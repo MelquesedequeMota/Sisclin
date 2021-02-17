@@ -13,7 +13,10 @@ class Departamentos extends Migration
      */
     public function up()
     {
-        //
+        Schema::create('departamentos', function (Blueprint $table) {
+            $table->bigIncrements('dep_id');
+            $table->string('dep_nome');
+        });
     }
 
     /**
@@ -23,6 +26,6 @@ class Departamentos extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('departamentos');
     }
 }
