@@ -31,7 +31,7 @@ class Fornecedoresfis extends Migration
             $table->string('forfis_tel2')->nullable();
             $table->string('forfis_celular')->nullable();
             $table->string('forfis_rg')->unique();
-            $table->string('forfis_email');
+            $table->string('forfis_email')->nullable();
             $table->string('forfis_razaosocial')->nullable();
             $table->string('forfis_website')->nullable();
             $table->string('forfis_areaatuacao')->nullable();

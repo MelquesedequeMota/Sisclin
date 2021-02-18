@@ -32,7 +32,7 @@ class Pacientes extends Migration
             $table->string('pac_tel2')->nullable();
             $table->string('pac_celular')->nullable();
             $table->string('pac_rg')->unique();
-            $table->string('pac_email');
+            $table->string('pac_email')->nullable();
             $table->string('pac_nomeres')->nullable();
             $table->string('pac_telres')->nullable();
             $table->string('pac_obseti')->nullable();

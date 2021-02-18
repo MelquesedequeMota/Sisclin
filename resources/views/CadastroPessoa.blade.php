@@ -21,7 +21,7 @@
         <div class='input' id='cnpj'>*CNPJ:<input type='text' class='valores' name='cnpj' data-inputmask="'mask': '99.999.999/999-99'"><br></div>
         <div class='input' id='nome'>*Nome:<input type='text' class='valores' name='nome'><br></div>
         <div class='input' id='rg'>*RG:<input type='text' class='valores' name='rg' data-inputmask="'mask': '9999999999-9'"><br></div>
-        <div class='input' id='datanasc'>*Data de Nascimento:<input type='text' class='valores' name='datanasc'><br></div>
+        <div class='input' id='datanasc'>*Data de Nascimento:<input type='text' class='valores' name='datanasc'data-inputmask="'mask': '99/99/9999'"><br></div>
         <div class='input' id='estadocivil'>Estado Civil<select name="estadocivil">
             <option value="solt">Solteiro</option>
             <option value="cas">Casado</option>
@@ -67,10 +67,10 @@
             <option value='SE'>SE</option>
             <option value='TO'>TO</option>
         </select><br></div>
-        <div class='input' id='tel1'>*Telefone 1:<input type='text' class='valores' name='tel1' ><br></div>
-        <div class='input' id='tel2'>Telefone 2:<input type='text' class='valores' name='tel2' ><br></div>
-        <div class='input' id='celular'>Celular:<input type='text' class='valores' name='celular' ><br></div>
-        <div class='input' id='inscest'>Inscrição Estadual: <input type='text' class='valores' name='inscest'><br></div>
+        <div class='input' id='tel1'>*Telefone 1:<input type='text' class='valores' name='tel1' id='tel1input'  onkeypress='tel1()'><br></div>
+        <div class='input' id='tel2'>Telefone 2:<input type='text' class='valores' name='tel2' id='tel2input'  onkeypress='tel2()'><br></div>
+        <div class='input' id='celular'>Celular:<input type='text' class='valores' name='celular' data-inputmask="'mask': '(99) 99999-9999'"><br></div>
+        <div class='input' id='inscest'>Inscrição Estadual: <input type='text' class='valores' name='inscest' data-inputmask="'mask': '99.999.9999-9'"><br></div>
         <div class='input' id='website'>Web Site: <input type='text' class='valores' name='website'><br></div>
         <div class='input' id='email'>E-mail:<input type='text' class='valores' name='email' ><br></div>
         <div class='input' id='prof'>Profissão:<input type='text' class='valores' name='prof' ><br></div>
@@ -92,15 +92,42 @@
             <option value="masc">Caixa</option>
             <option value="fem">Atendente</option>
         </select><br></div>
-        <div class='input' id='ctps'>CTPS:<input type='text' class='valores' name='ctps' ><br></div>
-        <div class='input' id='serie'>Série:<input type='text' class='valores' name='serie' ><br></div>
-        <div class='input' id='pis'>PIS:<input type='text' class='valores' name='pis' ><br></div>
-        <div class='input' id='salario'>Salário:<input type='text' class='valores' name='salario' ><br></div>
+        <div class='input' id='ctps'>CTPS:<input type='text' class='valores' name='ctps' data-inputmask="'mask': '9999999'"><br></div>
+        <div class='input' id='serie'>Série:<input type='text' class='valores' name='serie' data-inputmask="'mask': '999-9'"><br></div>
+        <div class='input' id='ufctps'>UF:<select name="ufctps">
+            <option value='AC'>AC</option>
+            <option value='AL'>AL</option>
+            <option value='AP'>AP</option>
+            <option value='AM'>AM</option>
+            <option value='BA'>BA</option>
+            <option value='CE'>CE</option>
+            <option value='DF'>DF</option>
+            <option value='ES'>ES</option>
+            <option value='GO'>GO</option>
+            <option value='MA'>MA</option>
+            <option value='MT'>MT</option>
+            <option value='MS'>MS</option>
+            <option value='MG'>MG</option>
+            <option value='PA'>PA</option>
+            <option value='PB'>PB</option>
+            <option value='PR'>PR</option>
+            <option value='PE'>PE</option>
+            <option value='PI'>PI</option>
+            <option value='RJ'>RJ</option>
+            <option value='RN'>RN</option>
+            <option value='RS'>RS</option>
+            <option value='RO'>RO</option>
+            <option value='RR'>RR</option>
+            <option value='SC'>SC</option>
+            <option value='SP'>SP</option>
+            <option value='SE'>SE</option>
+            <option value='TO'>TO</option>
+        </select><br></div>
+        <div class='input' id='pis'>PIS:<input type='text' class='valores' name='pis' data-inputmask="'mask': '999.99999.99-9'"><br></div>
+        <div class='input' id='salario'>Salário:<input type='text' class='valores' name='salario' id='salarioinput' onblur='salario()'><br></div>
         <div class='input' id='conjugue'>Cônjugue<input type='text' class='valores' name='conjugue'><br></div>
         <div class='input' id='pai'>Pai<input type='text' class='valores' name='pai'><br></div>
         <div class='input' id='mae'>Mãe<input type='text' class='valores' name='mae'></div>
-        <div class='input' id='dataadm'> Data de Admissão:<input type='text' class='valores' name='dataadm' ><br></div>
-        <div class='input' id='datadem'>Data de Demissão:<input type='text' class='valores' name='datadem' ><br></div>
         <div class='input' id='datareg'>Data do Registro:<input type='text' class='valores' name='datareg' ><br></div>
         <div class='input' id='ultatt'>Última Atualização:<input type='text' class='valores' name='ultatt' ><br></div>
         <div class='input' id='situpac'>Situação do Paciente:<select name="situpac" >
@@ -112,7 +139,7 @@
         <div class='input' id='obj'>Objetivo da Consulta:<textarea name='obj' ></textarea><br></div>
         <div class='input' id='nomerep'>Nome do Representante - Pessoa de Contato: <input type='text' class='valores' name='nomerep'><br></div>
         <div class='input' id='emailrep'>E-mail: <input type='text' class='valores' name='emailrep'><br></div>
-        <div class='input' id='contatorep'>Telefone de Contato: <input type='text' class='valores' name='contatorep'><br></div>
+        <div class='input' id='contatorep'>Telefone de Contato: <input type='text' class='valores' name='contatorep' id='contatorepinput' onkeypress='contatorep()'><br></div>
         <div class='input' id='obs'>Observações<textarea name='obs' ></textarea></div>
         <input type='button' value='Cadastrar Pessoa' onclick='cadastrarPessoa()'><br>
 </head>
@@ -121,6 +148,45 @@
 </body>
 <script>
     reset();
+    $('#tel1input').inputmask('(99) 9999[9]-9999');
+    $('#tel2input').inputmask('(99) 9999[9]-9999');
+    $('#contatorepinput').inputmask('(99) 9999[9]-9999');
+    $('#salarioinput').inputmask('R$[9]9.999,99');
+    function tel1(){
+        if(document.getElementById('tel1input').value[5] != '9'){
+            $('#tel1input').inputmask('(99) 9999-9999');
+        }else{
+            $('#tel1input').inputmask('(99) 9999[9]-9999');
+        }
+    }
+    function tel2(){
+        if(document.getElementById('tel2input').value[5] != '9'){
+            $('#tel2input').inputmask('(99) 9999-9999');
+        }else{
+            $('#tel2input').inputmask('(99) 9999[9]-9999');
+        }
+    }
+    function telres(){
+        if(document.getElementById('telresinput').value[5] != '9'){
+            $('#telresinput').inputmask('(99) 9999-9999');
+        }else{
+            $('#telresinput').inputmask('(99) 9999[9]-9999');
+        }
+    }
+    function contatorep(){
+        if(document.getElementById('contatorepinput').value[5] != '9'){
+            $('#contatorepinput').inputmask('(99) 9999-9999');
+        }else{
+            $('#contatorepinput').inputmask('(99) 9999[9]-9999');
+        }
+    }
+    function salario(){
+        if(document.getElementById('salarioinput').value[10] = '_'){
+            $('#salarioinput').inputmask('R$9.999,99');
+        }else{
+            $('#salarioinput').inputmask('R$[9]9.999,99');
+        }
+    }
     function reset(){
         document.getElementById('tipo_pessoa').value = '';
         $('.input').css('display', 'none');
@@ -160,7 +226,6 @@
     }
         
     function pesquisacep(valor) {
-        console.log(valor);
             //Nova variável "cep" somente com dígitos.
             var cep = valor.replace(/\D/g, '');
 
@@ -207,6 +272,8 @@
             if(document.getElementById('Paciente').checked==true || document.getElementById('Funcionario').checked==true || document.getElementById('Fornecedor').checked==true){
                 
                 document.getElementById('cpf').style.display = 'block';
+                document.getElementById('nome').style.display = 'block';
+                document.getElementById('datanasc').style.display = 'block';
                 document.getElementById('cep').style.display = 'block';
                 document.getElementById('rg').style.display = 'block';
                 document.getElementById('logradouro').style.display = 'block';
@@ -225,7 +292,6 @@
                     document.getElementById('nome').style.display = 'block';
                     document.getElementById('estadocivil').style.display = 'block';
                     document.getElementById('sexo').style.display = 'block';
-                    document.getElementById('datanasc').style.display = 'block';
                     document.getElementById('prof').style.display = 'block';
                     document.getElementById('obseti').style.display = 'block';
                     document.getElementById('situpac').style.display = 'block';
@@ -233,7 +299,8 @@
                     document.getElementById('nomeres').style.display = 'block';
                     document.getElementById('telres').style.display = 'block';
                     document.getElementById('nomeres').innerHTML = "Nome da mãe ou responsável:<input type='text' class='valores' name='nomeres' id='nomeres'>";
-                    document.getElementById('telres').innerHTML = "Telefone da mãe ou responsável:<input type='text' class='valores' name='telres' id='telres'>";
+                    document.getElementById('telres').innerHTML = "Telefone da mãe ou responsável:<input type='text' class='valores' name='telres' id='telresinput' onkeypress='telres()'>";
+                    $('#telresinput').inputmask('(99) 9999[9]-9999');
                 }
                 if(document.getElementById('Paciente').checked==false){
                     document.getElementById('obseti').style.display = 'none';
@@ -245,31 +312,27 @@
                 }
 
                 if(document.getElementById('Funcionario').checked==true){
-                    document.getElementById('nome').style.display = 'block';
                     document.getElementById('estadocivil').style.display = 'block';
                     document.getElementById('sexo').style.display = 'block';
-                    document.getElementById('datanasc').style.display = 'block';
                     document.getElementById('func').style.display = 'block';
-                    document.getElementById('dataadm').style.display = 'block';
-                    document.getElementById('datadem').style.display = 'block';
                     document.getElementById('dep').style.display = 'block';
                     document.getElementById('setor').style.display = 'block';
                     document.getElementById('ctps').style.display = 'block';
                     document.getElementById('serie').style.display = 'block';
                     document.getElementById('pis').style.display = 'block';
+                    document.getElementById('ufctps').style.display = 'block';
                     document.getElementById('salario').style.display = 'block';
                     document.getElementById('conjugue').style.display = 'block';
                     document.getElementById('pai').style.display = 'block';
                     document.getElementById('mae').style.display = 'block';
                 }
                 if(document.getElementById('Funcionario').checked==false){
-                    document.getElementById('dataadm').style.display = 'none';
-                    document.getElementById('datadem').style.display = 'none';
                     document.getElementById('dep').style.display = 'none';
                     document.getElementById('setor').style.display = 'none';
                     document.getElementById('ctps').style.display = 'none';
                     document.getElementById('serie').style.display = 'none';
                     document.getElementById('pis').style.display = 'none';
+                    document.getElementById('ufctps').style.display = 'block';
                     document.getElementById('salario').style.display = 'none';
                     document.getElementById('conjugue').style.display = 'none';
                     document.getElementById('pai').style.display = 'none';
@@ -278,16 +341,12 @@
 
             }
             if(document.getElementById('Fornecedor').checked==true){
-                document.getElementById('nome').style.display = 'block';
                 document.getElementById('razaosocial').style.display = 'block';
-                document.getElementById('datanasc').style.display = 'block';
                 document.getElementById('website').style.display = 'block';
                 document.getElementById('areaatuacao').style.display = 'block';
             }
             if(document.getElementById('Fornecedor').checked==false){
-                document.getElementById('nome').style.display = 'none';
                 document.getElementById('razaosocial').style.display = 'none';
-                document.getElementById('datanasc').style.display = 'none';
                 document.getElementById('website').style.display = 'none';
                 document.getElementById('areaatuacao').style.display = 'none';
             }
@@ -444,14 +503,12 @@
                     func:$("[name='func']").val(),
                     ctps:$("[name='ctps']").val(),
                     serie:$("[name='serie']").val(),
-                    uf:$("[name='uf']").val(),
+                    ufctps:$("[name='ufctps']").val(),
                     pis:$("[name='pis']").val(),
                     salario:$("[name='salario']").val(),
                     conjugue:$("[name='conjugue']").val(),
                     nomepai:$("[name='pai']").val(),
                     nomemae:$("[name='mae']").val(),
-                    dataadm:$("[name='dataadm']").val(),
-                    datadem:$("[name='datadem']").val(),
                     obs:$("[name='obs']").val(),
                 },
                 dataType: "json",

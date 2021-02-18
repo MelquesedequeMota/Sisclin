@@ -152,12 +152,12 @@ class CadastroController extends Controller
             'func_ctps' => $request->ctps,
             'func_serie' => $request->serie,
             'func_pis' => $request->pis,
+            'func_ufctps' => $request->ufctps,
             'func_salario' => $request->salario,
             'func_conjugue' => $request->conjugue,
             'func_nomepai' => $request->nomepai,
             'func_nomemae' => $request->nomemae,
-            'func_dataadm' => $request->dataadm,
-            'func_datadem' => $request->datadem,
+            'func_dataadm' => date('d/m/Y'),
             'func_obs' => $request->obs,
         ]);
         if($cadastrarfuncionario == 1){
