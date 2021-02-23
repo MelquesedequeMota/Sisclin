@@ -80,18 +80,15 @@
         <div class='input' id='nomeres'></div><br>
         <div class='input' id='telres'></div><br>
         <div class='input' id='endcom'>Endereço Completo(em caso de ser diferente do pessoal):<input type='text' class='valores' name='endcom' ><br></div>
-        <div class='input' id='dep'>Departamento:<select name="dep">
-            <option value="ti">TI</option>
-            <option value="financ">Financeiro</option>
-        </select><br></div>
-        <div class='input' id='setor'>Setor:<select name="setor">
-            <option value="atendimento">Atendimento</option>
-            <option value="triagem">Triagem</option>
-        </select><br></div>
-        <div class='input' id='func'>Função:<select name="func">
-            <option value="masc">Caixa</option>
-            <option value="fem">Atendente</option>
-        </select><br></div>
+        <div class='input' id='dep'>Departamento:<select name="dep" id='depselect' onchange='filtset()'>
+        <option value=''>---</option>
+        </select><button id='depnovobutton' onclick='novodep()'> Novo Departamento </button><br></div><div class='input' id='depnovo'></div>
+        <div class='input' id='setor'>Setor:<select name="setor" id='setselect' onchange='filtfunc()'>
+        <option value=''>---</option>
+        </select><button id='setnovobutton' onclick='novoset()'> Novo Setor </button><br></div><div class='input' id='setnovo'></div>
+        <div class='input' id='func'>Função:<select name="func" id='funcselect'>
+        <option value=''>---</option>
+        </select><button id='funcnovobutton' onclick='novofunc()'> Nova Função </button><br></div><div class='input' id='funcnovo'></div>
         <div class='input' id='ctps'>CTPS:<input type='text' class='valores' name='ctps' data-inputmask="'mask': '9999999'"><br></div>
         <div class='input' id='serie'>Série:<input type='text' class='valores' name='serie' data-inputmask="'mask': '999-9'"><br></div>
         <div class='input' id='ufctps'>UF:<select name="ufctps">
@@ -152,6 +149,70 @@
     $('#tel2input').inputmask('(99) 9999[9]-9999');
     $('#contatorepinput').inputmask('(99) 9999[9]-9999');
     $('#salarioinput').inputmask('R$[9]9.999,99');
+    consdep();
+
+    function consdep(){
+        $.ajax({
+                type: "GET",
+                url: "/consultacadastrodep",
+                data: {},
+                dataType: "json",
+                success: function(data) {
+                    var select = document.getElementById('depselect');
+                    for(var i = 0; i<data['id'].length; i++){
+                        var opt = document.createElement('option');
+                        opt.appendChild(document.createTextNode(data['nome'][i]));
+                        opt.value = data['id'][i];
+                        select.appendChild(opt);
+                    }
+                }
+            });
+    }
+
+    function filtset(){
+        $("#setselect").empty();
+        var select = document.getElementById('setselect');
+        var opt = document.createElement('option');
+        opt.appendChild(document.createTextNode('---'));
+        opt.value = '';
+        select.appendChild(opt);
+        $.ajax({
+                type: "GET",
+                url: "/consultacadastroset",
+                data: {dep:$("[name='dep']").val(),},
+                dataType: "json",
+                success: function(data) {
+                    for(var i = 0; i<data['id'].length; i++){
+                        var opt = document.createElement('option');
+                        opt.appendChild(document.createTextNode(data['nome'][i]));
+                        opt.value = data['id'][i];
+                        select.appendChild(opt);
+                    }
+                }
+            });
+    }
+    function filtfunc(){
+        $("#funcselect").empty();
+        var select = document.getElementById('funcselect');
+        var opt = document.createElement('option');
+        opt.appendChild(document.createTextNode('---'));
+        opt.value = '';
+        select.appendChild(opt);
+        $.ajax({
+                type: "GET",
+                url: "/consultacadastrofunc",
+                data: {set:$("[name='setor']").val(),},
+                dataType: "json",
+                success: function(data) {
+                    for(var i = 0; i<data['id'].length; i++){
+                        var opt = document.createElement('option');
+                        opt.appendChild(document.createTextNode(data['nome'][i]));
+                        opt.value = data['id'][i];
+                        select.appendChild(opt);
+                    }
+                }
+            });
+    }
     function tel1(){
         if(document.getElementById('tel1input').value[5] != '9'){
             $('#tel1input').inputmask('(99) 9999-9999');
@@ -200,6 +261,54 @@
         }else{
             document.getElementById('subtipo').innerHTML="";
         }
+    }
+
+    function novodep(){
+        document.getElementById('depnovo').innerHTML="Novo Departamento: <input type='text' id='depnovoinput' name='depnovoinput'><button onclick='cadastrodep()'>Cadastrar Departamento</button>";
+        document.getElementById('depnovo').style.display='block';
+    }
+
+    function novoset(){
+        document.getElementById('setnovo').innerHTML="Novo Setor: <input type='text' id='setnovoinput' name='setnovoinput'> Departamento:<select name='setnovodep' id='setnovodep'></select><button onclick='cadastroset()'>Cadastrar Setor</button>";
+        document.getElementById('setnovo').style.display='block';
+        $.ajax({
+                type: "GET",
+                url: "/consultacadastrodep",
+                data: {},
+                dataType: "json",
+                success: function(data) {
+                    var select = document.getElementById('setnovodep');
+                    for(var i = 0; i<data['id'].length; i++){
+                        var opt = document.createElement('option');
+                        opt.appendChild(document.createTextNode(data['nome'][i]));
+                        opt.value = data['id'][i];
+                        select.appendChild(opt);
+                    }         
+                filtset();
+                }
+            });
+    }
+
+    function novofunc(){
+        document.getElementById('funcnovo').innerHTML="Nova Função: <input type='text' id='funcnovoinput' name='funcnovoinput'> Setor:<select name='funcnovoset' id='funcnovoset'></select><button onclick='cadastrofunc()'>Cadastrar Função</button>";
+        document.getElementById('funcnovo').style.display='block';
+        $.ajax({
+                type: "GET",
+                url: "/consultacadastroset",
+                data: {},
+                dataType: "json",
+                success: function(data) {
+                    console.log(data);
+                    var select = document.getElementById('funcnovoset');
+                    for(var i = 0; i<data['id'].length; i++){
+                        var opt = document.createElement('option');
+                        opt.appendChild(document.createTextNode(data['nome'][i]));
+                        opt.value = data['id'][i];
+                        select.appendChild(opt);
+                    }         
+                filtfunc();
+                }
+            });
     }
 
     function limpa_formulário_cep() {
@@ -587,6 +696,51 @@
             }
         }
         
+    }
+
+    function cadastrodep(){
+        $.ajax({
+                type: "GET",
+                url: "/cadastro/cadastrodepartamento",
+                data: {
+                    nome:$("[name='depnovoinput']").val(),
+                },
+                dataType: "json",
+                success: function(data) {
+                    console.log('Departamento cadastrado com sucesso');
+                    document.getElementById('depnovo').style.display='none'
+                    }
+                });
+    }
+    function cadastroset(){
+        $.ajax({
+                type: "GET",
+                url: "/cadastro/cadastrosetor",
+                data: {
+                    nome:$("[name='setnovoinput']").val(),
+                    dep:$("[name='setnovodep']").val(),
+                },
+                dataType: "json",
+                success: function(data) {
+                    console.log('Setor cadastrado com sucesso');
+                    document.getElementById('setnovo').style.display='none'
+                    }
+                });
+    }
+    function cadastrofunc(){
+        $.ajax({
+                type: "GET",
+                url: "/cadastro/cadastrofuncao",
+                data: {
+                    nome:$("[name='funcnovoinput']").val(),
+                    set:$("[name='funcnovoset']").val(),
+                },
+                dataType: "json",
+                success: function(data) {
+                    console.log('Função cadastrada com sucesso');
+                    document.getElementById('funcnovo').style.display='none'
+                    }
+                });
     }
 </script>
 </html>

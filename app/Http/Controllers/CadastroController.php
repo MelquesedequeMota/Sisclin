@@ -20,6 +20,28 @@ class CadastroController extends Controller
             return 0;
         }
     }
+    public function CadastroSetor(Request $request){
+        $cadastrarset = DB::table('setores')->insert([
+            'set_nome' => $request->nome,
+            'set_dep' => $request->dep,
+        ]);
+        if($cadastrarset == 1){
+            return 1;
+        }else{
+            return 0;
+        }
+    }
+    public function CadastroFuncao(Request $request){
+        $cadastrarfunc = DB::table('funcoes')->insert([
+            'func_nome' => $request->nome,
+            'func_setor' => $request->set,
+        ]);
+        if($cadastrarfunc == 1){
+            return 1;
+        }else{
+            return 0;
+        }
+    }
 
     public function CadastroEspecialidade(Request $request){
         $cadastrarespec = DB::table('especialidades')->insert([
@@ -161,36 +183,6 @@ class CadastroController extends Controller
             'func_obs' => $request->obs,
         ]);
         if($cadastrarfuncionario == 1){
-            return 1;
-        }else{
-            return 0;
-        }
-    }
-
-    public function CadastroClienteJuridico(Request $request){
-        $cadastrarcliente = DB::table('clientesjur')->insert([
-            'clijur_nome' => $request->nome,
-            'clijur_cnpj' => $request->cnpj,
-            'clijur_cep' => $request->cep,
-            'clijur_logradouro' => $request->logradouro,
-            'clijur_num' => $request->num,
-            'clijur_complemento' =>$request->complemento,
-            'clijur_bairro' => $request->bairro,
-            'clijur_cidade' => $request->cidade,
-            'clijur_uf' => $request->uf,
-            'clijur_tel1' => $request->tel1,
-            'clijur_tel2' => $request->tel2,
-            'clijur_celular' => $request->celular,
-            'clijur_email' => $request->email,
-            'clijur_website' => $request->website,
-            'clijur_razaosocial' => $request->razaosocial,
-            'clijur_areaatuacao' => $request->areaatuacao,
-            'clijur_nomerep' => $request->nomerep,
-            'clijur_emailrep' => $request->emailrep,
-            'clijur_contatorep' => $request->contatorep,
-            'clijur_obs' => $request->obs,
-        ]);
-        if($cadastrarcliente == 1){
             return 1;
         }else{
             return 0;
