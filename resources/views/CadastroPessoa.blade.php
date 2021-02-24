@@ -441,7 +441,7 @@
                     document.getElementById('ctps').style.display = 'none';
                     document.getElementById('serie').style.display = 'none';
                     document.getElementById('pis').style.display = 'none';
-                    document.getElementById('ufctps').style.display = 'block';
+                    document.getElementById('ufctps').style.display = 'none';
                     document.getElementById('salario').style.display = 'none';
                     document.getElementById('conjugue').style.display = 'none';
                     document.getElementById('pai').style.display = 'none';
@@ -709,6 +709,7 @@
                 success: function(data) {
                     console.log('Departamento cadastrado com sucesso');
                     document.getElementById('depnovo').style.display='none'
+                    consdep();
                     }
                 });
     }
