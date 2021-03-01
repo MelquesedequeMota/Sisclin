@@ -31,9 +31,9 @@ class Fornecedoresjur extends Migration
             $table->string('forjur_razaosocial')->nullable();
             $table->string('forjur_website')->nullable();
             $table->string('forjur_areaatuacao')->nullable();
-            $table->string('forjur_nomerep')->nullable();
+            $table->string('forjur_nomerep');
             $table->string('forjur_emailrep')->nullable();
-            $table->string('forjur_contatorep')->nullable();
+            $table->string('forjur_contatorep');
             $table->string('forjur_obs')->nullable();
         });
     }

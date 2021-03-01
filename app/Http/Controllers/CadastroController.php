@@ -149,6 +149,36 @@ class CadastroController extends Controller
         }
     }
 
+    public function CadastroClienteJuridico(Request $request){
+        $cadastrarcliente = DB::table('clientesjur')->insert([
+            'clijur_nome' => $request->nome,
+            'clijur_cnpj' => $request->cnpj,
+            'clijur_cep' => $request->cep,
+            'clijur_logradouro' => $request->logradouro,
+            'clijur_num' => $request->num,
+            'clijur_complemento' =>$request->complemento,
+            'clijur_bairro' => $request->bairro,
+            'clijur_cidade' => $request->cidade,
+            'clijur_uf' => $request->uf,
+            'clijur_tel1' => $request->tel1,
+            'clijur_tel2' => $request->tel2,
+            'clijur_celular' => $request->celular,
+            'clijur_email' => $request->email,
+            'clijur_website' => $request->website,
+            'clijur_razaosocial' => $request->razaosocial,
+            'clijur_areaatuacao' => $request->areaatuacao,
+            'clijur_nomerep' => $request->nomerep,
+            'clijur_emailrep' => $request->emailrep,
+            'clijur_contatorep' => $request->contatorep,
+            'clijur_obs' => $request->obs,
+        ]);
+        if($cadastrarcliente == 1){
+            return 1;
+        }else{
+            return 0;
+        }
+    }
+
     public function CadastroFuncionario(Request $request){
         $cadastrarfuncionario = DB::table('funcionarios')->insert([
             'func_nome' => $request->nome,

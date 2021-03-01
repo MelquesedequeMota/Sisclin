@@ -10,15 +10,18 @@
     <script src="{{asset('inputmask/dist/jquery.inputmask.min.js')}}"></script>
     <script src="{{asset('inputmask/dist/bindings/inputmask.binding.js')}}"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-    <title>Cadastro de Pessoa</title>
-        Tipo de Pessoa:<select name="tipo_pessoa" id='tipo_pessoa' onchange='subTipo()'>
-            <option value="n"></option>
-            <option value="fis">Física</option>
-            <option value="jur">Jurídica</option>
-        </select><br>
-        <div id='subtipo'></div>
+    <title>Consulta de Pessoa</title>
+        Nome: <input type='text' name='pesquisarpessoanome' id='pesquisarpessoanome'> CPF/CNPJ: <input type='text' name='pesquisarpessoacpfcnpj' id='pesquisarpessoacpfcnpj'><input type='button' value='Pesquisar' onclick='pesquisarpessoa()'>
+        <table border='1px'id='pesquisarpessoatable'>
+            <tr>
+                <th>CPF/CNPJ</th>
+                <th>Nome da Empresa</th>
+                <th>Telefone de Contato</th>
+                <th>Tipo de Pessoa</th>
+            </tr>
+        </table>
         <div class='input' id='cpf'>*CPF:<input type='text' class='valores' name='cpf' data-inputmask="'mask': '999.999.999-99'"><br></div>
-        <div class='input' id='cnpj'>*CNPJ:<input type='text' class='valores' name='cnpj' data-inputmask="'mask': '99.999.999/9999-99'"><br></div>
+        <div class='input' id='cnpj'>*CNPJ:<input type='text' class='valores' name='cnpj' data-inputmask="'mask': '99.999.999/999-99'"><br></div>
         <div class='input' id='nome'>*Nome:<input type='text' class='valores' name='nome'><br></div>
         <div class='input' id='rg'>*RG:<input type='text' class='valores' name='rg' data-inputmask="'mask': '9999999999-9'"><br></div>
         <div class='input' id='datanasc'>*Data de Nascimento:<input type='text' class='valores' name='datanasc'data-inputmask="'mask': '99/99/9999'"><br></div>
@@ -138,7 +141,6 @@
         <div class='input' id='emailrep'>E-mail: <input type='text' class='valores' name='emailrep'><br></div>
         <div class='input' id='contatorep'>Telefone de Contato: <input type='text' class='valores' name='contatorep' id='contatorepinput' onkeypress='contatorep()'><br></div>
         <div class='input' id='obs'>Observações<textarea name='obs' ></textarea></div>
-        <input type='button' value='Cadastrar Pessoa' onclick='cadastrarPessoa()'><br>
 </head>
 <body>
     
@@ -149,7 +151,76 @@
     $('#tel2input').inputmask('(99) 9999[9]-9999');
     $('#contatorepinput').inputmask('(99) 9999[9]-9999');
     $('#salarioinput').inputmask('R$[9]9.999,99');
+    $("input[id*='pesquisarpessoacpfcnpj']").inputmask({
+        mask: ['999.999.999-99', '99.999.999/9999-99'],
+        keepStatic: true
+    });
     consdep();
+
+    function pesquisarpessoa(){
+        apagartabela();
+        if(document.getElementById('pesquisarpessoacpfcnpj').value.length == 14 || document.getElementById('pesquisarpessoacpfcnpj').value.length == 18){
+            $.ajax({
+                type: "GET",
+                url: "/consulta/pessoa/dados",
+                data: {cpfcnpj: document.getElementById('pesquisarpessoacpfcnpj').value},
+                dataType: "json",
+                success: function(data) {
+                    for(i=0; i<data.length; i++){
+                        var tabela = document.getElementById('pesquisarpessoatable');
+                        var numeroLinhas = tabela.rows.length;
+                        var linha = tabela.insertRow(numeroLinhas);
+                        var celula1 = linha.insertCell(0);
+                        var celula2 = linha.insertCell(1);   
+                        var celula3 = linha.insertCell(2); 
+                        var celula4 = linha.insertCell(3);
+                        var celula5 = linha.insertCell(4);
+                        if(document.getElementById('pesquisarpessoacpfcnpj').value.length == 14){
+                            if(data[i]['pac_cpf'] != undefined){
+                                celula1.innerHTML=data[i]['pac_cpf'];
+                                celula2.innerHTML=data[i]['pac_nome'];
+                                celula3.innerHTML=data[i]['pac_tel1'];
+                                celula4.innerHTML='Cliente Físico';
+                            }else if(data[i]['forfis_cpf'] != undefined){
+                                celula1.innerHTML=data[i]['forfis_cpf'];
+                                celula2.innerHTML=data[i]['forfis_nome'];
+                                celula3.innerHTML=data[i]['forfis_tel1'];
+                                celula4.innerHTML='Fornecedor Físico';
+                            }else{
+                                celula1.innerHTML=data[i]['func_cpf'];
+                                celula2.innerHTML=data[i]['func_nome'];
+                                celula3.innerHTML=data[i]['func_tel1'];
+                                celula4.innerHTML='Funcionário';
+                            }
+                        }else{
+                            if(data[i]['forjur_cnpj'] != undefined){
+                                celula1.innerHTML=data[i]['forjur_cnpj'];
+                                celula2.innerHTML=data[i]['forjur_nome'];
+                                celula3.innerHTML=data[i]['forjur_tel1'];
+                                celula4.innerHTML='Fornecedor Jurídico';
+                            }else{
+                                celula1.innerHTML=data[i]['clijur_cnpj'];
+                                celula2.innerHTML=data[i]['clijur_nome'];
+                                celula3.innerHTML=data[i]['clijur_tel1'];
+                                celula4.innerHTML='Cliente Jurídico';
+                            }
+                        }
+                        
+                    }
+                }
+            });
+        }else{
+
+        }
+    }
+    function apagartabela(){
+        var tableHeaderRowCount = 1;
+        var table = document.getElementById('pesquisarpessoatable');
+        var rowCount = table.rows.length;
+        for (var i = tableHeaderRowCount; i < rowCount; i++) {
+            table.deleteRow(tableHeaderRowCount);
+        }
+    }
 
     function consdep(){
         $.ajax({
@@ -249,7 +320,6 @@
         }
     }
     function reset(){
-        document.getElementById('tipo_pessoa').value = '';
         $('.input').css('display', 'none');
     }
     function subTipo(){
@@ -555,7 +625,7 @@
             if(document.getElementById('Fornecedor').checked==true){
                 $.ajax({
                 type: "GET",
-                url: "/cadastro/cadastrofornecedorfisico",
+                url: "/cadastro/cadastrofornecedorfisic",
                 data: {
                     nome:$("[name='nome']").val(),
                     cpf:$("[name='cpf']").val(),

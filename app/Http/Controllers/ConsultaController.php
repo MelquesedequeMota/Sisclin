@@ -54,4 +54,57 @@ class ConsultaController extends Controller
         }
         return $funcoes;
     }
+
+    public function ConsultaPessoa(Request $request){
+        return view('ConsultaPessoa');
+    }
+
+    public function ConsultaPessoaDados(Request $request){
+        if(strlen($request->cpfcnpj) == 18){
+            $consultafornecedoresjur = DB::table('fornecedoresjur')->where('forjur_cnpj', $request->cpfcnpj)->get();
+            $consultaclientesjur = DB::table('clientesjur')->where('clijur_cnpj', $request->cpfcnpj)->get();
+            $clientesjur = $consultaclientesjur->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+            $fornecedoresjur = $consultafornecedoresjur->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+            $consulta = array_merge($fornecedoresjur, $clientesjur);
+            return $consulta;
+        }else if(strlen($request->cpfcnpj) == 14){
+            $consultapacientes = DB::table('pacientes')->where('pac_cpf', $request->cpfcnpj)->get();
+            $consultafornecedoresfis = DB::table('fornecedoresfis')->where('forfis_cpf', $request->cpfcnpj)->get();
+            $consultafuncionarios = DB::table('funcionarios')->where('func_cpf', $request->cpfcnpj)->get();
+            $pacientes = $consultapacientes->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+            $fornecedoresfis = $consultafornecedoresfis->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+            $funcionarios = $consultafuncionarios->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+
+            $consulta1 = array_merge($pacientes, $fornecedoresfis);
+            $consulta = array_merge($consulta1, $funcionarios);
+            return $consulta;
+        }
+    }
+
+    public function ConsultaPessoaFornecedores(Request $request){
+        return view('ConsultaPessoaFornecedor');
+    }
+
+    public function ConsultaPessoaFornecedoresDados(Request $request){
+        $consultafis = DB::table('fornecedoresfis')->get();
+        $consultajur = DB::table('fornecedoresjur')->get();
+        $fornecedoresfis = $consultafis->map(function($obj){
+            return (array) $obj;
+          })->toArray();
+        $fornecedoresjur = $consultajur->map(function($obj){
+        return (array) $obj;
+        })->toArray();
+        $fornecedores = array_merge($fornecedoresfis, $fornecedoresjur);
+        return $fornecedores;
+    }
 }
