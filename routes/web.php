@@ -22,6 +22,7 @@ Route::get('consultacadastroset', 'App\Http\Controllers\ConsultaController@Consu
 Route::get('consultacadastrofunc', 'App\Http\Controllers\ConsultaController@ConsultaCadastroFuncao')->name('consultacadastrofunc');
 
 Route::get('consulta/pessoa', 'App\Http\Controllers\ConsultaController@ConsultaPessoa')->name('consultapessoa');
+Route::get('consulta/pessoa/nome', 'App\Http\Controllers\ConsultaController@ConsultaPessoaNome')->name('consultapessoanome');
 Route::get('consulta/pessoa/dados', 'App\Http\Controllers\ConsultaController@ConsultaPessoaDados')->name('consultapessoadados');
 Route::get('consulta/fornecedores', 'App\Http\Controllers\ConsultaController@ConsultaPessoaFornecedores')->name('consultapessoafornecedores');
 Route::get('consulta/fornecedores/dados', 'App\Http\Controllers\ConsultaController@ConsultaPessoaFornecedoresDados')->name('consultapessoafornecedoresdados');

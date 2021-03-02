@@ -88,7 +88,64 @@ class ConsultaController extends Controller
             $consulta1 = array_merge($pacientes, $fornecedoresfis);
             $consulta = array_merge($consulta1, $funcionarios);
             return $consulta;
+        }else{
+            $consultapacientes = DB::table('pacientes')->where('pac_nome', 'like', '%'.$request->nomepessoa.'%')->get();
+            $consultafornecedoresfis = DB::table('fornecedoresfis')->where('forfis_nome', 'like', '%'. $request->nomepessoa.'%')->get();
+            $consultafuncionarios = DB::table('funcionarios')->where('func_nome', 'like', '%'. $request->nomepessoa.'%')->get();
+            $consultafornecedoresjur = DB::table('fornecedoresjur')->where('forjur_nome', 'like', '%'. $request->nomepessoa.'%')->get();
+            $consultaclientesjur = DB::table('clientesjur')->where('clijur_nome', 'like', '%'. $request->nomepessoa.'%')->get();
+            $pacientes = $consultapacientes->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+            $fornecedoresfis = $consultafornecedoresfis->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+            $funcionarios = $consultafuncionarios->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+            $clientesjur = $consultaclientesjur->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+            $fornecedoresjur = $consultafornecedoresjur->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+
+            $merge1 = array_merge($pacientes, $fornecedoresfis);
+            $merge2 = array_merge($merge1, $funcionarios);
+            $merge3 = array_merge($merge2, $clientesjur);
+            $consulta = array_merge($merge3, $fornecedoresjur);
+            return $consulta;
         }
+    }
+
+    public function ConsultaPessoaNome(Request $request){
+        $consultapacientes = DB::table('pacientes')->where('pac_nome', 'like', '%'.$request->nomepessoa.'%')->get();
+        $consultafornecedoresfis = DB::table('fornecedoresfis')->where('forfis_nome', 'like', '%'. $request->nomepessoa.'%')->get();
+        $consultafuncionarios = DB::table('funcionarios')->where('func_nome', 'like', '%'. $request->nomepessoa.'%')->get();
+        $consultafornecedoresjur = DB::table('fornecedoresjur')->where('forjur_nome', 'like', '%'. $request->nomepessoa.'%')->get();
+        $consultaclientesjur = DB::table('clientesjur')->where('clijur_nome', 'like', '%'. $request->nomepessoa.'%')->get();
+        $pacientes = $consultapacientes->map(function($obj){
+            return (array) $obj;
+        })->toArray();
+        $fornecedoresfis = $consultafornecedoresfis->map(function($obj){
+            return (array) $obj;
+        })->toArray();
+        $funcionarios = $consultafuncionarios->map(function($obj){
+            return (array) $obj;
+        })->toArray();
+        $clientesjur = $consultaclientesjur->map(function($obj){
+            return (array) $obj;
+        })->toArray();
+        $fornecedoresjur = $consultafornecedoresjur->map(function($obj){
+            return (array) $obj;
+        })->toArray();
+
+        $merge1 = array_merge($pacientes, $fornecedoresfis);
+        $merge2 = array_merge($merge1, $funcionarios);
+        $merge3 = array_merge($merge2, $clientesjur);
+        $consulta = array_merge($merge3, $fornecedoresjur);
+        return $consulta;
+        
     }
 
     public function ConsultaPessoaFornecedores(Request $request){

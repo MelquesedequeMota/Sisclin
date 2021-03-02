@@ -7,11 +7,12 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
     <script src="{{asset('jquery.min.js')}}"></script>
+    <script src="{{asset('jquery-ui-1.12.1/jquery-ui.js')}}"></script>
     <script src="{{asset('inputmask/dist/jquery.inputmask.min.js')}}"></script>
     <script src="{{asset('inputmask/dist/bindings/inputmask.binding.js')}}"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <title>Consulta de Pessoa</title>
-        Nome: <input type='text' name='pesquisarpessoanome' id='pesquisarpessoanome'> CPF/CNPJ: <input type='text' name='pesquisarpessoacpfcnpj' id='pesquisarpessoacpfcnpj'><input type='button' value='Pesquisar' onclick='pesquisarpessoa()'>
+        Nome: <input type='text' name='pesquisarpessoanome' id='pesquisarpessoanome' > CPF/CNPJ: <input type='text' name='pesquisarpessoacpfcnpj' id='pesquisarpessoacpfcnpj'><input type='button' value='Pesquisar' onclick='pesquisarpessoa()'>
         <table border='1px'id='pesquisarpessoatable'>
             <tr>
                 <th>CPF/CNPJ</th>
@@ -157,13 +158,56 @@
     });
     consdep();
 
+    $('#pesquisarpessoanome').keyup(function(){
+
+        var nome = $('#pesquisarpessoanome').val();
+        var nomes = [];
+        if(nome.length >= 2){
+            $.ajax({
+                type:'GET',
+                url:'pessoa/nome',
+                data: {nomepessoa:nome},
+                dataType: "json",
+                success: function(data){
+                    for(i=0; i<data.length; i++){
+                        if(data[i]['pac_nome']){
+                            nomes.push(data[i]['pac_nome']);
+                        }else if(data[i]['forfis_nome']){
+                            nomes.push(data[i]['forfis_nome']);
+                        }else if(data[i]['func_nome']){
+                            nomes.push(data[i]['func_nome']);
+                        }else if(data[i]['forjur_nome']){
+                            nomes.push(data[i]['forjur_nome']);
+                        }else if(data[i]['clijur_nome']){
+                            nomes.push(data[i]['clijur_nome']);
+                        }
+                    }
+                    nomes = nomes.filter((este, i) => nomes.indexOf(este) === i);
+                    $("#pesquisarpessoanome").autocomplete({
+                        source: nomes
+                        });
+                }
+
+            });
+
+        }
+
+    });
+
+    function buscarnome(){
+        var nome = document.getElementById('pesquisarpessoanome').value;
+        console.log(nome);
+
+    }
+
     function pesquisarpessoa(){
         apagartabela();
-        if(document.getElementById('pesquisarpessoacpfcnpj').value.length == 14 || document.getElementById('pesquisarpessoacpfcnpj').value.length == 18){
+        console.log(document.getElementById('pesquisarpessoanome').value.length);
+        if(document.getElementById('pesquisarpessoacpfcnpj').value.length == 14 || document.getElementById('pesquisarpessoacpfcnpj').value.length == 18 || document.getElementById('pesquisarpessoanome').value.length >=2){
             $.ajax({
                 type: "GET",
                 url: "/consulta/pessoa/dados",
-                data: {cpfcnpj: document.getElementById('pesquisarpessoacpfcnpj').value},
+                data: {cpfcnpj: document.getElementById('pesquisarpessoacpfcnpj').value, nomepessoa: document.getElementById('pesquisarpessoanome').value},
                 dataType: "json",
                 success: function(data) {
                     for(i=0; i<data.length; i++){
@@ -192,8 +236,35 @@
                                 celula3.innerHTML=data[i]['func_tel1'];
                                 celula4.innerHTML='Funcionário';
                             }
-                        }else{
+                        }else if(document.getElementById('pesquisarpessoacpfcnpj').value.length == 18){
                             if(data[i]['forjur_cnpj'] != undefined){
+                                celula1.innerHTML=data[i]['forjur_cnpj'];
+                                celula2.innerHTML=data[i]['forjur_nome'];
+                                celula3.innerHTML=data[i]['forjur_tel1'];
+                                celula4.innerHTML='Fornecedor Jurídico';
+                            }else{
+                                celula1.innerHTML=data[i]['clijur_cnpj'];
+                                celula2.innerHTML=data[i]['clijur_nome'];
+                                celula3.innerHTML=data[i]['clijur_tel1'];
+                                celula4.innerHTML='Cliente Jurídico';
+                            }
+                        }else{
+                            if(data[i]['pac_cpf'] != undefined){
+                                celula1.innerHTML=data[i]['pac_cpf'];
+                                celula2.innerHTML=data[i]['pac_nome'];
+                                celula3.innerHTML=data[i]['pac_tel1'];
+                                celula4.innerHTML='Cliente Físico';
+                            }else if(data[i]['forfis_cpf'] != undefined){
+                                celula1.innerHTML=data[i]['forfis_cpf'];
+                                celula2.innerHTML=data[i]['forfis_nome'];
+                                celula3.innerHTML=data[i]['forfis_tel1'];
+                                celula4.innerHTML='Fornecedor Físico';
+                            }else if(data[i]['func_cpf'] != undefined){
+                                celula1.innerHTML=data[i]['func_cpf'];
+                                celula2.innerHTML=data[i]['func_nome'];
+                                celula3.innerHTML=data[i]['func_tel1'];
+                                celula4.innerHTML='Funcionário';
+                            }else if(data[i]['forjur_cnpj'] != undefined){
                                 celula1.innerHTML=data[i]['forjur_cnpj'];
                                 celula2.innerHTML=data[i]['forjur_nome'];
                                 celula3.innerHTML=data[i]['forjur_tel1'];
@@ -209,8 +280,6 @@
                     }
                 }
             });
-        }else{
-
         }
     }
     function apagartabela(){
