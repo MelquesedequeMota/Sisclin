@@ -148,6 +148,44 @@ class ConsultaController extends Controller
         
     }
 
+    public function ConsultaPessoaEditar(Request $request){
+        if(strlen($request->cpfcnpj) == 18){
+            if($request->pessoa == 'forjur'){
+                $consultafornecedoresjur = DB::table('fornecedoresjur')->where('forjur_cnpj', $request->cpfcnpj)->get();
+                $fornecedoresjur = $consultafornecedoresjur->map(function($obj){
+                    return (array) $obj;
+                })->toArray();
+                return $fornecedoresjur;
+            }else if($request->pessoa == 'clijur'){
+                $consultaclientesjur = DB::table('clientesjur')->where('clijur_cnpj', $request->cpfcnpj)->get();
+                $clientesjur = $consultaclientesjur->map(function($obj){
+                    return (array) $obj;
+                })->toArray();  
+                return $clientesjur;
+            }
+        }else if(strlen($request->cpfcnpj) == 14){
+            if($request->pessoa == 'pac'){
+                $consultapacientes = DB::table('pacientes')->where('pac_cpf', $request->cpfcnpj)->get();
+                $pacientes = $consultapacientes->map(function($obj){
+                    return (array) $obj;
+                })->toArray();
+                return $pacientes;
+            }else if($request->pessoa == 'forfis'){
+                $consultafornecedoresfis = DB::table('fornecedoresfis')->where('forfis_cpf', $request->cpfcnpj)->get();
+                $fornecedoresfis = $consultafornecedoresfis->map(function($obj){
+                    return (array) $obj;
+                })->toArray(); 
+                return $fornecedoresfis;
+            }else{
+                $consultafuncionarios = DB::table('funcionarios')->where('func_cpf', $request->cpfcnpj)->get();
+                $funcionarios = $consultafuncionarios->map(function($obj){
+                    return (array) $obj;
+                })->toArray();
+                return $funcionarios;
+            }
+        }
+    }
+
     public function ConsultaPessoaFornecedores(Request $request){
         return view('ConsultaPessoaFornecedor');
     }

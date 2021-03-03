@@ -13,14 +13,15 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <title>Consulta de Pessoa</title>
         Nome: <input type='text' name='pesquisarpessoanome' id='pesquisarpessoanome' > CPF/CNPJ: <input type='text' name='pesquisarpessoacpfcnpj' id='pesquisarpessoacpfcnpj'><input type='button' value='Pesquisar' onclick='pesquisarpessoa()'>
-        <table border='1px'id='pesquisarpessoatable'>
+        <div id='tabela'><table border='1px'id='pesquisarpessoatable'>
             <tr>
                 <th>CPF/CNPJ</th>
                 <th>Nome da Empresa</th>
                 <th>Telefone de Contato</th>
                 <th>Tipo de Pessoa</th>
+                <th>Editar</th>
             </tr>
-        </table>
+        </table></div>
         <div class='input' id='cpf'>*CPF:<input type='text' class='valores' name='cpf' data-inputmask="'mask': '999.999.999-99'"><br></div>
         <div class='input' id='cnpj'>*CNPJ:<input type='text' class='valores' name='cnpj' data-inputmask="'mask': '99.999.999/999-99'"><br></div>
         <div class='input' id='nome'>*Nome:<input type='text' class='valores' name='nome'><br></div>
@@ -147,7 +148,9 @@
     
 </body>
 <script>
+    var dadoslinhas = [];
     reset();
+    escondertabela()
     $('#tel1input').inputmask('(99) 9999[9]-9999');
     $('#tel2input').inputmask('(99) 9999[9]-9999');
     $('#contatorepinput').inputmask('(99) 9999[9]-9999');
@@ -157,6 +160,10 @@
         keepStatic: true
     });
     consdep();
+
+    function escondertabela(){
+        $('#tabela').css('display', 'none');
+    }
 
     $('#pesquisarpessoanome').keyup(function(){
 
@@ -202,7 +209,6 @@
 
     function pesquisarpessoa(){
         apagartabela();
-        console.log(document.getElementById('pesquisarpessoanome').value.length);
         if(document.getElementById('pesquisarpessoacpfcnpj').value.length == 14 || document.getElementById('pesquisarpessoacpfcnpj').value.length == 18 || document.getElementById('pesquisarpessoanome').value.length >=2){
             $.ajax({
                 type: "GET",
@@ -210,6 +216,7 @@
                 data: {cpfcnpj: document.getElementById('pesquisarpessoacpfcnpj').value, nomepessoa: document.getElementById('pesquisarpessoanome').value},
                 dataType: "json",
                 success: function(data) {
+                    document.getElementById('tabela').style.display = 'block';
                     for(i=0; i<data.length; i++){
                         var tabela = document.getElementById('pesquisarpessoatable');
                         var numeroLinhas = tabela.rows.length;
@@ -221,59 +228,80 @@
                         var celula5 = linha.insertCell(4);
                         if(document.getElementById('pesquisarpessoacpfcnpj').value.length == 14){
                             if(data[i]['pac_cpf'] != undefined){
+                                dadoslinhas.push([data[i]['pac_cpf'], "pac"]);
                                 celula1.innerHTML=data[i]['pac_cpf'];
                                 celula2.innerHTML=data[i]['pac_nome'];
                                 celula3.innerHTML=data[i]['pac_tel1'];
                                 celula4.innerHTML='Cliente Físico';
+                                celula5.innerHTML="<input type='button' name='editareste' id='"+i+"' value='Editar' onclick='editar(this)'>";
                             }else if(data[i]['forfis_cpf'] != undefined){
+                                dadoslinhas.push([data[i]['forfis_cpf'], "forfis"]);
                                 celula1.innerHTML=data[i]['forfis_cpf'];
                                 celula2.innerHTML=data[i]['forfis_nome'];
                                 celula3.innerHTML=data[i]['forfis_tel1'];
                                 celula4.innerHTML='Fornecedor Físico';
+                                celula5.innerHTML="<input type='button' name='editareste' id='"+i+"' value='Editar' onclick='editar(this)'>";
                             }else{
+                                dadoslinhas.push([data[i]['func_cpf'], "func"]);
                                 celula1.innerHTML=data[i]['func_cpf'];
                                 celula2.innerHTML=data[i]['func_nome'];
                                 celula3.innerHTML=data[i]['func_tel1'];
                                 celula4.innerHTML='Funcionário';
+                                celula4.innerHTML='Cliente Físico';
+                                celula5.innerHTML="<input type='button' name='editareste' id='"+i+"' value='Editar' onclick='editar(this)'>";
                             }
                         }else if(document.getElementById('pesquisarpessoacpfcnpj').value.length == 18){
                             if(data[i]['forjur_cnpj'] != undefined){
+                                dadoslinhas.push([data[i]['forjur_cnpj'], "forjur"]);
                                 celula1.innerHTML=data[i]['forjur_cnpj'];
                                 celula2.innerHTML=data[i]['forjur_nome'];
                                 celula3.innerHTML=data[i]['forjur_tel1'];
                                 celula4.innerHTML='Fornecedor Jurídico';
+                                celula5.innerHTML="<input type='button' name='editareste' id='"+i+"' value='Editar' onclick='editar(this)'>";
                             }else{
+                                dadoslinhas.push([data[i]['clijur_cnpj'], "clijur"]);
                                 celula1.innerHTML=data[i]['clijur_cnpj'];
                                 celula2.innerHTML=data[i]['clijur_nome'];
                                 celula3.innerHTML=data[i]['clijur_tel1'];
                                 celula4.innerHTML='Cliente Jurídico';
+                                celula5.innerHTML="<input type='button' name='editareste' id='"+i+"' value='Editar' onclick='editar(this)'>";
                             }
                         }else{
                             if(data[i]['pac_cpf'] != undefined){
+                                dadoslinhas.push([data[i]['pac_cpf'], "pac"]);
                                 celula1.innerHTML=data[i]['pac_cpf'];
                                 celula2.innerHTML=data[i]['pac_nome'];
                                 celula3.innerHTML=data[i]['pac_tel1'];
                                 celula4.innerHTML='Cliente Físico';
+                                celula5.innerHTML="<input type='button' name='editareste' id='"+i+"' value='Editar' onclick='editar(this)'>";
                             }else if(data[i]['forfis_cpf'] != undefined){
+                                dadoslinhas.push([data[i]['forfis_cpf'], "forfis"]);
                                 celula1.innerHTML=data[i]['forfis_cpf'];
                                 celula2.innerHTML=data[i]['forfis_nome'];
                                 celula3.innerHTML=data[i]['forfis_tel1'];
                                 celula4.innerHTML='Fornecedor Físico';
+                                celula5.innerHTML="<input type='button' name='editareste' id='"+i+"' value='Editar' onclick='editar(this)'>";
                             }else if(data[i]['func_cpf'] != undefined){
+                                dadoslinhas.push([data[i]['func_cpf'], "func"]);
                                 celula1.innerHTML=data[i]['func_cpf'];
                                 celula2.innerHTML=data[i]['func_nome'];
                                 celula3.innerHTML=data[i]['func_tel1'];
                                 celula4.innerHTML='Funcionário';
+                                celula5.innerHTML="<input type='button' name='editareste' id='"+i+"' value='Editar' onclick='editar(this)'>";
                             }else if(data[i]['forjur_cnpj'] != undefined){
+                                dadoslinhas.push([data[i]['forjur_cnpj'], "forjur"]);
                                 celula1.innerHTML=data[i]['forjur_cnpj'];
                                 celula2.innerHTML=data[i]['forjur_nome'];
                                 celula3.innerHTML=data[i]['forjur_tel1'];
                                 celula4.innerHTML='Fornecedor Jurídico';
+                                celula5.innerHTML="<input type='button' name='editareste' id='"+i+"' value='Editar' onclick='editar(this)'>";
                             }else{
+                                dadoslinhas.push([data[i]['clijur_cnpj'], "clijur"]);
                                 celula1.innerHTML=data[i]['clijur_cnpj'];
                                 celula2.innerHTML=data[i]['clijur_nome'];
                                 celula3.innerHTML=data[i]['clijur_tel1'];
                                 celula4.innerHTML='Cliente Jurídico';
+                                celula5.innerHTML="<input type='button' name='editareste' id='"+i+"' value='Editar' onclick='editar(this)'>";
                             }
                         }
                         
@@ -281,6 +309,29 @@
                 }
             });
         }
+    }
+
+    function editar(linha){
+        linha = parseInt(linha.id);
+        $.ajax({
+                type:'GET',
+                url:'pessoa/dadosedit',
+                data: {cpfcnpj: dadoslinhas[linha][0] ,pessoa: dadoslinhas[linha][1]},
+                dataType: "json",
+                success: function(data){
+                    if(data[0]['pac_nome']){
+                        esconder('fis', 'pac', data[0]);
+                    }else if(data[0]['forfis_nome']){
+                        esconder('fis', 'forfis', data[0]);
+                    }else if(data[0]['func_nome']){
+                        esconder('fis', 'func', data[0]);
+                    }else if(data[0]['forjur_nome']){
+                        esconder('jur', 'forjur', data[0]);
+                    }else if(data[0]['clijur_nome']){
+                        esconder('jur', 'clijur', data[0]);
+                    }
+                }
+            });
     }
     function apagartabela(){
         var tableHeaderRowCount = 1;
@@ -390,16 +441,6 @@
     }
     function reset(){
         $('.input').css('display', 'none');
-    }
-    function subTipo(){
-        $('.input').css('display', 'none');
-        if(document.getElementById('tipo_pessoa').value == 'fis'){
-            document.getElementById('subtipo').innerHTML = "Paciente <input type='checkbox' value='Paciente' id='Paciente' onclick='esconder()'> Fornecedor <input type='checkbox' value='Fornecedor' id='Fornecedor' onclick='esconder()'> Funcionário <input type='checkbox' value='Funcionario' id='Funcionario' onclick='esconder()'>";
-        }else if(document.getElementById('tipo_pessoa').value == 'jur'){
-            document.getElementById('subtipo').innerHTML = "Fornecedor <input type='checkbox' value='Fornecedor' id='Fornecedor' onclick='esconder()'> Cliente <input type='checkbox' value='Cliente' id='Cliente' onclick='esconder()'>";
-        }else{
-            document.getElementById('subtipo').innerHTML="";
-        }
     }
 
     function novodep(){
@@ -515,100 +556,156 @@
         
     };
 
-    function esconder() {
-        if(document.getElementById('tipo_pessoa').value=='fis'){
-            if(document.getElementById('Paciente').checked==true || document.getElementById('Funcionario').checked==true || document.getElementById('Fornecedor').checked==true){
-                
-                document.getElementById('cpf').style.display = 'block';
-                document.getElementById('nome').style.display = 'block';
-                document.getElementById('datanasc').style.display = 'block';
-                document.getElementById('cep').style.display = 'block';
-                document.getElementById('rg').style.display = 'block';
-                document.getElementById('logradouro').style.display = 'block';
-                document.getElementById('num').style.display = 'block';
-                document.getElementById('complemento').style.display = 'block';
-                document.getElementById('bairro').style.display = 'block';
-                document.getElementById('cidade').style.display = 'block';
-                document.getElementById('uf').style.display = 'block';
-                document.getElementById('celular').style.display = 'block';
-                document.getElementById('tel1').style.display = 'block';
-                document.getElementById('tel2').style.display = 'block';
-                document.getElementById('email').style.display = 'block';
-                document.getElementById('obs').style.display = 'block';
+    function esconder(tipo, pessoa, dados) {
+        escondertabela();
+        if(tipo == 'fis'){
+            document.getElementById('cpf').style.display = 'block';
+            document.getElementById('nome').style.display = 'block';
+            document.getElementById('datanasc').style.display = 'block';
+            document.getElementById('cep').style.display = 'block';
+            document.getElementById('rg').style.display = 'block';
+            document.getElementById('logradouro').style.display = 'block';
+            document.getElementById('num').style.display = 'block';
+            document.getElementById('complemento').style.display = 'block';
+            document.getElementById('bairro').style.display = 'block';
+            document.getElementById('cidade').style.display = 'block';
+            document.getElementById('uf').style.display = 'block';
+            document.getElementById('celular').style.display = 'block';
+            document.getElementById('tel1').style.display = 'block';
+            document.getElementById('tel2').style.display = 'block';
+            document.getElementById('email').style.display = 'block';
+            document.getElementById('obs').style.display = 'block';
+            if(pessoa == 'pac'){
+                document.getElementById('estadocivil').style.display = 'block';
+                document.getElementById('sexo').style.display = 'block';
+                document.getElementById('prof').style.display = 'block';
+                document.getElementById('obseti').style.display = 'block';
+                document.getElementById('situpac').style.display = 'block';
+                document.getElementById('obj').style.display = 'block';
+                document.getElementById('nomeres').style.display = 'block';
+                document.getElementById('telres').style.display = 'block';
+                document.getElementById('nomeres').innerHTML = "Nome da mãe ou responsável:<input type='text' class='valores' name='nomeres' id='nomeresinput'>";
+                document.getElementById('telres').innerHTML = "Telefone da mãe ou responsável:<input type='text' class='valores' name='telres' id='telresinput' onkeypress='telres()'>";
+                $('#telresinput').inputmask('(99) 9999[9]-9999');
 
-                if(document.getElementById('Paciente').checked==true){
-                    document.getElementById('nome').style.display = 'block';
-                    document.getElementById('estadocivil').style.display = 'block';
-                    document.getElementById('sexo').style.display = 'block';
-                    document.getElementById('prof').style.display = 'block';
-                    document.getElementById('obseti').style.display = 'block';
-                    document.getElementById('situpac').style.display = 'block';
-                    document.getElementById('obj').style.display = 'block';
-                    document.getElementById('nomeres').style.display = 'block';
-                    document.getElementById('telres').style.display = 'block';
-                    document.getElementById('nomeres').innerHTML = "Nome da mãe ou responsável:<input type='text' class='valores' name='nomeres' id='nomeres'>";
-                    document.getElementById('telres').innerHTML = "Telefone da mãe ou responsável:<input type='text' class='valores' name='telres' id='telresinput' onkeypress='telres()'>";
-                    $('#telresinput').inputmask('(99) 9999[9]-9999');
+                document.querySelector("[name='cpf']").value = dados['pac_cpf'];
+                document.querySelector("[name='nome']").value = dados['pac_nome'];
+                document.querySelector("[name='datanasc']").value = dados['pac_datanasc'];
+                document.querySelector("[name='cep']").value = dados['pac_cep'];
+                document.querySelector("[name='rg']").value = dados['pac_rg'];
+                document.querySelector("[name='logradouro']").value = dados['pac_logradouro'];
+                document.querySelector("[name='num']").value = dados['pac_num'];
+                document.querySelector("[name='complemento']").value = dados['pac_complemento'];
+                document.querySelector("[name='bairro']").value = dados['pac_bairro'];
+                document.querySelector("[name='cidade']").value = dados['pac_cidade'];
+                document.querySelector("[name='uf']").value = dados['pac_uf'];
+                if(dados['pac_celular'] != null){
+                    document.querySelector("[name='celular']").value = dados['pac_celular'];
                 }
-                if(document.getElementById('Paciente').checked==false){
-                    document.getElementById('obseti').style.display = 'none';
-                    document.getElementById('situpac').style.display = 'none';
-                    document.getElementById('prof').style.display = 'none';
-                    document.getElementById('obj').style.display = 'none';
-                    document.getElementById('nomeres').style.display = 'none';
-                    document.getElementById('telres').style.display = 'none';
+                document.querySelector("[name='tel1']").value = dados['pac_tel1'];
+                if(dados['pac_tel2'] != null){
+                    document.querySelector("[name='tel2']").value = dados['pac_tel2'];
+                }
+                document.querySelector("[name='email']").value = dados['pac_email'];
+                document.querySelector("[name='obs']").value = dados['pac_obs'];
+                document.querySelector("[name='estadocivil']").value = dados['pac_estadocivil'];
+                document.querySelector("[name='sexo']").value = dados['pac_sexo'];
+                document.querySelector("[name='prof']").value = dados['pac_profissao'];
+                document.querySelector("[name='obseti']").value = dados['pac_obseti'];
+                document.querySelector("[name='situpac']").value = dados['pac_situ'];
+                document.querySelector("[name='obj']").value = dados['pac_obj'];
+                document.querySelector("[name='nomeres']").value = dados['pac_nomeres'];
+                if(dados['pac_telres'] != null){
+                    document.querySelector("[name='telres']").value = dados['pac_telres'];
                 }
 
-                if(document.getElementById('Funcionario').checked==true){
-                    document.getElementById('estadocivil').style.display = 'block';
-                    document.getElementById('sexo').style.display = 'block';
-                    document.getElementById('func').style.display = 'block';
-                    document.getElementById('dep').style.display = 'block';
-                    document.getElementById('setor').style.display = 'block';
-                    document.getElementById('ctps').style.display = 'block';
-                    document.getElementById('serie').style.display = 'block';
-                    document.getElementById('pis').style.display = 'block';
-                    document.getElementById('ufctps').style.display = 'block';
-                    document.getElementById('salario').style.display = 'block';
-                    document.getElementById('conjugue').style.display = 'block';
-                    document.getElementById('pai').style.display = 'block';
-                    document.getElementById('mae').style.display = 'block';
-                }
-                if(document.getElementById('Funcionario').checked==false){
-                    document.getElementById('dep').style.display = 'none';
-                    document.getElementById('setor').style.display = 'none';
-                    document.getElementById('func').style.display = 'none';
-                    document.getElementById('ctps').style.display = 'none';
-                    document.getElementById('serie').style.display = 'none';
-                    document.getElementById('pis').style.display = 'none';
-                    document.getElementById('ufctps').style.display = 'none';
-                    document.getElementById('salario').style.display = 'none';
-                    document.getElementById('conjugue').style.display = 'none';
-                    document.getElementById('pai').style.display = 'none';
-                    document.getElementById('mae').style.display = 'none';
-                } 
-
-            }
-            if(document.getElementById('Fornecedor').checked==true){
+            }else if(pessoa == 'forfis'){
                 document.getElementById('estadocivil').style.display = 'block';
                 document.getElementById('sexo').style.display = 'block';
                 document.getElementById('razaosocial').style.display = 'block';
                 document.getElementById('website').style.display = 'block';
                 document.getElementById('areaatuacao').style.display = 'block';
-            }
-            if(document.getElementById('Fornecedor').checked==false){
-                document.getElementById('razaosocial').style.display = 'none';
-                document.getElementById('website').style.display = 'none';
-                document.getElementById('areaatuacao').style.display = 'none';
-            }
-            if(document.getElementById('Paciente').checked==false && document.getElementById('Funcionario').checked==false && document.getElementById('Fornecedor').checked==false){
-                $('.input').css('display', 'none');
-            }
-            
-        }
 
-        if(document.getElementById('tipo_pessoa').value=='jur'){
-            if(document.getElementById('Fornecedor').checked==true || document.getElementById('Cliente').checked==true){
+                document.querySelector("[name='cpf']").value = dados['forfis_cpf'];
+                document.querySelector("[name='nome']").value = dados['forfis_nome'];
+                document.querySelector("[name='datanasc']").value = dados['forfis_datanasc'];
+                document.querySelector("[name='cep']").value = dados['forfis_cep'];
+                document.querySelector("[name='rg']").value = dados['forfis_rg'];
+                document.querySelector("[name='logradouro']").value = dados['forfis_logradouro'];
+                document.querySelector("[name='num']").value = dados['forfis_num'];
+                document.querySelector("[name='complemento']").value = dados['forfis_complemento'];
+                document.querySelector("[name='bairro']").value = dados['forfis_bairro'];
+                document.querySelector("[name='cidade']").value = dados['forfis_cidade'];
+                document.querySelector("[name='uf']").value = dados['forfis_uf'];
+                if(dados['forfis_celular'] != null){
+                    document.querySelector("[name='celular']").value = dados['forfis_celular'];
+                }
+                document.querySelector("[name='tel1']").value = dados['forfis_tel1'];
+                if(dados['forfis_tel2'] != null){
+                    document.querySelector("[name='tel2']").value = dados['forfis_tel2'];
+                }
+                document.querySelector("[name='email']").value = dados['forfis_email'];
+                document.querySelector("[name='obs']").value = dados['forfis_obs'];
+                document.querySelector("[name='estadocivil']").value = dados['forfis_estadocivil'];
+                document.querySelector("[name='sexo']").value = dados['forfis_sexo'];
+                document.querySelector("[name='razaosocial']").value = dados['forfis_razaosocial'];
+                document.querySelector("[name='website']").value = dados['forfis_website'];
+                document.querySelector("[name='areaatuacao']").value = dados['forfis_areaatuacao'];
+
+            }else{
+                document.getElementById('estadocivil').style.display = 'block';
+                document.getElementById('sexo').style.display = 'block';
+                document.getElementById('func').style.display = 'block';
+                document.getElementById('dep').style.display = 'block';
+                document.getElementById('setor').style.display = 'block';
+                document.getElementById('ctps').style.display = 'block';
+                document.getElementById('serie').style.display = 'block';
+                document.getElementById('pis').style.display = 'block';
+                document.getElementById('ufctps').style.display = 'block';
+                document.getElementById('salario').style.display = 'block';
+                document.getElementById('conjugue').style.display = 'block';
+                document.getElementById('pai').style.display = 'block';
+                document.getElementById('mae').style.display = 'block';
+                
+                document.querySelector("[name='cpf']").value = dados['func_cpf'];
+                document.querySelector("[name='nome']").value = dados['func_nome'];
+                document.querySelector("[name='datanasc']").value = dados['func_datanasc'];
+                document.querySelector("[name='cep']").value = dados['func_cep'];
+                document.querySelector("[name='rg']").value = dados['func_rg'];
+                document.querySelector("[name='logradouro']").value = dados['func_logradouro'];
+                document.querySelector("[name='num']").value = dados['func_num'];
+                document.querySelector("[name='complemento']").value = dados['func_complemento'];
+                document.querySelector("[name='bairro']").value = dados['func_bairro'];
+                document.querySelector("[name='cidade']").value = dados['func_cidade'];
+                document.querySelector("[name='uf']").value = dados['func_uf'];
+                if(dados['func_celular'] != null){
+                    document.querySelector("[name='celular']").value = dados['func_celular'];
+                }
+                document.querySelector("[name='tel1']").value = dados['func_tel1'];
+                if(dados['func_tel2'] != null){
+                    document.querySelector("[name='tel2']").value = dados['func_tel2'];
+                }
+                document.querySelector("[name='email']").value = dados['func_email'];
+                document.querySelector("[name='obs']").value = dados['func_obs'];
+                document.querySelector("[name='estadocivil']").value = dados['func_estadocivil'];
+                document.querySelector("[name='sexo']").value = dados['func_sexo'];
+                document.querySelector("[name='dep']").value = dados['func_dep'];
+                filtset();
+                setTimeout(function(){ document.querySelector("[name='setor']").value = dados['func_setor'];}, 200);
+                setTimeout(function(){ filtfunc();}, 300);
+                setTimeout(function(){ document.querySelector("[name='func']").value = dados['func_func'];}, 500);
+                document.querySelector("[name='ctps']").value = dados['func_ctps'];
+                document.querySelector("[name='serie']").value = dados['func_serie'];
+                document.querySelector("[name='pis']").value = dados['func_pis'];
+                document.querySelector("[name='ufctps']").value = dados['func_ufctps'];
+                document.querySelector("[name='salario']").value = dados['func_salario'];
+                document.querySelector("[name='conjugue']").value = dados['func_conjugue'];
+                document.querySelector("[name='pai']").value = dados['func_nomepai'];
+                document.querySelector("[name='mae']").value = dados['func_nomemae'];
+
+            }
+        }else{
+            if(pessoa == 'forjur'){
                 document.getElementById('nome').style.display = 'block';
                 document.getElementById('cnpj').style.display = 'block';
                 document.getElementById('cep').style.display = 'block';
@@ -631,25 +728,89 @@
                 document.getElementById('emailrep').style.display = 'block';
                 document.getElementById('contatorep').style.display = 'block';
                 document.getElementById('obs').style.display = 'block';
-                
 
-                if(document.getElementById('Fornecedor').checked==true){
+                document.querySelector("[name='nome']").value = dados['forjur_nome'];
+                document.querySelector("[name='cnpj']").value = dados['forjur_cnpj'];
+                document.querySelector("[name='cep']").value = dados['forjur_cep'];
+                document.querySelector("[name='logradouro']").value = dados['forjur_logradouro'];
+                document.querySelector("[name='num']").value = dados['forjur_num'];
+                document.querySelector("[name='uf']").value = dados['forjur_uf'];
+                document.querySelector("[name='complemento']").value = dados['forjur_complemento'];
+                document.querySelector("[name='bairro']").value = dados['forjur_bairro'];
+                document.querySelector("[name='cidade']").value = dados['forjur_cidade'];
+                document.querySelector("[name='tel1']").value = dados['forjur_tel1'];
+                if(dados['forjur_celular'] != null){
+                    document.querySelector("[name='celular']").value = dados['forjur_celular'];
                 }
-                if(document.getElementById('Fornecedor').checked==false){
+                if(dados['forjur_tel2'] != null){
+                    document.querySelector("[name='tel2']").value = dados['forjur_tel2'];
                 }
-
-                if(document.getElementById('Cliente').checked==true){
+                document.querySelector("[name='email']").value = dados['forjur_email'];
+                document.querySelector("[name='obs']").value = dados['forjur_obs'];
+                document.querySelector("[name='razaosocial']").value = dados['forjur_razaosocial'];
+                document.querySelector("[name='inscest']").value = dados['forjur_inscest'];
+                document.querySelector("[name='website']").value = dados['forjur_website'];
+                document.querySelector("[name='areaatuacao']").value = dados['forjur_areaatuacao'];
+                document.querySelector("[name='nomerep']").value = dados['forjur_nomerep'];
+                document.querySelector("[name='emailrep']").value = dados['forjur_emailrep'];
+                if(dados['forjur_contatorep'] != null){
+                    document.querySelector("[name='contatorep']").value = dados['forjur_contatorep'];
                 }
-                if(document.getElementById('Cliente').checked==false){
-                }
+                document.querySelector("[name='obs']").value = dados['forjur_obs'];
             }else{
-                $('.input').css('display', 'none');
+                document.getElementById('nome').style.display = 'block';
+                document.getElementById('cnpj').style.display = 'block';
+                document.getElementById('cep').style.display = 'block';
+                document.getElementById('logradouro').style.display = 'block';
+                document.getElementById('num').style.display = 'block';
+                document.getElementById('uf').style.display = 'block';
+                document.getElementById('complemento').style.display = 'block';
+                document.getElementById('bairro').style.display = 'block';
+                document.getElementById('cidade').style.display = 'block';
+                document.getElementById('celular').style.display = 'block';
+                document.getElementById('tel1').style.display = 'block';
+                document.getElementById('tel2').style.display = 'block';
+                document.getElementById('email').style.display = 'block';
+                document.getElementById('obs').style.display = 'block';
+                document.getElementById('razaosocial').style.display = 'block';
+                document.getElementById('inscest').style.display = 'block';
+                document.getElementById('website').style.display = 'block';
+                document.getElementById('areaatuacao').style.display = 'block';
+                document.getElementById('nomerep').style.display = 'block';
+                document.getElementById('emailrep').style.display = 'block';
+                document.getElementById('contatorep').style.display = 'block';
+                document.getElementById('obs').style.display = 'block';
+
+                document.querySelector("[name='nome']").value = dados['clijur_nome'];
+                document.querySelector("[name='cnpj']").value = dados['clijur_cnpj'];
+                document.querySelector("[name='cep']").value = dados['clijur_cep'];
+                document.querySelector("[name='logradouro']").value = dados['clijur_logradouro'];
+                document.querySelector("[name='num']").value = dados['clijur_num'];
+                document.querySelector("[name='uf']").value = dados['clijur_uf'];
+                document.querySelector("[name='complemento']").value = dados['clijur_complemento'];
+                document.querySelector("[name='bairro']").value = dados['clijur_bairro'];
+                document.querySelector("[name='cidade']").value = dados['clijur_cidade'];
+                document.querySelector("[name='tel1']").value = dados['clijur_tel1'];
+                if(dados['clijur_celular'] != null){
+                    document.querySelector("[name='celular']").value = dados['clijur_celular'];
+                }
+                if(dados['clijur_tel2'] != null){
+                    document.querySelector("[name='tel2']").value = dados['clijur_tel2'];
+                }
+                document.querySelector("[name='email']").value = dados['clijur_email'];
+                document.querySelector("[name='obs']").value = dados['clijur_obs'];
+                document.querySelector("[name='razaosocial']").value = dados['clijur_razaosocial'];
+                document.querySelector("[name='inscest']").value = dados['clijur_inscest'];
+                document.querySelector("[name='website']").value = dados['clijur_website'];
+                document.querySelector("[name='areaatuacao']").value = dados['clijur_areaatuacao'];
+                document.querySelector("[name='nomerep']").value = dados['clijur_nomerep'];
+                document.querySelector("[name='emailrep']").value = dados['clijur_emailrep'];
+                if(dados['clijur_contatorep'] != null){
+                    document.querySelector("[name='contatorep']").value = dados['clijur_contatorep'];
+                }
+                document.querySelector("[name='obs']").value = dados['clijur_obs'];
             }
-            
         }
-        
-        
-        
     }
     
 

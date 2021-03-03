@@ -28,6 +28,7 @@ class Clientesjur extends Migration
             $table->string('clijur_tel2')->nullable();
             $table->string('clijur_celular')->nullable();
             $table->string('clijur_email')->nullable();
+            $table->string('clijur_inscest');
             $table->string('clijur_razaosocial')->nullable();
             $table->string('clijur_website')->nullable();
             $table->string('clijur_areaatuacao')->nullable();
