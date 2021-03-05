@@ -12,7 +12,7 @@
     <script src="{{asset('inputmask/dist/bindings/inputmask.binding.js')}}"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <title>Consulta de Pessoa</title>
-        Nome: <input type='text' name='pesquisarpessoanome' id='pesquisarpessoanome' > CPF/CNPJ: <input type='text' name='pesquisarpessoacpfcnpj' id='pesquisarpessoacpfcnpj'><input type='button' value='Pesquisar' onclick='pesquisarpessoa()'>
+        Nome: <input type='text' name='pesquisarpessoanome' id='pesquisarpessoanome' > CPF/CNPJ: <input type='text' name='pesquisarpessoacpfcnpj' id='pesquisarpessoacpfcnpj'><input type='button' value='Pesquisar' onclick='pesquisarpessoa()'><input type='button' value='Mostrar Sessao' onclick='mostrarsessao()'>
         <div id='tabela'><table border='1px'id='pesquisarpessoatable'>
             <tr>
                 <th>CPF/CNPJ</th>
@@ -23,7 +23,7 @@
             </tr>
         </table></div>
         <div class='input' id='cpf'>*CPF:<input type='text' class='valores' name='cpf' data-inputmask="'mask': '999.999.999-99'"><br></div>
-        <div class='input' id='cnpj'>*CNPJ:<input type='text' class='valores' name='cnpj' data-inputmask="'mask': '99.999.999/999-99'"><br></div>
+        <div class='input' id='cnpj'>*CNPJ:<input type='text' class='valores' name='cnpj' data-inputmask="'mask': '99.999.999/9999-99'"><br></div>
         <div class='input' id='nome'>*Nome:<input type='text' class='valores' name='nome'><br></div>
         <div class='input' id='rg'>*RG:<input type='text' class='valores' name='rg' data-inputmask="'mask': '9999999999-9'"><br></div>
         <div class='input' id='datanasc'>*Data de Nascimento:<input type='text' class='valores' name='datanasc'data-inputmask="'mask': '99/99/9999'"><br></div>
@@ -142,13 +142,15 @@
         <div class='input' id='nomerep'>Nome do Representante - Pessoa de Contato: <input type='text' class='valores' name='nomerep'><br></div>
         <div class='input' id='emailrep'>E-mail: <input type='text' class='valores' name='emailrep'><br></div>
         <div class='input' id='contatorep'>Telefone de Contato: <input type='text' class='valores' name='contatorep' id='contatorepinput' onkeypress='contatorep()'><br></div>
-        <div class='input' id='obs'>Observações<textarea name='obs' ></textarea></div>
+        <div class='input' id='obs'>Observações<textarea name='obs' ></textarea><br></div>
+        <div class='input' id='editar'><input type='button' name='editarpessoa' value='Editar Pessoa' id='editarpessoa' onclick='editarPessoa()'></div>
 </head>
 <body>
     
 </body>
 <script>
     var dadoslinhas = [];
+    var sessao = '';
     reset();
     escondertabela()
     $('#tel1input').inputmask('(99) 9999[9]-9999');
@@ -321,17 +323,26 @@
                 success: function(data){
                     if(data[0]['pac_nome']){
                         esconder('fis', 'pac', data[0]);
+                        sessao = 'pac';
                     }else if(data[0]['forfis_nome']){
                         esconder('fis', 'forfis', data[0]);
+                        sessao = 'forfis';
                     }else if(data[0]['func_nome']){
                         esconder('fis', 'func', data[0]);
+                        sessao = 'func';
                     }else if(data[0]['forjur_nome']){
                         esconder('jur', 'forjur', data[0]);
+                        sessao = 'forjur';
                     }else if(data[0]['clijur_nome']){
                         esconder('jur', 'clijur', data[0]);
+                        sessao = 'clijur';
                     }
                 }
             });
+    }
+
+    function mostrarsessao(){
+        console.log(sessao);
     }
     function apagartabela(){
         var tableHeaderRowCount = 1;
@@ -340,6 +351,7 @@
         for (var i = tableHeaderRowCount; i < rowCount; i++) {
             table.deleteRow(tableHeaderRowCount);
         }
+        reset();
     }
 
     function consdep(){
@@ -558,6 +570,7 @@
 
     function esconder(tipo, pessoa, dados) {
         escondertabela();
+        document.getElementById('editar').style.display = 'block';
         if(tipo == 'fis'){
             document.getElementById('cpf').style.display = 'block';
             document.getElementById('nome').style.display = 'block';
@@ -591,8 +604,12 @@
                 document.querySelector("[name='cpf']").value = dados['pac_cpf'];
                 document.querySelector("[name='nome']").value = dados['pac_nome'];
                 document.querySelector("[name='datanasc']").value = dados['pac_datanasc'];
-                document.querySelector("[name='cep']").value = dados['pac_cep'];
-                document.querySelector("[name='rg']").value = dados['pac_rg'];
+                if(dados['pac_cep'] != null){
+                    document.querySelector("[name='cep']").value = dados['pac_cep'];
+                }
+                if(dados['pac_rg'] != null){
+                    document.querySelector("[name='rg']").value = dados['pac_rg'];
+                }
                 document.querySelector("[name='logradouro']").value = dados['pac_logradouro'];
                 document.querySelector("[name='num']").value = dados['pac_num'];
                 document.querySelector("[name='complemento']").value = dados['pac_complemento'];
@@ -629,8 +646,12 @@
                 document.querySelector("[name='cpf']").value = dados['forfis_cpf'];
                 document.querySelector("[name='nome']").value = dados['forfis_nome'];
                 document.querySelector("[name='datanasc']").value = dados['forfis_datanasc'];
-                document.querySelector("[name='cep']").value = dados['forfis_cep'];
-                document.querySelector("[name='rg']").value = dados['forfis_rg'];
+                if(dados['forfis_cep'] != null){
+                    document.querySelector("[name='cep']").value = dados['forfis_cep'];
+                }
+                if(dados['forfis_rg'] != null){
+                    document.querySelector("[name='rg']").value = dados['forfis_rg'];
+                }
                 document.querySelector("[name='logradouro']").value = dados['forfis_logradouro'];
                 document.querySelector("[name='num']").value = dados['forfis_num'];
                 document.querySelector("[name='complemento']").value = dados['forfis_complemento'];
@@ -670,8 +691,12 @@
                 document.querySelector("[name='cpf']").value = dados['func_cpf'];
                 document.querySelector("[name='nome']").value = dados['func_nome'];
                 document.querySelector("[name='datanasc']").value = dados['func_datanasc'];
-                document.querySelector("[name='cep']").value = dados['func_cep'];
-                document.querySelector("[name='rg']").value = dados['func_rg'];
+                if(dados['func_cep'] != null){
+                    document.querySelector("[name='cep']").value = dados['func_cep'];
+                }
+                if(dados['func_rg'] != null){
+                    document.querySelector("[name='rg']").value = dados['func_rg'];
+                }
                 document.querySelector("[name='logradouro']").value = dados['func_logradouro'];
                 document.querySelector("[name='num']").value = dados['func_num'];
                 document.querySelector("[name='complemento']").value = dados['func_complemento'];
@@ -691,9 +716,9 @@
                 document.querySelector("[name='sexo']").value = dados['func_sexo'];
                 document.querySelector("[name='dep']").value = dados['func_dep'];
                 filtset();
-                setTimeout(function(){ document.querySelector("[name='setor']").value = dados['func_setor'];}, 200);
-                setTimeout(function(){ filtfunc();}, 300);
-                setTimeout(function(){ document.querySelector("[name='func']").value = dados['func_func'];}, 500);
+                setTimeout(function(){ document.querySelector("[name='setor']").value = dados['func_setor'];}, 500);
+                setTimeout(function(){ filtfunc();}, 1000);
+                setTimeout(function(){ document.querySelector("[name='func']").value = dados['func_func'];}, 1500);
                 document.querySelector("[name='ctps']").value = dados['func_ctps'];
                 document.querySelector("[name='serie']").value = dados['func_serie'];
                 document.querySelector("[name='pis']").value = dados['func_pis'];
@@ -731,7 +756,9 @@
 
                 document.querySelector("[name='nome']").value = dados['forjur_nome'];
                 document.querySelector("[name='cnpj']").value = dados['forjur_cnpj'];
-                document.querySelector("[name='cep']").value = dados['forjur_cep'];
+                if(dados['forjur_cep'] != null){
+                    document.querySelector("[name='cep']").value = dados['forjur_cep'];
+                }
                 document.querySelector("[name='logradouro']").value = dados['forjur_logradouro'];
                 document.querySelector("[name='num']").value = dados['forjur_num'];
                 document.querySelector("[name='uf']").value = dados['forjur_uf'];
@@ -783,7 +810,9 @@
 
                 document.querySelector("[name='nome']").value = dados['clijur_nome'];
                 document.querySelector("[name='cnpj']").value = dados['clijur_cnpj'];
-                document.querySelector("[name='cep']").value = dados['clijur_cep'];
+                if(dados['clijur_cep'] != null){
+                    document.querySelector("[name='cep']").value = dados['clijur_cep'];
+                }
                 document.querySelector("[name='logradouro']").value = dados['clijur_logradouro'];
                 document.querySelector("[name='num']").value = dados['clijur_num'];
                 document.querySelector("[name='uf']").value = dados['clijur_uf'];
@@ -814,191 +843,192 @@
     }
     
 
-    function cadastrarPessoa(){
-        if(document.getElementById('tipo_pessoa').value == 'fis'){
-            if(document.getElementById('Paciente').checked==true){
-                $.ajax({
-                type: "GET",
-                url: "/cadastro/cadastropaciente",
-                data: {
-                    nome:$("[name='nome']").val(),
-                    cpf:$("[name='cpf']").val(),
-                    rg:$("[name='rg']").val(),
-                    email:$("[name='email']").val(),
-                    datanasc:$("[name='datanasc']").val(),
-                    estadocivil:$("[name='estadocivil']").val(),
-                    sexo:$("[name='sexo']").val(),
-                    prof:$("[name='prof']").val(),
-                    cep:$("[name='cep']").val(),
-                    logradouro:$("[name='logradouro']").val(),
-                    num:$("[name='num']").val(),
-                    complemento:$("[name='complemento']").val(),
-                    bairro:$("[name='bairro']").val(),
-                    cidade:$("[name='cidade']").val(),
-                    uf:$("[name='uf']").val(),
-                    tel1:$("[name='tel1']").val(),
-                    tel2:$("[name='tel2']").val(),
-                    celular:$("[name='celular']").val(),
-                    obseti:$("[name='obseti']").val(),
-                    nomeres:$("[name='nomeres']").val(),
-                    telres:$("[name='telres']").val(),
-                    situpac:$("[name='situpac']").val(),
-                    obj:$("[name='obj']").val(),
-                    obs:$("[name='obs']").val(),
-                },
-                dataType: "json",
-                success: function(data) {
-                    console.log('Paciente cadastrado com sucesso');
-                    }
-                });
-            }
-            if(document.getElementById('Fornecedor').checked==true){
-                $.ajax({
-                type: "GET",
-                url: "/cadastro/cadastrofornecedorfisic",
-                data: {
-                    nome:$("[name='nome']").val(),
-                    cpf:$("[name='cpf']").val(),
-                    rg:$("[name='rg']").val(),
-                    cep:$("[name='cep']").val(),
-                    datanasc:$("[name='datanasc']").val(),
-                    estadocivil:$("[name='estadocivil']").val(),
-                    sexo:$("[name='sexo']").val(),
-                    logradouro:$("[name='logradouro']").val(),
-                    num:$("[name='num']").val(),
-                    complemento:$("[name='complemento']").val(),
-                    bairro:$("[name='bairro']").val(),
-                    cidade:$("[name='cidade']").val(),
-                    uf:$("[name='uf']").val(),
-                    celular:$("[name='celular']").val(),
-                    tel1:$("[name='tel1']").val(),
-                    tel2:$("[name='tel2']").val(),
-                    email:$("[name='email']").val(),
-                    obs:$("[name='obs']").val(),
-                    empresa:$("[name='empresa']").val(),
-                    razaosocial:$("[name='razaosocial']").val(),
-                    inscest:$("[name='inscest']").val(),
-                    website:$("[name='website']").val(),
-                    areaatuacao:$("[name='areaatuacao']").val(),
-                    obs:$("[name='obs']").val(),
-                },
-                dataType: "json",
-                success: function(data) {
-                    console.log('Fornecedor Físico cadastrado com sucesso!');
-                    }
-                });
-            }
-            if(document.getElementById('Funcionario').checked==true){
-                $.ajax({
-                type: "GET",
-                url: "/cadastro/cadastrofuncionario",
-                data: {
-                    nome:$("[name='nome']").val(),
-                    cpf:$("[name='cpf']").val(),
-                    rg:$("[name='rg']").val(),
-                    email:$("[name='email']").val(),
-                    datanasc:$("[name='datanasc']").val(),
-                    estadocivil:$("[name='estadocivil']").val(),
-                    sexo:$("[name='sexo']").val(),
-                    cep:$("[name='cep']").val(),
-                    logradouro:$("[name='logradouro']").val(),
-                    num:$("[name='num']").val(),
-                    complemento:$("[name='complemento']").val(),
-                    bairro:$("[name='bairro']").val(),
-                    cidade:$("[name='cidade']").val(),
-                    uf:$("[name='uf']").val(),
-                    tel1:$("[name='tel1']").val(),
-                    tel2:$("[name='tel2']").val(),
-                    celular:$("[name='celular']").val(),
-                    dep:$("[name='dep']").val(),
-                    setor:$("[name='setor']").val(),
-                    func:$("[name='func']").val(),
-                    ctps:$("[name='ctps']").val(),
-                    serie:$("[name='serie']").val(),
-                    ufctps:$("[name='ufctps']").val(),
-                    pis:$("[name='pis']").val(),
-                    salario:$("[name='salario']").val(),
-                    conjugue:$("[name='conjugue']").val(),
-                    nomepai:$("[name='pai']").val(),
-                    nomemae:$("[name='mae']").val(),
-                    obs:$("[name='obs']").val(),
-                },
-                dataType: "json",
-                success: function(data) {
-                    console.log('Funcionário cadastrado com sucesso!');
-                    }
-                });
-            }
+    function editarPessoa(){
+        if(sessao == 'pac'){
+            $.ajax({
+            type: "GET",
+            url: "/editar/editarpaciente",
+            data: {
+                nome:$("[name='nome']").val(),
+                cpf:$("[name='cpf']").val(),
+                rg:$("[name='rg']").val(),
+                email:$("[name='email']").val(),
+                datanasc:$("[name='datanasc']").val(),
+                estadocivil:$("[name='estadocivil']").val(),
+                sexo:$("[name='sexo']").val(),
+                prof:$("[name='prof']").val(),
+                cep:$("[name='cep']").val(),
+                logradouro:$("[name='logradouro']").val(),
+                num:$("[name='num']").val(),
+                complemento:$("[name='complemento']").val(),
+                bairro:$("[name='bairro']").val(),
+                cidade:$("[name='cidade']").val(),
+                uf:$("[name='uf']").val(),
+                tel1:$("[name='tel1']").val(),
+                tel2:$("[name='tel2']").val(),
+                celular:$("[name='celular']").val(),
+                obseti:$("[name='obseti']").val(),
+                nomeres:$("[name='nomeres']").val(),
+                telres:$("[name='telres']").val(),
+                situpac:$("[name='situpac']").val(),
+                obj:$("[name='obj']").val(),
+                obs:$("[name='obs']").val(),
+                
+            },
+            dataType: "json",
+            success: function(data) {
+                console.log('Paciente editado com sucesso');
+                }
+            });
+        }
+        if(sessao == 'forfis'){
+            $.ajax({
+            type: "GET",
+            url: "/editar/editarfornecedorfisico",
+            data: {
+                nome:$("[name='nome']").val(),
+                cpf:$("[name='cpf']").val(),
+                rg:$("[name='rg']").val(),
+                cep:$("[name='cep']").val(),
+                datanasc:$("[name='datanasc']").val(),
+                estadocivil:$("[name='estadocivil']").val(),
+                sexo:$("[name='sexo']").val(),
+                logradouro:$("[name='logradouro']").val(),
+                num:$("[name='num']").val(),
+                complemento:$("[name='complemento']").val(),
+                bairro:$("[name='bairro']").val(),
+                cidade:$("[name='cidade']").val(),
+                uf:$("[name='uf']").val(),
+                celular:$("[name='celular']").val(),
+                tel1:$("[name='tel1']").val(),
+                tel2:$("[name='tel2']").val(),
+                email:$("[name='email']").val(),
+                obs:$("[name='obs']").val(),
+                empresa:$("[name='empresa']").val(),
+                razaosocial:$("[name='razaosocial']").val(),
+                inscest:$("[name='inscest']").val(),
+                website:$("[name='website']").val(),
+                areaatuacao:$("[name='areaatuacao']").val(),
+                obs:$("[name='obs']").val(),
+                
+            },
+            dataType: "json",
+            success: function(data) {
+                console.log('Fornecedor Físico editado com sucesso!');
+                }
+            });
+        }
+        if(sessao == 'func'){
+            $.ajax({
+            type: "GET",
+            url: "/editar/editarfuncionario",
+            data: {
+                nome:$("[name='nome']").val(),
+                cpf:$("[name='cpf']").val(),
+                rg:$("[name='rg']").val(),
+                email:$("[name='email']").val(),
+                datanasc:$("[name='datanasc']").val(),
+                estadocivil:$("[name='estadocivil']").val(),
+                sexo:$("[name='sexo']").val(),
+                cep:$("[name='cep']").val(),
+                logradouro:$("[name='logradouro']").val(),
+                num:$("[name='num']").val(),
+                complemento:$("[name='complemento']").val(),
+                bairro:$("[name='bairro']").val(),
+                cidade:$("[name='cidade']").val(),
+                uf:$("[name='uf']").val(),
+                tel1:$("[name='tel1']").val(),
+                tel2:$("[name='tel2']").val(),
+                celular:$("[name='celular']").val(),
+                dep:$("[name='dep']").val(),
+                setor:$("[name='setor']").val(),
+                func:$("[name='func']").val(),
+                ctps:$("[name='ctps']").val(),
+                serie:$("[name='serie']").val(),
+                ufctps:$("[name='ufctps']").val(),
+                pis:$("[name='pis']").val(),
+                salario:$("[name='salario']").val(),
+                conjugue:$("[name='conjugue']").val(),
+                nomepai:$("[name='pai']").val(),
+                nomemae:$("[name='mae']").val(),
+                obs:$("[name='obs']").val(),
+                
+            },
+            dataType: "json",
+            success: function(data) {
+                console.log('Funcionário editado com sucesso!');
+                }
+            });
+        }
+        if(sessao == 'forjur'){
+            $.ajax({
+            type: "GET",
+            url: "/editar/editarfornecedorjuridico",
+            data: {
+                nome:$("[name='nome']").val(),
+                cnpj:$("[name='cnpj']").val(),
+                email:$("[name='email']").val(),
+                cep:$("[name='cep']").val(),
+                logradouro:$("[name='logradouro']").val(),
+                num:$("[name='num']").val(),
+                complemento:$("[name='complemento']").val(),
+                bairro:$("[name='bairro']").val(),
+                cidade:$("[name='cidade']").val(),
+                uf:$("[name='uf']").val(),
+                tel1:$("[name='tel1']").val(),
+                tel2:$("[name='tel2']").val(),
+                celular:$("[name='celular']").val(),
+                website:$("[name='website']").val(),
+                inscest:$("[name='inscest']").val(),
+                razaosocial:$("[name='razaosocial']").val(),
+                areaatuacao:$("[name='areaatuacao']").val(),
+                nomerep:$("[name='nomerep']").val(),
+                emailrep:$("[name='emailrep']").val(),
+                contatorep:$("[name='contatorep']").val(),
+                obs:$("[name='obs']").val(),
+                
+            },
+            dataType: "json",
+            success: function(data) {
+                console.log('Fornecedor Jurídico editado com sucesso!');
+                }
+            });
         }
 
-        if(document.getElementById('tipo_pessoa').value == 'jur'){
-            if(document.getElementById('Fornecedor').checked==true){
-                $.ajax({
-                type: "GET",
-                url: "/cadastro/cadastrofornecedorjuridico",
-                data: {
-                    nome:$("[name='nome']").val(),
-                    cnpj:$("[name='cnpj']").val(),
-                    email:$("[name='email']").val(),
-                    cep:$("[name='cep']").val(),
-                    logradouro:$("[name='logradouro']").val(),
-                    num:$("[name='num']").val(),
-                    complemento:$("[name='complemento']").val(),
-                    bairro:$("[name='bairro']").val(),
-                    cidade:$("[name='cidade']").val(),
-                    uf:$("[name='uf']").val(),
-                    tel1:$("[name='tel1']").val(),
-                    tel2:$("[name='tel2']").val(),
-                    celular:$("[name='celular']").val(),
-                    website:$("[name='website']").val(),
-                    razaosocial:$("[name='razaosocial']").val(),
-                    areaatuacao:$("[name='areaatuacao']").val(),
-                    nomerep:$("[name='nomerep']").val(),
-                    emailrep:$("[name='emailrep']").val(),
-                    contatorep:$("[name='contatorep']").val(),
-                    obs:$("[name='obs']").val(),
-                },
-                dataType: "json",
-                success: function(data) {
-                    console.log('Fornecedor Jurídico cadastrado com sucesso!');
-                    }
-                });
-            }
-
-            if(document.getElementById('Cliente').checked==true){
-                $.ajax({
-                type: "GET",
-                url: "/cadastro/cadastroclientejuridico",
-                data: {
-                    nome:$("[name='nome']").val(),
-                    cnpj:$("[name='cnpj']").val(),
-                    email:$("[name='email']").val(),
-                    cep:$("[name='cep']").val(),
-                    logradouro:$("[name='logradouro']").val(),
-                    num:$("[name='num']").val(),
-                    complemento:$("[name='complemento']").val(),
-                    bairro:$("[name='bairro']").val(),
-                    cidade:$("[name='cidade']").val(),
-                    uf:$("[name='uf']").val(),
-                    tel1:$("[name='tel1']").val(),
-                    tel2:$("[name='tel2']").val(),
-                    celular:$("[name='celular']").val(),
-                    website:$("[name='website']").val(),
-                    razaosocial:$("[name='razaosocial']").val(),
-                    areaatuacao:$("[name='areaatuacao']").val(),
-                    nomerep:$("[name='nomerep']").val(),
-                    emailrep:$("[name='emailrep']").val(),
-                    contatorep:$("[name='contatorep']").val(),
-                    obs:$("[name='obs']").val(),
-                },
-                dataType: "json",
-                success: function(data) {
-                    console.log('Cliente cadastrado com sucesso!');
-                    }
-                });
-            }
+        if(sessao == 'clijur'){
+            $.ajax({
+            type: "GET",
+            url: "/editar/editarclientejuridico",
+            data: {
+                nome:$("[name='nome']").val(),
+                cnpj:$("[name='cnpj']").val(),
+                email:$("[name='email']").val(),
+                cep:$("[name='cep']").val(),
+                logradouro:$("[name='logradouro']").val(),
+                num:$("[name='num']").val(),
+                complemento:$("[name='complemento']").val(),
+                bairro:$("[name='bairro']").val(),
+                cidade:$("[name='cidade']").val(),
+                uf:$("[name='uf']").val(),
+                tel1:$("[name='tel1']").val(),
+                tel2:$("[name='tel2']").val(),
+                celular:$("[name='celular']").val(),
+                website:$("[name='website']").val(),
+                inscest:$("[name='inscest']").val(),
+                razaosocial:$("[name='razaosocial']").val(),
+                areaatuacao:$("[name='areaatuacao']").val(),
+                nomerep:$("[name='nomerep']").val(),
+                emailrep:$("[name='emailrep']").val(),
+                contatorep:$("[name='contatorep']").val(),
+                obs:$("[name='obs']").val(),
+                
+            },
+            dataType: "json",
+            success: function(data) {
+                console.log('Cliente editado com sucesso!');
+                }
+            });
         }
-        
     }
 
     function cadastrodep(){

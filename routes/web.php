@@ -27,3 +27,9 @@ Route::get('consulta/pessoa/dados', 'App\Http\Controllers\ConsultaController@Con
 Route::get('consulta/pessoa/dadosedit', 'App\Http\Controllers\ConsultaController@ConsultaPessoaEditar')->name('consultapessoaeditar');
 Route::get('consulta/fornecedores', 'App\Http\Controllers\ConsultaController@ConsultaPessoaFornecedores')->name('consultapessoafornecedores');
 Route::get('consulta/fornecedores/dados', 'App\Http\Controllers\ConsultaController@ConsultaPessoaFornecedoresDados')->name('consultapessoafornecedoresdados');
+
+Route::get('editar/editarpaciente', 'App\Http\Controllers\EditarController@EditarPaciente')->name('editarpaciente');
+Route::get('editar/editarfornecedorfisico', 'App\Http\Controllers\EditarController@EditarFornecedorFisico')->name('editarfornecedorfisico');
+Route::get('editar/editarfornecedorjuridico', 'App\Http\Controllers\EditarController@EditarFornecedorJuridico')->name('editarfornecedorjuridico');
+Route::get('editar/editarclientejuridico', 'App\Http\Controllers\EditarController@EditarClienteJuridico')->name('editarclientejuridico');
+Route::get('editar/editarfuncionario', 'App\Http\Controllers\EditarController@EditarFuncionario')->name('editarfuncionario');

@@ -17,12 +17,12 @@ class Clientesjur extends Migration
             $table->bigIncrements('clijur_id');
             $table->string('clijur_nome');
             $table->string('clijur_cnpj')->unique();
-            $table->string('clijur_cep');
-            $table->string('clijur_logradouro');
-            $table->string('clijur_num');
-            $table->string('clijur_complemento');
-            $table->string('clijur_bairro');
-            $table->string('clijur_cidade');
+            $table->string('clijur_cep')->nullable();
+            $table->string('clijur_logradouro')->nullable();
+            $table->string('clijur_num')->nullable();
+            $table->string('clijur_complemento')->nullable();
+            $table->string('clijur_bairro')->nullable();
+            $table->string('clijur_cidade')->nullable();
             $table->string('clijur_uf');
             $table->string('clijur_tel1');
             $table->string('clijur_tel2')->nullable();
@@ -32,9 +32,9 @@ class Clientesjur extends Migration
             $table->string('clijur_razaosocial')->nullable();
             $table->string('clijur_website')->nullable();
             $table->string('clijur_areaatuacao')->nullable();
-            $table->string('clijur_nomerep')->nullable();
+            $table->string('clijur_nomerep');
             $table->string('clijur_emailrep')->nullable();
-            $table->string('clijur_contatorep')->nullable();
+            $table->string('clijur_contatorep');
             $table->string('clijur_obs')->nullable();
         });
     }

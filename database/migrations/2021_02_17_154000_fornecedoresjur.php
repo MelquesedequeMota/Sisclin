@@ -17,12 +17,12 @@ class Fornecedoresjur extends Migration
             $table->bigIncrements('forjur_id');
             $table->string('forjur_nome');
             $table->string('forjur_cnpj')->unique();
-            $table->string('forjur_cep');
-            $table->string('forjur_logradouro');
-            $table->string('forjur_num');
-            $table->string('forjur_complemento');
-            $table->string('forjur_bairro');
-            $table->string('forjur_cidade');
+            $table->string('forjur_cep')->nullable();
+            $table->string('forjur_logradouro')->nullable();
+            $table->string('forjur_num')->nullable();
+            $table->string('forjur_complemento')->nullable();
+            $table->string('forjur_bairro')->nullable();
+            $table->string('forjur_cidade')->nullable();
             $table->string('forjur_uf');
             $table->string('forjur_tel1');
             $table->string('forjur_tel2')->nullable();
