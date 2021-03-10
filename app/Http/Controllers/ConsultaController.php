@@ -202,4 +202,14 @@ class ConsultaController extends Controller
         $fornecedores = array_merge($fornecedoresfis, $fornecedoresjur);
         return $fornecedores;
     }
+
+    public function ConsultaCadastroEspecialidade(Request $request){
+        $consultaselectespec = DB::table('especialidades')->get();
+        $espec = ["id"=>[], "nome"=>[]];
+        foreach($consultaselectespec as $consultaselectespec){
+            array_push($espec["id"], $consultaselectespec->espec_id);
+            array_push($espec["nome"], $consultaselectespec->espec_nome);
+        }
+        return $espec;
+    }
 }

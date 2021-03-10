@@ -8,7 +8,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::get('cadastro/pessoa', 'App\Http\Controllers\CadastroController@CadastroPessoa')->name('cadastropessoa');
-Route::get('cadastroespec', 'App\Http\Controllers\CadastroController@CadastroEspecialidade')->name('cadastroespec');
+Route::get('cadastro/medico', 'App\Http\Controllers\CadastroController@CadastroMedico')->name('cadastromedico');
+Route::get('cadastro/cadastroespecialidade', 'App\Http\Controllers\CadastroController@CadastroEspecialidade')->name('cadastroespec');
 Route::get('cadastro/cadastropaciente', 'App\Http\Controllers\CadastroController@CadastroPaciente')->name('cadastropaciente');
 Route::get('cadastro/cadastrofornecedorfisico', 'App\Http\Controllers\CadastroController@CadastroFornecedorFisico')->name('cadastrofornecedorfisico');
 Route::get('cadastro/cadastrofornecedorjuridico', 'App\Http\Controllers\CadastroController@CadastroFornecedorJuridico')->name('cadastrofornecedorjuridico');
@@ -20,6 +21,7 @@ Route::get('cadastro/cadastrofuncao', 'App\Http\Controllers\CadastroController@C
 Route::get('consultacadastrodep', 'App\Http\Controllers\ConsultaController@ConsultaCadastroDepartamento')->name('consultacadastrodep');
 Route::get('consultacadastroset', 'App\Http\Controllers\ConsultaController@ConsultaCadastroSetor')->name('consultacadastroset');
 Route::get('consultacadastrofunc', 'App\Http\Controllers\ConsultaController@ConsultaCadastroFuncao')->name('consultacadastrofunc');
+Route::get('consultacadastroespec', 'App\Http\Controllers\ConsultaController@ConsultaCadastroEspecialidade')->name('consultacadastroespec');
 
 Route::get('consulta/pessoa', 'App\Http\Controllers\ConsultaController@ConsultaPessoa')->name('consultapessoa');
 Route::get('consulta/pessoa/nome', 'App\Http\Controllers\ConsultaController@ConsultaPessoaNome')->name('consultapessoanome');
@@ -33,3 +35,6 @@ Route::get('editar/editarfornecedorfisico', 'App\Http\Controllers\EditarControll
 Route::get('editar/editarfornecedorjuridico', 'App\Http\Controllers\EditarController@EditarFornecedorJuridico')->name('editarfornecedorjuridico');
 Route::get('editar/editarclientejuridico', 'App\Http\Controllers\EditarController@EditarClienteJuridico')->name('editarclientejuridico');
 Route::get('editar/editarfuncionario', 'App\Http\Controllers\EditarController@EditarFuncionario')->name('editarfuncionario');
+
+Route::get('horaatendimento', 'App\Http\Controllers\CadastroController@HoraAtendimento')->name('horaatendimento');
+Route::get('cadastro/cadastroagenda', 'App\Http\Controllers\CadastroController@CadastroAgenda')->name('cadastroagenda');

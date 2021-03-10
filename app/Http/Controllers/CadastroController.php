@@ -10,6 +10,9 @@ class CadastroController extends Controller
     public function CadastroPessoa(Request $request){
         return view('CadastroPessoa');
     }
+    public function CadastroMedico(Request $request){
+        return view('CadastroMedico');
+    }
     public function CadastroDepartamento(Request $request){
         $cadastrardep = DB::table('departamentos')->insert([
             'dep_nome' => $request->nome,
@@ -45,7 +48,7 @@ class CadastroController extends Controller
 
     public function CadastroEspecialidade(Request $request){
         $cadastrarespec = DB::table('especialidades')->insert([
-            'espec_nome' => $request->novaespec,
+            'espec_nome' => $request->nome,
         ]);
         if($cadastrarespec == 1){
             return 1;
@@ -215,6 +218,38 @@ class CadastroController extends Controller
             'func_obs' => $request->obs,
         ]);
         if($cadastrarfuncionario == 1){
+            return 1;
+        }else{
+            return 0;
+        }
+    }
+    public function HoraAtendimento(){
+        return view('HoraAtendimento');
+    }
+    public function CadastroAgenda(Request $request){
+        $dias = ['domingo','segunda','terca','quarta','quinta','sexta','sabado'];
+        $dadosdias = [];
+        for($i = 0; $i<count($dias); $i++){
+            $atualcheckbox = $dias[$i].'checkbox';
+            $atualselect1 = $dias[$i].'select1';
+            $atualselect2 = $dias[$i].'select2';
+            if($request->$atualcheckbox == 'true'){
+                array_push($dadosdias, $request->$atualselect1.' - '.$request->$atualselect2);
+            }else{
+                array_push($dadosdias,'');
+            }
+        }
+        $cadastraragenda = DB::table('medico_atendimento')->insert([
+            'med_id' => 1,
+            'medat_domingo' => $dadosdias[0],
+            'medat_segunda' => $dadosdias[1],
+            'medat_terca' => $dadosdias[2],
+            'medat_quarta' => $dadosdias[3],
+            'medat_quinta' => $dadosdias[4],
+            'medat_sexta' => $dadosdias[5],
+            'medat_sabado' => $dadosdias[6],
+        ]);
+        if($cadastraragenda == 1){
             return 1;
         }else{
             return 0;
