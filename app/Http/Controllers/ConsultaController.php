@@ -212,4 +212,14 @@ class ConsultaController extends Controller
         }
         return $espec;
     }
+
+    public function ConsultaCadastroEspecializacao(Request $request){
+        $consultaselectespeci = DB::table('especializacoes')->where('espec_id', $request->espec)->get();
+        $especi = ["id"=>[], "nome"=>[]];
+        foreach($consultaselectespeci as $consultaselectespeci){
+            array_push($especi["id"], $consultaselectespeci->especi_id);
+            array_push($especi["nome"], $consultaselectespeci->especi_nome);
+        }
+        return $especi;
+    }
 }

@@ -66,12 +66,13 @@
         <div class='input' id='tel1'>*Telefone 1:<input type='text' class='valores' name='tel1' id='tel1input'  onkeypress='tel1()'><br></div>
         <div class='input' id='tel2'>Telefone 2:<input type='text' class='valores' name='tel2' id='tel2input'  onkeypress='tel2()'><br></div>
         <div class='input' id='celular'>Celular:<input type='text' class='valores' name='celular' data-inputmask="'mask': '(99) 99999-9999'"><br></div>
-        <div class='input' id='comissao'>Comissao(%):<input type='text' class='valores' name='comissao'><br></div>
-        <div class='input' id='espec'>Especialidade:<select name="espec" id='especselect'>
+        <div class='input' id='comissao'>Comissao(%):<input type='number' class='valores' name='comissao' min='1' max='100'><br></div>
+        <div class='input' id='espec'>Especialidade:<select name="espec" id='especselect' onchange='filtespeci()'>
         <option value=''>---</option>
         </select><button id='especnovobutton' onclick='novoespec()'> Nova Especialidade </button><br></div><div class='input' id='especnovo'></div>
-        <div class='input' id='pagamento'>Dia do Pagamento:<input type='number' class='valores' name='pagamento' min='1' max='27' value='1'><br></div>
-        <div class='input' id='status'>Status: Ativo <input type='radio' value='Ativo' id='Ativo' name='status'> Inativo <input type='radio' value='Inativo' id='Inativo' name='status'><br></div>
+        <div class='input' id='especicheckbox'></div><br></div><div class='input' id='especinovo'></div>
+        <div class='input' id='pagamento'>Dia do Pagamento:<input type='number' class='valores' name='pagamento' value ='1' min='1' max='100' value='1'><br></div>
+        <div class='input' id='status'>Status: Ativo <input type='radio' value='Ativo' id='Ativo' name='status' checked > Inativo <input type='radio' value='Inativo' id='Inativo' name='status'><br></div>
         <div id='tabela'><table id='horaatendimentotable'>
             <tr>
                 <th>Domingo</th>
@@ -110,14 +111,15 @@
                 <td><select name='sabadoselect2' id='sabadoselect2'></select></td>
             </tr>
         </table></div>
-        <input type='button' name='entenderbutton' id='entenderbutton' onclick='horas()' value='Atendimento'>
-        <input type='button' name='horaatendimentobutton' id='horaatendimentobutton' onclick='cadastroagenda()' value='Cadastrar'>
+        <input type='button' name='cadastrarmedico' id='cadastrarmedico' onclick='cadastrarmedico()' value='Cadastrar Médico'>
 </body>
 <script>
     consespec();
     preencherSelects();
     $('#tel1input').inputmask('(99) 9999[9]-9999');
     $('#tel2input').inputmask('(99) 9999[9]-9999');
+    var especiar = [];
+    var especiaresc = [];
 
     function tel1(){
         if(document.getElementById('tel1input').value[5] != '9'){
@@ -131,6 +133,25 @@
             $('#tel2input').inputmask('(99) 9999-9999');
         }else{
             $('#tel2input').inputmask('(99) 9999[9]-9999');
+        }
+    }
+
+    function filtespeci(){
+        document.getElementById('especicheckbox').innerHTML = '';
+        if($("[name='espec']").val() != ''){
+            $.ajax({
+                type: "GET",
+                url: "/consultacadastroespeci",
+                data: {espec:$("[name='espec']").val()},
+                dataType: "json",
+                success: function(data) {
+                    for(var i = 0; i<data['nome'].length; i++){
+                        document.getElementById('especicheckbox').innerHTML += data['nome'][i] + ": <input type='checkbox' name='especibox"+data['id'][i]+"' value='"+data['id'][i]+"'> ";
+                        especiar.push(data['id'][i]);
+                    }
+                    document.getElementById('especicheckbox').innerHTML+= "<button id='especinovobutton' onclick='novaespeci()'> Nova Especialização </button>";
+                }
+            });
         }
     }
 
@@ -157,6 +178,26 @@
             document.getElementById('especnovo').style.display='block';
         }
 
+    function novaespeci(){
+        document.getElementById('especinovo').innerHTML="Nova Especialização: <input type='text' id='especinovoinput' name='especinovoinput'> Especialidade:<select name='especinovoespec' id='especinovoespec'></select><button onclick='cadastroespeci()'>Cadastrar Especialização</button>";
+        document.getElementById('especinovo').style.display='block';
+        $.ajax({
+                type: "GET",
+                url: "/consultacadastroespec",
+                data: {},
+                dataType: "json",
+                success: function(data) {
+                    var select = document.getElementById('especinovoespec');
+                    for(var i = 0; i<data['id'].length; i++){
+                        var opt = document.createElement('option');
+                        opt.appendChild(document.createTextNode(data['nome'][i]));
+                        opt.value = data['id'][i];
+                        select.appendChild(opt);
+                    }
+                }
+            });
+    }
+
     function cadastroespec(){
         $.ajax({
                 type: "GET",
@@ -171,7 +212,22 @@
                     consespec();
                     }
                 });
-        }
+    }
+    function cadastroespeci(){
+        $.ajax({
+                type: "GET",
+                url: "/cadastro/cadastroespecializacao",
+                data: {
+                    nome:$("[name='especinovoinput']").val(),
+                    espec:$("[name='especinovoespec']").val(),
+                },
+                dataType: "json",
+                success: function(data) {
+                    console.log('Especialização cadastrada com sucesso');
+                    document.getElementById('especinovo').style.display='none'
+                    }
+                });
+    }
 
         function limpa_formulário_cep() {
             //Limpa valores do formulário de cep.
@@ -258,19 +314,40 @@
     }
     
 }
-function horas(){
-    var diass = ['domingo','segunda','terca','quarta','quinta','sexta','sabado'];
-    for(var u = 0; u<diass.length; i=u++){
-        if(document.getElementById(diass[u]+'checkbox').checked == true){
-            console.log( diass[u] +' ele(a) trabalha de '+document.getElementById(diass[u]+'select1').value + ' até ' + document.getElementById(diass[u]+'select2').value);
+
+function cadastrarmedico(){
+    for(var o = 0; o<especiar.length; o++){
+        var sla = 'especibox'+especiar[o];
+        if($("[name='"+sla+"']").prop('checked') == true){
+            especiaresc.push($("[name='"+sla+"']").val());
         }
     }
-}
-function cadastroagenda(){
     $.ajax({
         type: "GET",
-        url: "/cadastro/cadastroagenda",
+        url: "/cadastro/cadastromedico",
         data: {
+            nome:$("[name='nome']").val(),
+            cpf:$("[name='cpf']").val(),
+            rg:$("[name='rg']").val(),
+            cep:$("[name='cep']").val(),
+            datanasc:$("[name='datanasc']").val(),
+            estadocivil:$("[name='estadocivil']").val(),
+            sexo:$("[name='sexo']").val(),
+            logradouro:$("[name='logradouro']").val(),
+            num:$("[name='num']").val(),
+            complemento:$("[name='complemento']").val(),
+            bairro:$("[name='bairro']").val(),
+            cidade:$("[name='cidade']").val(),
+            uf:$("[name='uf']").val(),
+            celular:$("[name='celular']").val(),
+            tel1:$("[name='tel1']").val(),
+            tel2:$("[name='tel2']").val(),
+            email:$("[name='email']").val(),
+            comissao:$("[name='comissao']").val(),
+            espec:$("[name='espec']").val(),
+            especi: especiaresc,
+            pagamento:$("[name='pagamento']").val(),
+            status:$("[name='status']").val(),
             domingocheckbox:$("[name='domingocheckbox']").prop('checked'),
             domingoselect1:$("[name='domingoselect1']").val(),
             domingoselect2:$("[name='domingoselect2']").val(),
@@ -295,7 +372,7 @@ function cadastroagenda(){
         },
         dataType: "json",
         success: function(data) {
-            console.log('Agenda Uga Buga Huga');
+            console.log('Médico cadastrado com sucesso');
             }
         });
 }

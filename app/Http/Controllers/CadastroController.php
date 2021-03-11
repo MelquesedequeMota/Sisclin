@@ -10,7 +10,7 @@ class CadastroController extends Controller
     public function CadastroPessoa(Request $request){
         return view('CadastroPessoa');
     }
-    public function CadastroMedico(Request $request){
+    public function CadastrarMedico(Request $request){
         return view('CadastroMedico');
     }
     public function CadastroDepartamento(Request $request){
@@ -51,6 +51,18 @@ class CadastroController extends Controller
             'espec_nome' => $request->nome,
         ]);
         if($cadastrarespec == 1){
+            return 1;
+        }else{
+            return 0;
+        }
+    }
+
+    public function CadastroEspecializacao(Request $request){
+        $cadastrarespeci = DB::table('especializacoes')->insert([
+            'espec_id'=> $request->espec,
+            'especi_nome' => $request->nome,
+        ]);
+        if($cadastrarespeci == 1){
             return 1;
         }else{
             return 0;
@@ -251,6 +263,66 @@ class CadastroController extends Controller
         ]);
         if($cadastraragenda == 1){
             return 1;
+        }else{
+            return 0;
+        }
+    }
+
+    public function CadastroMedico(Request $request){
+        $especi = implode(',', $request->especi);
+        $cadastrarmedico = DB::table('medicos')->insert([
+            'med_nome' => $request->nome,
+            'med_cpf' => $request->cpf,
+            'med_estadocivil' => $request->estadocivil,
+            'med_sexo' => $request->sexo,
+            'med_datanasc' => $request->datanasc,
+            'med_cep' => $request->cep,
+            'med_logradouro' => $request->logradouro,
+            'med_num' => $request->num,
+            'med_complemento' =>$request->complemento,
+            'med_bairro' => $request->bairro,
+            'med_cidade' => $request->cidade,
+            'med_uf' => $request->uf,
+            'med_tel1' => $request->tel1,
+            'med_tel2' => $request->tel2,
+            'med_celular' => $request->celular,
+            'med_rg' => $request->rg,
+            'med_email' => $request->email,
+            'med_comissao' => $request->comissao,
+            'med_espec' => $request->espec,
+            'med_especi' => $especi,
+            'med_diapag' => $request->pagamento,
+            'med_status' => $request->status,
+        ]);
+        if($cadastrarmedico == 1){
+            $medicoatual = DB::table('medicos')->orderBy('med_id', 'DESC')->first();
+            $dias = ['domingo','segunda','terca','quarta','quinta','sexta','sabado'];
+            $dadosdias = [];
+            for($i = 0; $i<count($dias); $i++){
+                $atualcheckbox = $dias[$i].'checkbox';
+                $atualselect1 = $dias[$i].'select1';
+                $atualselect2 = $dias[$i].'select2';
+                if($request->$atualcheckbox == 'true'){
+                    array_push($dadosdias, $request->$atualselect1.' - '.$request->$atualselect2);
+                }else{
+                    array_push($dadosdias,'');
+                }
+            }
+            $cadastraragenda = DB::table('medico_atendimento')->insert([
+                'med_id' => $medicoatual->med_id,
+                'medat_domingo' => $dadosdias[0],
+                'medat_segunda' => $dadosdias[1],
+                'medat_terca' => $dadosdias[2],
+                'medat_quarta' => $dadosdias[3],
+                'medat_quinta' => $dadosdias[4],
+                'medat_sexta' => $dadosdias[5],
+                'medat_sabado' => $dadosdias[6],
+            ]);
+            if($cadastraragenda == 1){
+                return 1;
+            }else{
+                return 0;
+            }
         }else{
             return 0;
         }
