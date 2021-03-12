@@ -248,7 +248,7 @@ class CadastroController extends Controller
             if($request->$atualcheckbox == 'true'){
                 array_push($dadosdias, $request->$atualselect1.' - '.$request->$atualselect2);
             }else{
-                array_push($dadosdias,'');
+                array_push($dadosdias, null);
             }
         }
         $cadastraragenda = DB::table('medico_atendimento')->insert([

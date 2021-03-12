@@ -171,7 +171,7 @@
                     }
                 }
             });
-        }
+    }
 
     function novoespec(){
             document.getElementById('especnovo').innerHTML="Nova Especialidade: <input type='text' id='especnovoinput' name='especnovoinput'><button onclick='cadastroespec()'>Cadastrar Especialidade</button>";

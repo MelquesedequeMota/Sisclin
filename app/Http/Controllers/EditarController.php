@@ -9,6 +9,8 @@ use App\Models\FornecedoresFisicos;
 use App\Models\Funcionarios;
 use App\Models\FornecedoresJuridicos;
 use App\Models\ClientesJuridicos;
+use App\Models\Medicos;
+use App\Models\Medico_Atendimento;
 
 class EditarController extends Controller
 {
@@ -447,5 +449,67 @@ class EditarController extends Controller
         }
     }
 
+    public function EditarMedico(Request $request){
+        $medico = DB::table('medicos')->where('med_cpf', $request->cpf)->get()->map(function($obj){
+            return (array) $obj;
+        })->toArray();
+        $especi = implode(',', $request->especi);
+        $edmedico = Medicos::find($medico[0]['med_id']);
+        $edmedico->med_nome = $request->nome;
+        $edmedico->med_cpf = $request->cpf;
+        $edmedico->med_estadocivil = $request->estadocivil;
+        $edmedico->med_sexo = $request->sexo;
+        $edmedico->med_datanasc = $request->datanasc;
+        $edmedico->med_cep = $request->cep;
+        $edmedico->med_logradouro = $request->logradouro;
+        $edmedico->med_num = $request->num;
+        $edmedico->med_complemento = $request->complemento;
+        $edmedico->med_bairro = $request->bairro;
+        $edmedico->med_cidade = $request->cidade;
+        $edmedico->med_uf = $request->uf;
+        $edmedico->med_tel1 = $request->tel1;
+        $edmedico->med_tel2 = $request->tel2;
+        $edmedico->med_celular = $request->celular;
+        $edmedico->med_rg = $request->rg;
+        $edmedico->med_email = $request->email;
+        $edmedico->med_comissao = $request->comissao;
+        $edmedico->med_espec = $request->espec;
+        $edmedico->med_especi = $especi;
+        $edmedico->med_diapag = $request->pagamento;
+        $edmedico->med_status = $request->status;
+        if($edmedico->save()){
+            $medicoatual = DB::table('medicos')->orderBy('med_id', 'DESC')->first();
+            $dias = ['domingo','segunda','terca','quarta','quinta','sexta','sabado'];
+            $dadosdias = [];
+            for($i = 0; $i<count($dias); $i++){
+                $atualcheckbox = $dias[$i].'checkbox';
+                $atualselect1 = $dias[$i].'select1';
+                $atualselect2 = $dias[$i].'select2';
+                if($request->$atualcheckbox == 'true'){
+                    array_push($dadosdias, $request->$atualselect1.' - '.$request->$atualselect2);
+                }else{
+                    array_push($dadosdias,'');
+                }
+            }
+            $medico_atendimento = DB::table('medico_atendimento')->where('med_id', $medicoatual->med_id)->get()->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+            $edmedico_atendimento = Medico_Atendimento::find($medico_atendimento[0]['medat_id']);
+            $edmedico_atendimento->medat_domingo = $dadosdias[0];
+            $edmedico_atendimento->medat_segunda = $dadosdias[1];
+            $edmedico_atendimento->medat_terca = $dadosdias[2];
+            $edmedico_atendimento->medat_quarta = $dadosdias[3];
+            $edmedico_atendimento->medat_quinta = $dadosdias[4];
+            $edmedico_atendimento->medat_sexta = $dadosdias[5];
+            $edmedico_atendimento->medat_sabado = $dadosdias[6];
+            if($edmedico_atendimento->save()){
+                return 1;
+            }else{
+                return 0;
+            }
+        }else{
+            return 0;
+        }
+    }
     
 }

@@ -15,14 +15,14 @@ class MedicoAtendimento extends Migration
     {
         Schema::create('medico_atendimento', function (Blueprint $table) {
             $table->bigIncrements('medat_id');
-            $table->integer('med_id');
-            $table->string('medat_domingo');
-            $table->string('medat_segunda');
-            $table->string('medat_terca');
-            $table->string('medat_quarta');
-            $table->string('medat_quinta');
-            $table->string('medat_sexta');
-            $table->string('medat_sabado');
+            $table->integer('med_id')->unique();
+            $table->string('medat_domingo')->nullable();
+            $table->string('medat_segunda')->nullable();
+            $table->string('medat_terca')->nullable();
+            $table->string('medat_quarta')->nullable();
+            $table->string('medat_quinta')->nullable();
+            $table->string('medat_sexta')->nullable();
+            $table->string('medat_sabado')->nullable();
         });
     }
 

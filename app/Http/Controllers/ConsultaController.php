@@ -59,6 +59,10 @@ class ConsultaController extends Controller
         return view('ConsultaPessoa');
     }
 
+    public function ConsultaMedico(){
+        return view('ConsultaMedico');
+    }
+
     public function ConsultaPessoaDados(Request $request){
         if(strlen($request->cpfcnpj) == 18){
             $consultafornecedoresjur = DB::table('fornecedoresjur')->where('forjur_cnpj', $request->cpfcnpj)->get();
@@ -118,6 +122,19 @@ class ConsultaController extends Controller
         }
     }
 
+    public function ConsultaMedicoDados(Request $request){
+        if($request->cpf){
+            $consultamedicos = DB::table('medicos')->where('med_cpf', $request->cpf)->get();
+        }else{
+            $consultamedicos = DB::table('medicos')->where('med_nome', $request->nomemedico)->get();
+        }
+        
+        $consulta = $consultamedicos->map(function($obj){
+            return (array) $obj;
+        })->toArray();
+        return $consulta;
+    }
+
     public function ConsultaPessoaNome(Request $request){
         $consultapacientes = DB::table('pacientes')->where('pac_nome', 'like', '%'.$request->nomepessoa.'%')->get();
         $consultafornecedoresfis = DB::table('fornecedoresfis')->where('forfis_nome', 'like', '%'. $request->nomepessoa.'%')->get();
@@ -144,6 +161,15 @@ class ConsultaController extends Controller
         $merge2 = array_merge($merge1, $funcionarios);
         $merge3 = array_merge($merge2, $clientesjur);
         $consulta = array_merge($merge3, $fornecedoresjur);
+        return $consulta;
+        
+    }
+
+    public function ConsultaMedicoNome(Request $request){
+        $consultamedicos = DB::table('medicos')->where('med_nome', 'like', '%'.$request->nomemedico.'%')->get();
+        $consulta = $consultamedicos->map(function($obj){
+            return (array) $obj;
+        })->toArray();
         return $consulta;
         
     }
@@ -186,6 +212,22 @@ class ConsultaController extends Controller
         }
     }
 
+    public function ConsultaMedicoEditar(Request $request){
+        $consultamedicos = DB::table('medicos')->where('med_cpf', $request->cpf)->get();
+        $consulta = $consultamedicos->map(function($obj){
+            return (array) $obj;
+        })->toArray();
+        return $consulta;
+    }
+
+    public function ConsultaAgendaMedico(Request $request){
+        $consultaagenda = DB::table('medico_atendimento')->where('med_id', $request->med_id)->get();
+        $consulta = $consultaagenda->map(function($obj){
+            return (array) $obj;
+        })->toArray();
+        return $consulta;
+    }
+
     public function ConsultaPessoaFornecedores(Request $request){
         return view('ConsultaPessoaFornecedor');
     }
@@ -222,4 +264,6 @@ class ConsultaController extends Controller
         }
         return $especi;
     }
+
+    
 }
