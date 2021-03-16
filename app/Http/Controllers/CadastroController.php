@@ -317,6 +317,7 @@ class CadastroController extends Controller
                 'medat_quinta' => $dadosdias[4],
                 'medat_sexta' => $dadosdias[5],
                 'medat_sabado' => $dadosdias[6],
+                'medat_tempoconsulta' => $request->tempoconsulta,
             ]);
             if($cadastraragenda == 1){
                 return 1;

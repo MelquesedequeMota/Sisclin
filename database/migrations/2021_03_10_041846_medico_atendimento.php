@@ -23,6 +23,7 @@ class MedicoAtendimento extends Migration
             $table->string('medat_quinta')->nullable();
             $table->string('medat_sexta')->nullable();
             $table->string('medat_sabado')->nullable();
+            $table->string('medat_tempoconsulta')->nullable();
         });
     }
 

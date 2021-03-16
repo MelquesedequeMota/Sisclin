@@ -73,6 +73,20 @@
         <div class='input' id='especicheckbox'></div><br></div><div class='input' id='especinovo'></div>
         <div class='input' id='pagamento'>Dia do Pagamento:<input type='number' class='valores' name='pagamento' value ='1' min='1' max='100' value='1'><br></div>
         <div class='input' id='status'>Status: Ativo <input type='radio' value='Ativo' id='Ativo' name='status' checked > Inativo <input type='radio' value='Inativo' id='Inativo' name='status'><br></div>
+        <div class='input' id='tempoconsulta'>Tempo da mínimo da consulta:<select name="tempoconsulta" id='tempoconsultainput'>
+            <option value='5'>5 min</option>
+            <option value='10'>10 min</option>
+            <option value='15'>15 min</option>
+            <option value='20'>20 min</option>
+            <option value='25'>25 min</option>
+            <option value='30'>30 min</option>
+            <option value='35'>35 min</option>
+            <option value='40'>40 min</option>
+            <option value='45'>45 min</option>
+            <option value='50'>50 min</option>
+            <option value='55'>55 min</option>
+            <option value='60'>60 min</option>
+        </select><br></div>
         <div id='tabela'><table id='horaatendimentotable'>
             <tr>
                 <th>Domingo</th>
@@ -369,6 +383,7 @@ function cadastrarmedico(){
             sabadocheckbox:$("[name='sabadocheckbox']").prop('checked'),
             sabadoselect1:$("[name='sabadoselect1']").val(),
             sabadoselect2:$("[name='sabadoselect2']").val(),
+            tempoconsulta:$("[name='tempoconsulta']").val(),
         },
         dataType: "json",
         success: function(data) {
