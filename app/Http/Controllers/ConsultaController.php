@@ -55,6 +55,16 @@ class ConsultaController extends Controller
         return $funcoes;
     }
 
+    public function ConsultaCadastroCategoria(Request $request){
+        $consultaselectcate = DB::table('categorias')->get();
+        $categorias = ["id"=>[], "nome"=>[]];
+        foreach($consultaselectcate as $consultaselectcate){
+            array_push($categorias["id"], $consultaselectcate->cate_id);
+            array_push($categorias["nome"], $consultaselectcate->cate_nome);
+        }
+        return $categorias;
+    }
+
     public function ConsultaPessoa(Request $request){
         return view('ConsultaPessoa');
     }

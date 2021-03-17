@@ -82,6 +82,20 @@
         <div class='input' id='especicheckbox'></div><br></div><div class='input' id='especinovo'></div>
         <div class='input' id='pagamento'>Dia do Pagamento:<input type='number' class='valores' name='pagamento' value ='1' min='1' max='100' value='1'><br></div>
         <div class='input' id='status'>Status: Ativo <input type='radio' value='Ativo' id='Ativo' name='status' checked > Inativo <input type='radio' value='Inativo' id='Inativo' name='status'><br></div>
+        <div class='input' id='tempoconsulta'>Tempo da mínimo da consulta:<select name="tempoconsulta" id='tempoconsultainput'>
+            <option value='5'>5 min</option>
+            <option value='10'>10 min</option>
+            <option value='15'>15 min</option>
+            <option value='20'>20 min</option>
+            <option value='25'>25 min</option>
+            <option value='30'>30 min</option>
+            <option value='35'>35 min</option>
+            <option value='40'>40 min</option>
+            <option value='45'>45 min</option>
+            <option value='50'>50 min</option>
+            <option value='55'>55 min</option>
+            <option value='60'>60 min</option>
+        </select><br></div>
         <div class='input' id='tabelaagenda'><table id='horaatendimentotable'>
             <tr>
                 <th>Domingo</th>
@@ -178,6 +192,63 @@
                     }
                 }
             });
+    }
+
+    function novoespec(){
+            document.getElementById('especnovo').innerHTML="Nova Especialidade: <input type='text' id='especnovoinput' name='especnovoinput'> Descrição: <input type='text' id='especnovodescinput' name='especnovodescinput'><button onclick='cadastroespec()'>Cadastrar Especialidade</button>";
+            document.getElementById('especnovo').style.display='block';
+        }
+
+    function novaespeci(){
+        document.getElementById('especinovo').innerHTML="Nova Especialização: <input type='text' id='especinovoinput' name='especinovoinput'> Especialidade:<select name='especinovoespec' id='especinovoespec'></select><button onclick='cadastroespeci()'>Cadastrar Especialização</button>";
+        document.getElementById('especinovo').style.display='block';
+        $.ajax({
+                type: "GET",
+                url: "/consultacadastroespec",
+                data: {},
+                dataType: "json",
+                success: function(data) {
+                    var select = document.getElementById('especinovoespec');
+                    for(var i = 0; i<data['id'].length; i++){
+                        var opt = document.createElement('option');
+                        opt.appendChild(document.createTextNode(data['nome'][i]));
+                        opt.value = data['id'][i];
+                        select.appendChild(opt);
+                    }
+                }
+            });
+    }
+
+    function cadastroespec(){
+        $.ajax({
+                type: "GET",
+                url: "/cadastro/cadastroespecialidade",
+                data: {
+                    nome:$("[name='especnovoinput']").val(),
+                    desc:$("[name='especnovodescinput']").val(),
+                },
+                dataType: "json",
+                success: function(data) {
+                    console.log('Especialidade cadastrado com sucesso');
+                    document.getElementById('especnovo').style.display='none'
+                    consespec();
+                    }
+                });
+    }
+    function cadastroespeci(){
+        $.ajax({
+                type: "GET",
+                url: "/cadastro/cadastroespecializacao",
+                data: {
+                    nome:$("[name='especinovoinput']").val(),
+                    espec:$("[name='especinovoespec']").val(),
+                },
+                dataType: "json",
+                success: function(data) {
+                    console.log('Especialização cadastrada com sucesso');
+                    document.getElementById('especinovo').style.display='none'
+                    }
+                });
     }
 
     function preencherSelects(){
@@ -406,6 +477,7 @@
         document.getElementById('tabelaagenda').style.display = 'block';
         document.getElementById('status').style.display = 'block';
         document.getElementById('especicheckbox').style.display = 'block';
+        document.getElementById('tempoconsulta').style.display = 'block';
 
         document.querySelector("[name='cpf']").value = dados['med_cpf'];
         document.querySelector("[name='nome']").value = dados['med_nome'];
@@ -467,6 +539,7 @@
                             $("[name='"+dias[i].substr(6)+"checkbox']").attr('checked', false);
                         }
                     }
+                    document.getElementById('tempoconsultainput').value = data[0]['medat_tempoconsulta'];
                 }
             });
     }
@@ -525,6 +598,7 @@
                 sabadocheckbox:$("[name='sabadocheckbox']").prop('checked'),
                 sabadoselect1:$("[name='sabadoselect1']").val(),
                 sabadoselect2:$("[name='sabadoselect2']").val(),
+                tempoconsulta:$("[name='tempoconsulta']").val(),
             },
             dataType: "json",
             success: function(data) {

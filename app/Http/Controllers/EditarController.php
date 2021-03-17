@@ -502,6 +502,7 @@ class EditarController extends Controller
             $edmedico_atendimento->medat_quinta = $dadosdias[4];
             $edmedico_atendimento->medat_sexta = $dadosdias[5];
             $edmedico_atendimento->medat_sabado = $dadosdias[6];
+            $edmedico_atendimento->medat_tempoconsulta = $request->tempoconsulta;
             if($edmedico_atendimento->save()){
                 return 1;
             }else{

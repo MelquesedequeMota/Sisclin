@@ -13,6 +13,9 @@ class CadastroController extends Controller
     public function CadastrarMedico(Request $request){
         return view('CadastroMedico');
     }
+    public function CadastrarProduto(Request $request){
+        return view('CadastroProduto');
+    }
     public function CadastroDepartamento(Request $request){
         $cadastrardep = DB::table('departamentos')->insert([
             'dep_nome' => $request->nome,
@@ -49,8 +52,13 @@ class CadastroController extends Controller
     public function CadastroEspecialidade(Request $request){
         $cadastrarespec = DB::table('especialidades')->insert([
             'espec_nome' => $request->nome,
+            'espec_desc' => $request->desc,
         ]);
-        if($cadastrarespec == 1){
+        $cadastrarcate = DB::table('categorias')->insert([
+            'cate_nome' => $request->nome,
+            'cate_desc' => "Categoria Criada para o(a) ".$request->nome,
+        ]);
+        if($cadastrarespec == 1 && $cadastrarcate == 1){
             return 1;
         }else{
             return 0;
@@ -63,6 +71,18 @@ class CadastroController extends Controller
             'especi_nome' => $request->nome,
         ]);
         if($cadastrarespeci == 1){
+            return 1;
+        }else{
+            return 0;
+        }
+    }
+
+    public function CadastroCategoria(Request $request){
+        $cadastrarcate = DB::table('categorias')->insert([
+            'cate_nome' => $request->nome,
+            'cate_desc' => $request->desc,
+        ]);
+        if($cadastrarcate == 1){
             return 1;
         }else{
             return 0;
@@ -324,6 +344,35 @@ class CadastroController extends Controller
             }else{
                 return 0;
             }
+        }else{
+            return 0;
+        }
+    }
+    public function CadastroProduto(Request $request){
+        if($request->quant == null){
+            $quant = 0;
+        }else{
+            $quant = $request->quant;
+        }
+        if($request->tipo == 'Servico'){
+            $cadastrarproduto = DB::table('produtos')->insert([
+                'prod_nome' => $request->nome,
+                'prod_desc' => $request->desc,
+                'prod_cate' => $request->cate,
+                'prod_tipo' => $request->tipo,
+            ]);
+        }else{
+            $cadastrarproduto = DB::table('produtos')->insert([
+                'prod_nome' => $request->nome,
+                'prod_desc' => $request->desc,
+                'prod_cate' => $request->cate,
+                'prod_tipo' => $request->tipo,
+                'prod_quant' => $quant,
+                'prod_estqmin' => $request->estqmin,
+            ]);
+        }
+        if($cadastrarproduto == 1){
+            return 1;
         }else{
             return 0;
         }

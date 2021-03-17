@@ -66,7 +66,7 @@
         <div class='input' id='tel1'>*Telefone 1:<input type='text' class='valores' name='tel1' id='tel1input'  onkeypress='tel1()'><br></div>
         <div class='input' id='tel2'>Telefone 2:<input type='text' class='valores' name='tel2' id='tel2input'  onkeypress='tel2()'><br></div>
         <div class='input' id='celular'>Celular:<input type='text' class='valores' name='celular' data-inputmask="'mask': '(99) 99999-9999'"><br></div>
-        <div class='input' id='comissao'>Comissao(%):<input type='number' class='valores' name='comissao' min='1' max='100'><br></div>
+        <div class='input' id='comissao'>Comissao(%):<input type='number' class='valores' name='comissao' min='1' max='100' value='1'><br></div>
         <div class='input' id='espec'>Especialidade:<select name="espec" id='especselect' onchange='filtespeci()'>
         <option value=''>---</option>
         </select><button id='especnovobutton' onclick='novoespec()'> Nova Especialidade </button><br></div><div class='input' id='especnovo'></div>
@@ -188,7 +188,7 @@
     }
 
     function novoespec(){
-            document.getElementById('especnovo').innerHTML="Nova Especialidade: <input type='text' id='especnovoinput' name='especnovoinput'><button onclick='cadastroespec()'>Cadastrar Especialidade</button>";
+            document.getElementById('especnovo').innerHTML="Nova Especialidade: <input type='text' id='especnovoinput' name='especnovoinput'> Descrição: <input type='text' id='especnovodescinput' name='especnovodescinput'><button onclick='cadastroespec()'>Cadastrar Especialidade</button>";
             document.getElementById('especnovo').style.display='block';
         }
 
@@ -218,6 +218,7 @@
                 url: "/cadastro/cadastroespecialidade",
                 data: {
                     nome:$("[name='especnovoinput']").val(),
+                    desc:$("[name='especnovodescinput']").val(),
                 },
                 dataType: "json",
                 success: function(data) {
@@ -329,67 +330,67 @@
     
 }
 
-function cadastrarmedico(){
-    for(var o = 0; o<especiar.length; o++){
-        var sla = 'especibox'+especiar[o];
-        if($("[name='"+sla+"']").prop('checked') == true){
-            especiaresc.push($("[name='"+sla+"']").val());
-        }
-    }
-    $.ajax({
-        type: "GET",
-        url: "/cadastro/cadastromedico",
-        data: {
-            nome:$("[name='nome']").val(),
-            cpf:$("[name='cpf']").val(),
-            rg:$("[name='rg']").val(),
-            cep:$("[name='cep']").val(),
-            datanasc:$("[name='datanasc']").val(),
-            estadocivil:$("[name='estadocivil']").val(),
-            sexo:$("[name='sexo']").val(),
-            logradouro:$("[name='logradouro']").val(),
-            num:$("[name='num']").val(),
-            complemento:$("[name='complemento']").val(),
-            bairro:$("[name='bairro']").val(),
-            cidade:$("[name='cidade']").val(),
-            uf:$("[name='uf']").val(),
-            celular:$("[name='celular']").val(),
-            tel1:$("[name='tel1']").val(),
-            tel2:$("[name='tel2']").val(),
-            email:$("[name='email']").val(),
-            comissao:$("[name='comissao']").val(),
-            espec:$("[name='espec']").val(),
-            especi: especiaresc,
-            pagamento:$("[name='pagamento']").val(),
-            status:$("[name='status']").val(),
-            domingocheckbox:$("[name='domingocheckbox']").prop('checked'),
-            domingoselect1:$("[name='domingoselect1']").val(),
-            domingoselect2:$("[name='domingoselect2']").val(),
-            segundacheckbox:$("[name='segundacheckbox']").prop('checked'),
-            segundaselect1:$("[name='segundaselect1']").val(),
-            segundaselect2:$("[name='segundaselect2']").val(),
-            tercacheckbox:$("[name='tercacheckbox']").prop('checked'),
-            tercaselect1:$("[name='tercaselect1']").val(),
-            tercaselect2:$("[name='tercaselect2']").val(),
-            quartacheckbox:$("[name='quartacheckbox']").prop('checked'),
-            quartaselect1:$("[name='quartaselect1']").val(),
-            quartaselect2:$("[name='quartaselect2']").val(),
-            quintacheckbox:$("[name='quintacheckbox']").prop('checked'),
-            quintaselect1:$("[name='quintaselect1']").val(),
-            quintaselect2:$("[name='quintaselect2']").val(),
-            sextacheckbox:$("[name='sextacheckbox']").prop('checked'),
-            sextaselect1:$("[name='sextaselect1']").val(),
-            sextaselect2:$("[name='sextaselect2']").val(),
-            sabadocheckbox:$("[name='sabadocheckbox']").prop('checked'),
-            sabadoselect1:$("[name='sabadoselect1']").val(),
-            sabadoselect2:$("[name='sabadoselect2']").val(),
-            tempoconsulta:$("[name='tempoconsulta']").val(),
-        },
-        dataType: "json",
-        success: function(data) {
-            console.log('Médico cadastrado com sucesso');
+    function cadastrarmedico(){
+        for(var o = 0; o<especiar.length; o++){
+            var sla = 'especibox'+especiar[o];
+            if($("[name='"+sla+"']").prop('checked') == true){
+                especiaresc.push($("[name='"+sla+"']").val());
             }
-        });
-}
+        }
+        $.ajax({
+            type: "GET",
+            url: "/cadastro/cadastromedico",
+            data: {
+                nome:$("[name='nome']").val(),
+                cpf:$("[name='cpf']").val(),
+                rg:$("[name='rg']").val(),
+                cep:$("[name='cep']").val(),
+                datanasc:$("[name='datanasc']").val(),
+                estadocivil:$("[name='estadocivil']").val(),
+                sexo:$("[name='sexo']").val(),
+                logradouro:$("[name='logradouro']").val(),
+                num:$("[name='num']").val(),
+                complemento:$("[name='complemento']").val(),
+                bairro:$("[name='bairro']").val(),
+                cidade:$("[name='cidade']").val(),
+                uf:$("[name='uf']").val(),
+                celular:$("[name='celular']").val(),
+                tel1:$("[name='tel1']").val(),
+                tel2:$("[name='tel2']").val(),
+                email:$("[name='email']").val(),
+                comissao:$("[name='comissao']").val(),
+                espec:$("[name='espec']").val(),
+                especi: especiaresc,
+                pagamento:$("[name='pagamento']").val(),
+                status:$("input[name=status]:checked").val(),
+                domingocheckbox:$("[name='domingocheckbox']").prop('checked'),
+                domingoselect1:$("[name='domingoselect1']").val(),
+                domingoselect2:$("[name='domingoselect2']").val(),
+                segundacheckbox:$("[name='segundacheckbox']").prop('checked'),
+                segundaselect1:$("[name='segundaselect1']").val(),
+                segundaselect2:$("[name='segundaselect2']").val(),
+                tercacheckbox:$("[name='tercacheckbox']").prop('checked'),
+                tercaselect1:$("[name='tercaselect1']").val(),
+                tercaselect2:$("[name='tercaselect2']").val(),
+                quartacheckbox:$("[name='quartacheckbox']").prop('checked'),
+                quartaselect1:$("[name='quartaselect1']").val(),
+                quartaselect2:$("[name='quartaselect2']").val(),
+                quintacheckbox:$("[name='quintacheckbox']").prop('checked'),
+                quintaselect1:$("[name='quintaselect1']").val(),
+                quintaselect2:$("[name='quintaselect2']").val(),
+                sextacheckbox:$("[name='sextacheckbox']").prop('checked'),
+                sextaselect1:$("[name='sextaselect1']").val(),
+                sextaselect2:$("[name='sextaselect2']").val(),
+                sabadocheckbox:$("[name='sabadocheckbox']").prop('checked'),
+                sabadoselect1:$("[name='sabadoselect1']").val(),
+                sabadoselect2:$("[name='sabadoselect2']").val(),
+                tempoconsulta:$("[name='tempoconsulta']").val(),
+            },
+            dataType: "json",
+            success: function(data) {
+                console.log('Médico cadastrado com sucesso');
+                }
+            });
+    }
 </script>
 </html>
