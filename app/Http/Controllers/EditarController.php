@@ -453,9 +453,10 @@ class EditarController extends Controller
         $medico = DB::table('medicos')->where('med_cpf', $request->cpf)->get()->map(function($obj){
             return (array) $obj;
         })->toArray();
-        $especi = implode(',', $request->especi);
+        $servi = implode(',', $request->servi);
         $edmedico = Medicos::find($medico[0]['med_id']);
         $edmedico->med_nome = $request->nome;
+        $edmedico->med_crn = $request->crn;
         $edmedico->med_cpf = $request->cpf;
         $edmedico->med_estadocivil = $request->estadocivil;
         $edmedico->med_sexo = $request->sexo;
@@ -474,7 +475,7 @@ class EditarController extends Controller
         $edmedico->med_email = $request->email;
         $edmedico->med_comissao = $request->comissao;
         $edmedico->med_espec = $request->espec;
-        $edmedico->med_especi = $especi;
+        $edmedico->med_servi = $servi;
         $edmedico->med_diapag = $request->pagamento;
         $edmedico->med_status = $request->status;
         if($edmedico->save()){

@@ -65,12 +65,15 @@ class CadastroController extends Controller
         }
     }
 
-    public function CadastroEspecializacao(Request $request){
-        $cadastrarespeci = DB::table('especializacoes')->insert([
-            'espec_id'=> $request->espec,
-            'especi_nome' => $request->nome,
+    public function CadastroServico(Request $request){
+        $consultaselectespec = DB::table('especialidades')->where('espec_id', $request->espec)->get();
+        $consultaselectcate = DB::table('categorias')->where('cate_nome', $consultaselectespec[0]->espec_nome)->get();
+        $cadastrarservi = DB::table('produtos')->insert([
+            'prod_nome' => $request->nome,
+            'prod_cate' => $consultaselectcate[0]->cate_id,
+            'prod_tipo' => 'Servico',
         ]);
-        if($cadastrarespeci == 1){
+        if($cadastrarservi == 1){
             return 1;
         }else{
             return 0;
@@ -289,9 +292,10 @@ class CadastroController extends Controller
     }
 
     public function CadastroMedico(Request $request){
-        $especi = implode(',', $request->especi);
+        $servi = implode(',', $request->servi);
         $cadastrarmedico = DB::table('medicos')->insert([
             'med_nome' => $request->nome,
+            'med_crn' => $request->crn,
             'med_cpf' => $request->cpf,
             'med_estadocivil' => $request->estadocivil,
             'med_sexo' => $request->sexo,
@@ -310,7 +314,7 @@ class CadastroController extends Controller
             'med_email' => $request->email,
             'med_comissao' => $request->comissao,
             'med_espec' => $request->espec,
-            'med_especi' => $especi,
+            'med_servi' => $servi,
             'med_diapag' => $request->pagamento,
             'med_status' => $request->status,
         ]);

@@ -133,16 +133,20 @@ class ConsultaController extends Controller
     }
 
     public function ConsultaMedicoDados(Request $request){
-        if($request->cpf){
-            $consultamedicos = DB::table('medicos')->where('med_cpf', $request->cpf)->get();
-        }else{
-            $consultamedicos = DB::table('medicos')->where('med_nome', $request->nomemedico)->get();
-        }
-        
+        $consultafinal = [];
+        $consultamedicos = DB::table('medicos')->where('med_cpf', 'like', '%'.$request->cpf.'%')
+        ->where('med_nome',  'like', '%'.$request->nomemedico.'%')
+        ->where('med_crn',  'like', '%'.$request->crnmedico.'%')
+        ->where('med_espec',  'like', '%'.$request->especmedico.'%')
+        ->get();
         $consulta = $consultamedicos->map(function($obj){
             return (array) $obj;
         })->toArray();
-        return $consulta;
+        foreach($consulta as $consulta){
+            $consultaespec = DB::table('especialidades')->where('espec_id', $consulta['med_espec'])->get();
+            array_push($consultafinal, [$consulta['med_cpf'] , $consulta['med_crn'], $consulta['med_nome'], $consulta['med_tel1'], $consultaespec[0]->espec_nome]);
+        }
+        return $consultafinal;
     }
 
     public function ConsultaPessoaNome(Request $request){
@@ -265,14 +269,16 @@ class ConsultaController extends Controller
         return $espec;
     }
 
-    public function ConsultaCadastroEspecializacao(Request $request){
-        $consultaselectespeci = DB::table('especializacoes')->where('espec_id', $request->espec)->get();
-        $especi = ["id"=>[], "nome"=>[]];
-        foreach($consultaselectespeci as $consultaselectespeci){
-            array_push($especi["id"], $consultaselectespeci->especi_id);
-            array_push($especi["nome"], $consultaselectespeci->especi_nome);
+    public function ConsultaCadastroServico(Request $request){
+        $consultaselectespec = DB::table('especialidades')->where('espec_id', $request->espec)->get();
+        $consultaselectcate = DB::table('categorias')->where('cate_nome', $consultaselectespec[0]->espec_nome)->get();
+        $consultaselectservi = DB::table('produtos')->where('prod_cate', $consultaselectcate[0]->cate_id)->get();
+        $servi = ["id"=>[], "nome"=>[]];
+        foreach($consultaselectservi as $consultaselectservi){
+            array_push($servi["id"], $consultaselectservi->prod_id);
+            array_push($servi["nome"], $consultaselectservi->prod_nome);
         }
-        return $especi;
+        return $servi;
     }
 
     

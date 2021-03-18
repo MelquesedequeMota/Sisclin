@@ -12,15 +12,20 @@
     <script src="{{asset('inputmask/dist/bindings/inputmask.binding.js')}}"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <title>Consulta do Médico</title>
-        Nome: <input type='text' name='pesquisarmediconome' id='pesquisarmediconome' > CPF/CNPJ: <input type='text' name='pesquisarmedicocpf' id='pesquisarmedicocpf'><input type='button' value='Pesquisar' onclick='pesquisarmedico()'>
+        Nome: <input type='text' name='pesquisarmediconome' id='pesquisarmediconome' > CPF/CNPJ: <input type='text' name='pesquisarmedicocpf' id='pesquisarmedicocpf'> CRN: <input type='text' name='pesquisarmedicocrn' id='pesquisarmedicocrn'> Especialidade:<select name="pesquisarmedicoespec" id='pesquisarmedicoespec'>
+        <option value=''>---</option>
+        </select><input type='button' value='Pesquisar' onclick='pesquisarmedico()'>
         <div id='tabela'><table border='1px'id='pesquisarmedicotable'>
             <tr>
                 <th>CPF</th>
+                <th>CRN</th>
                 <th>Nome do Médico</th>
                 <th>Telefone de Contato</th>
+                <th>Especialidade</th>
                 <th>Editar</th>
             </tr>
         </table></div>
+        <div class='input' id='crn'>*CRN:<input type='text' class='valores' name='crn'><br></div>
         <div class='input' id='cpf'>*CPF:<input type='text' class='valores' name='cpf' data-inputmask="'mask': '999.999.999-99'"><br></div>
         <div class='input' id='cnpj'>*CNPJ:<input type='text' class='valores' name='cnpj' data-inputmask="'mask': '99.999.999/9999-99'"><br></div>
         <div class='input' id='nome'>*Nome:<input type='text' class='valores' name='nome'><br></div>
@@ -79,7 +84,7 @@
         <div class='input' id='espec'>Especialidade:<select name="espec" id='especselect' onchange='filtespeci()'>
         <option value=''>---</option>
         </select><button id='especnovobutton' onclick='novoespec()'> Nova Especialidade </button><br></div><div class='input' id='especnovo'></div>
-        <div class='input' id='especicheckbox'></div><br></div><div class='input' id='especinovo'></div>
+        <div class='input' id='servicheckbox'></div><br></div><div class='input' id='servinovo'></div>
         <div class='input' id='pagamento'>Dia do Pagamento:<input type='number' class='valores' name='pagamento' value ='1' min='1' max='100' value='1'><br></div>
         <div class='input' id='status'>Status: Ativo <input type='radio' value='Ativo' id='Ativo' name='status' checked > Inativo <input type='radio' value='Inativo' id='Inativo' name='status'><br></div>
         <div class='input' id='tempoconsulta'>Tempo da mínimo da consulta:<select name="tempoconsulta" id='tempoconsultainput'>
@@ -145,6 +150,7 @@
     var sessao = '';
     reset();
     escondertabela();
+    consespecpesquisa();
     $('#tel1input').inputmask('(99) 9999[9]-9999');
     $('#tel2input').inputmask('(99) 9999[9]-9999');
     $('#contatorepinput').inputmask('(99) 9999[9]-9999');
@@ -154,23 +160,23 @@
         keepStatic: true
     });
     
-    var especiar = [];
-    var especiaresc = [];
+    var serviar = [];
+    var serviaresc = [];
 
-    function filtespeci(){
-        document.getElementById('especicheckbox').innerHTML = '';
+    function filtservi(){
+        document.getElementById('servicheckbox').innerHTML = '';
         if($("[name='espec']").val() != ''){
             $.ajax({
                 type: "GET",
-                url: "/consultacadastroespeci",
+                url: "/consultacadastroservi",
                 data: {espec:$("[name='espec']").val()},
                 dataType: "json",
                 success: function(data) {
                     for(var i = 0; i<data['nome'].length; i++){
-                        document.getElementById('especicheckbox').innerHTML += data['nome'][i] + ": <input type='checkbox' name='especibox"+data['id'][i]+"' value='"+data['id'][i]+"'> ";
-                        especiar.push(data['id'][i]);
+                        document.getElementById('servicheckbox').innerHTML += data['nome'][i] + ": <input type='checkbox' name='servibox"+data['id'][i]+"' value='"+data['id'][i]+"'> ";
+                        serviar.push(data['id'][i]);
                     }
-                    document.getElementById('especicheckbox').innerHTML+= "<button id='especinovobutton' onclick='novaespeci()'> Nova Especialização </button>";
+                    document.getElementById('servicheckbox').innerHTML+= "<button id='servinovobutton' onclick='novaservi()'> Novo Serviço </button>";
                 }
             });
         }
@@ -194,21 +200,14 @@
             });
     }
 
-    function novoespec(){
-            document.getElementById('especnovo').innerHTML="Nova Especialidade: <input type='text' id='especnovoinput' name='especnovoinput'> Descrição: <input type='text' id='especnovodescinput' name='especnovodescinput'><button onclick='cadastroespec()'>Cadastrar Especialidade</button>";
-            document.getElementById('especnovo').style.display='block';
-        }
-
-    function novaespeci(){
-        document.getElementById('especinovo').innerHTML="Nova Especialização: <input type='text' id='especinovoinput' name='especinovoinput'> Especialidade:<select name='especinovoespec' id='especinovoespec'></select><button onclick='cadastroespeci()'>Cadastrar Especialização</button>";
-        document.getElementById('especinovo').style.display='block';
+    function consespecpesquisa(){
         $.ajax({
                 type: "GET",
                 url: "/consultacadastroespec",
                 data: {},
                 dataType: "json",
                 success: function(data) {
-                    var select = document.getElementById('especinovoespec');
+                    var select = document.getElementById('pesquisarmedicoespec');
                     for(var i = 0; i<data['id'].length; i++){
                         var opt = document.createElement('option');
                         opt.appendChild(document.createTextNode(data['nome'][i]));
@@ -217,6 +216,37 @@
                     }
                 }
             });
+    }
+
+    function novoespec(){
+            document.getElementById('especnovo').innerHTML="Nova Especialidade: <input type='text' id='especnovoinput' name='especnovoinput'> Descrição: <input type='text' id='especnovodescinput' name='especnovodescinput'><button onclick='cadastroespec()'>Cadastrar Especialidade</button><input type='button' value='x' onclick='cancelarespec()'>";
+            document.getElementById('especnovo').style.display='block';
+        }
+    function cancelarespec(){
+        document.getElementById('especnovo').style.display='none'
+    }
+
+    function novaservi(){
+        document.getElementById('servinovo').innerHTML="Novo Serviço: <input type='text' id='servinovoinput' name='servinovoinput'> Serviço:<select name='servinovoespec' id='servinovoespec'></select><button onclick='cadastroservi()'>Cadastrar Serviço</button><input type='button' value='x' onclick='cancelarservi()'>";
+        document.getElementById('servinovo').style.display='block';
+        $.ajax({
+                type: "GET",
+                url: "/consultacadastroespec",
+                data: {},
+                dataType: "json",
+                success: function(data) {
+                    var select = document.getElementById('servinovoespec');
+                    for(var i = 0; i<data['id'].length; i++){
+                        var opt = document.createElement('option');
+                        opt.appendChild(document.createTextNode(data['nome'][i]));
+                        opt.value = data['id'][i];
+                        select.appendChild(opt);
+                    }
+                }
+            });
+    }
+    function cancelarservi(){
+        document.getElementById('servinovo').style.display='none'
     }
 
     function cadastroespec(){
@@ -235,20 +265,22 @@
                     }
                 });
     }
-    function cadastroespeci(){
+    function cadastroservi(){
         $.ajax({
                 type: "GET",
-                url: "/cadastro/cadastroespecializacao",
+                url: "/cadastro/cadastroservico",
                 data: {
-                    nome:$("[name='especinovoinput']").val(),
-                    espec:$("[name='especinovoespec']").val(),
+                    nome:$("[name='servinovoinput']").val(),
+                    espec:$("[name='servinovoespec']").val(),
                 },
                 dataType: "json",
                 success: function(data) {
-                    console.log('Especialização cadastrada com sucesso');
-                    document.getElementById('especinovo').style.display='none'
+                    console.log('Serviço cadastrado com sucesso');
+                    document.getElementById('servinovo').style.display='none'
+                    filtservi();
                     }
                 });
+            
     }
 
     function preencherSelects(){
@@ -311,7 +343,7 @@
         $.ajax({
                 type: "GET",
                 url: "/consulta/medico/dados",
-                data: {cpf: document.getElementById('pesquisarmedicocpf').value, nomemedico: document.getElementById('pesquisarmediconome').value},
+                data: {cpf: document.getElementById('pesquisarmedicocpf').value, nomemedico: document.getElementById('pesquisarmediconome').value, crnmedico: document.getElementById('pesquisarmedicocrn').value, especmedico: document.getElementById('pesquisarmedicoespec').value},
                 dataType: "json",
                 success: function(data) {
                     document.getElementById('tabela').style.display = 'block';
@@ -323,11 +355,15 @@
                         var celula2 = linha.insertCell(1);   
                         var celula3 = linha.insertCell(2); 
                         var celula4 = linha.insertCell(3);
-                        dadoslinhas.push(data[i]['med_cpf']);
-                        celula1.innerHTML=data[i]['med_cpf'];
-                        celula2.innerHTML=data[i]['med_nome'];
-                        celula3.innerHTML=data[i]['med_tel1'];
-                        celula4.innerHTML="<input type='button' name='editareste' id='"+i+"' value='Editar' onclick='editar(this)'>";
+                        var celula5 = linha.insertCell(4);
+                        var celula6 = linha.insertCell(5);
+                        dadoslinhas.push(data[i][0]);
+                        celula1.innerHTML=data[i][0];
+                        celula2.innerHTML=data[i][1];
+                        celula3.innerHTML=data[i][2];
+                        celula4.innerHTML=data[i][3];
+                        celula5.innerHTML=data[i][4];
+                        celula6.innerHTML="<input type='button' name='editareste' id='"+i+"' value='Editar' onclick='editar(this)'>";
                         
                     }
                 }
@@ -454,6 +490,7 @@
         consespec();
         document.getElementById('editar').style.display = 'block';
 
+        document.getElementById('crn').style.display = 'block';
         document.getElementById('cpf').style.display = 'block';
         document.getElementById('nome').style.display = 'block';
         document.getElementById('datanasc').style.display = 'block';
@@ -476,9 +513,10 @@
         document.getElementById('espec').style.display = 'block';
         document.getElementById('tabelaagenda').style.display = 'block';
         document.getElementById('status').style.display = 'block';
-        document.getElementById('especicheckbox').style.display = 'block';
+        document.getElementById('servicheckbox').style.display = 'block';
         document.getElementById('tempoconsulta').style.display = 'block';
 
+        document.querySelector("[name='crn']").value = dados['med_crn'];
         document.querySelector("[name='cpf']").value = dados['med_cpf'];
         document.querySelector("[name='nome']").value = dados['med_nome'];
         document.querySelector("[name='datanasc']").value = dados['med_datanasc'];
@@ -508,14 +546,14 @@
         document.querySelector("[name='pagamento']").value = dados['med_diapag'];
         document.querySelector("[name='status']").value = dados['med_status'];
         preencherAgenda(dados['med_id']);
-        setTimeout(function(){ document.querySelector("[name='espec']").value = dados['med_espec']; filtespeci();}, 500);
-        setTimeout(function(){ preencherEspeci(dados['med_especi'])}, 1000);
+        setTimeout(function(){ document.querySelector("[name='espec']").value = dados['med_espec']; filtservi();}, 500);
+        setTimeout(function(){ preencherServi(dados['med_servi'])}, 1000);
     }
 
-    function preencherEspeci(dados){
+    function preencherServi(dados){
         dados = dados.split(',');
         for(var i = 0; i<dados.length; i++){
-            var nome = 'especibox'+dados[i];
+            var nome = 'servibox'+dados[i];
             $("[name='"+nome+"']").attr('checked', true);
         }
     }
@@ -545,10 +583,10 @@
     }
 
     function editarMedico(){
-        for(var o = 0; o<especiar.length; o++){
-            var sla = 'especibox'+especiar[o];
+        for(var o = 0; o<serviar.length; o++){
+            var sla = 'servibox'+serviar[o];
             if($("[name='"+sla+"']").prop('checked') == true){
-                especiaresc.push($("[name='"+sla+"']").val());
+                serviaresc.push($("[name='"+sla+"']").val());
             }
         }
         $.ajax({
@@ -556,6 +594,7 @@
             url: "/editar/editarmedico",
             data: {
                 nome:$("[name='nome']").val(),
+                crn:$("[name='crn']").val(),
                 cpf:$("[name='cpf']").val(),
                 rg:$("[name='rg']").val(),
                 cep:$("[name='cep']").val(),
@@ -574,7 +613,7 @@
                 email:$("[name='email']").val(),
                 comissao:$("[name='comissao']").val(),
                 espec:$("[name='espec']").val(),
-                especi: especiaresc,
+                servi: serviaresc,
                 pagamento:$("[name='pagamento']").val(),
                 status:$("[name='status']").val(),
                 domingocheckbox:$("[name='domingocheckbox']").prop('checked'),
@@ -605,6 +644,7 @@
                 console.log('Medico editado com sucesso');
                 }
             });
+            serviaresc = [];
     }
 </script>
 </html>

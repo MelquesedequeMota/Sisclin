@@ -10,6 +10,7 @@ class Medicos extends Model
     protected $primaryKey = 'med_id';
     protected $fillable = [
         'med_nome',
+        'med_crn',
         'med_cpf',
         'med_estadocivil',
         'med_sexo',
@@ -28,7 +29,7 @@ class Medicos extends Model
         'med_rg',
         'med_email',
         'med_espec',
-        'med_especi',
+        'med_servi',
         'med_comissao',
         'med_diapag',
         'med_status',

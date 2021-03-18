@@ -21,13 +21,13 @@ Route::get('cadastro/cadastroproduto', 'App\Http\Controllers\CadastroController@
 Route::get('cadastro/cadastrodepartamento', 'App\Http\Controllers\CadastroController@CadastroDepartamento')->name('cadastrodepartamento');
 Route::get('cadastro/cadastrosetor', 'App\Http\Controllers\CadastroController@CadastroSetor')->name('cadastrosetor');
 Route::get('cadastro/cadastrofuncao', 'App\Http\Controllers\CadastroController@CadastroFuncao')->name('cadastrofuncao');
-Route::get('cadastro/cadastroespecializacao', 'App\Http\Controllers\CadastroController@CadastroEspecializacao')->name('cadastroespecializacao');
+Route::get('cadastro/cadastroservico', 'App\Http\Controllers\CadastroController@CadastroServico')->name('cadastroservico');
 Route::get('cadastro/cadastrocategoria', 'App\Http\Controllers\CadastroController@CadastroCategoria')->name('cadastrocategoria');
 Route::get('consultacadastrodep', 'App\Http\Controllers\ConsultaController@ConsultaCadastroDepartamento')->name('consultacadastrodep');
 Route::get('consultacadastroset', 'App\Http\Controllers\ConsultaController@ConsultaCadastroSetor')->name('consultacadastroset');
 Route::get('consultacadastrofunc', 'App\Http\Controllers\ConsultaController@ConsultaCadastroFuncao')->name('consultacadastrofunc');
 Route::get('consultacadastroespec', 'App\Http\Controllers\ConsultaController@ConsultaCadastroEspecialidade')->name('consultacadastroespec');
-Route::get('consultacadastroespeci', 'App\Http\Controllers\ConsultaController@ConsultaCadastroEspecializacao')->name('consultacadastroespeci');
+Route::get('consultacadastroservi', 'App\Http\Controllers\ConsultaController@ConsultaCadastroServico')->name('consultacadastroservi');
 Route::get('consultacadastrocate', 'App\Http\Controllers\ConsultaController@ConsultaCadastroCategoria')->name('consultacadastrocate');
 
 Route::get('consulta/pessoa', 'App\Http\Controllers\ConsultaController@ConsultaPessoa')->name('consultapessoa');

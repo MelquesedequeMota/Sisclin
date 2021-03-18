@@ -16,6 +16,7 @@ class Medicos extends Migration
         Schema::create('medicos', function (Blueprint $table) {
             $table->bigIncrements('med_id');
             $table->string('med_nome');
+            $table->string('med_crn')->unique();
             $table->string('med_cpf')->unique();
             $table->string('med_estadocivil');
             $table->string('med_sexo');
@@ -33,7 +34,7 @@ class Medicos extends Migration
             $table->string('med_rg')->unique()->nullable();
             $table->string('med_email')->nullable();
             $table->integer('med_espec');
-            $table->string('med_especi')->nullable();
+            $table->string('med_servi')->nullable();
             $table->integer('med_comissao');
             $table->integer('med_diapag');
             $table->string('med_status');

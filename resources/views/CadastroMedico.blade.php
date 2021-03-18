@@ -13,6 +13,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 </head>
 <body>
+        <div class='input' id='crn'>*CRN:<input type='text' class='valores' name='crn'><br></div>
         <div class='input' id='cpf'>*CPF:<input type='text' class='valores' name='cpf' data-inputmask="'mask': '999.999.999-99'"><br></div>
         <div class='input' id='nome'>*Nome:<input type='text' class='valores' name='nome'><br></div>
         <div class='input' id='rg'>*RG:<input type='text' class='valores' name='rg' data-inputmask="'mask': '9999999999-9'"><br></div>
@@ -67,10 +68,10 @@
         <div class='input' id='tel2'>Telefone 2:<input type='text' class='valores' name='tel2' id='tel2input'  onkeypress='tel2()'><br></div>
         <div class='input' id='celular'>Celular:<input type='text' class='valores' name='celular' data-inputmask="'mask': '(99) 99999-9999'"><br></div>
         <div class='input' id='comissao'>Comissao(%):<input type='number' class='valores' name='comissao' min='1' max='100' value='1'><br></div>
-        <div class='input' id='espec'>Especialidade:<select name="espec" id='especselect' onchange='filtespeci()'>
+        <div class='input' id='espec'>Especialidade:<select name="espec" id='especselect' onchange='filtservi()'>
         <option value=''>---</option>
         </select><button id='especnovobutton' onclick='novoespec()'> Nova Especialidade </button><br></div><div class='input' id='especnovo'></div>
-        <div class='input' id='especicheckbox'></div><br></div><div class='input' id='especinovo'></div>
+        <div class='input' id='servicheckbox'></div><br></div><div class='input' id='servinovo'></div>
         <div class='input' id='pagamento'>Dia do Pagamento:<input type='number' class='valores' name='pagamento' value ='1' min='1' max='100' value='1'><br></div>
         <div class='input' id='status'>Status: Ativo <input type='radio' value='Ativo' id='Ativo' name='status' checked > Inativo <input type='radio' value='Inativo' id='Inativo' name='status'><br></div>
         <div class='input' id='tempoconsulta'>Tempo da mínimo da consulta:<select name="tempoconsulta" id='tempoconsultainput'>
@@ -132,8 +133,8 @@
     preencherSelects();
     $('#tel1input').inputmask('(99) 9999[9]-9999');
     $('#tel2input').inputmask('(99) 9999[9]-9999');
-    var especiar = [];
-    var especiaresc = [];
+    var serviar = [];
+    var serviaresc = [];
 
     function tel1(){
         if(document.getElementById('tel1input').value[5] != '9'){
@@ -150,20 +151,20 @@
         }
     }
 
-    function filtespeci(){
-        document.getElementById('especicheckbox').innerHTML = '';
+    function filtservi(){
+        document.getElementById('servicheckbox').innerHTML = '';
         if($("[name='espec']").val() != ''){
             $.ajax({
                 type: "GET",
-                url: "/consultacadastroespeci",
+                url: "/consultacadastroservi",
                 data: {espec:$("[name='espec']").val()},
                 dataType: "json",
                 success: function(data) {
                     for(var i = 0; i<data['nome'].length; i++){
-                        document.getElementById('especicheckbox').innerHTML += data['nome'][i] + ": <input type='checkbox' name='especibox"+data['id'][i]+"' value='"+data['id'][i]+"'> ";
-                        especiar.push(data['id'][i]);
+                        document.getElementById('servicheckbox').innerHTML += data['nome'][i] + ": <input type='checkbox' name='servibox"+data['id'][i]+"' value='"+data['id'][i]+"'> ";
+                        serviar.push(data['id'][i]);
                     }
-                    document.getElementById('especicheckbox').innerHTML+= "<button id='especinovobutton' onclick='novaespeci()'> Nova Especialização </button>";
+                    document.getElementById('servicheckbox').innerHTML+= "<button id='servinovobutton' onclick='novaservi()'> Novo Serviço </button>";
                 }
             });
         }
@@ -188,20 +189,24 @@
     }
 
     function novoespec(){
-            document.getElementById('especnovo').innerHTML="Nova Especialidade: <input type='text' id='especnovoinput' name='especnovoinput'> Descrição: <input type='text' id='especnovodescinput' name='especnovodescinput'><button onclick='cadastroespec()'>Cadastrar Especialidade</button>";
+            document.getElementById('especnovo').innerHTML="Nova Especialidade: <input type='text' id='especnovoinput' name='especnovoinput'> Descrição: <input type='text' id='especnovodescinput' name='especnovodescinput'><button onclick='cadastroespec()'>Cadastrar Especialidade</button><input type='button' value='x' onclick='cancelarespec()'>";
             document.getElementById('especnovo').style.display='block';
         }
 
-    function novaespeci(){
-        document.getElementById('especinovo').innerHTML="Nova Especialização: <input type='text' id='especinovoinput' name='especinovoinput'> Especialidade:<select name='especinovoespec' id='especinovoespec'></select><button onclick='cadastroespeci()'>Cadastrar Especialização</button>";
-        document.getElementById('especinovo').style.display='block';
+    function cancelarespec(){
+        document.getElementById('especnovo').style.display='none'
+    }
+
+    function novaservi(){
+        document.getElementById('servinovo').innerHTML="Novo Serviço: <input type='text' id='servinovoinput' name='servinovoinput'> Serviço:<select name='servinovoespec' id='servinovoespec'></select><button onclick='cadastroservi()'>Cadastrar Serviço</button><input type='button' value='x' onclick='cancelarservi()'>";
+        document.getElementById('servinovo').style.display='block';
         $.ajax({
                 type: "GET",
                 url: "/consultacadastroespec",
                 data: {},
                 dataType: "json",
                 success: function(data) {
-                    var select = document.getElementById('especinovoespec');
+                    var select = document.getElementById('servinovoespec');
                     for(var i = 0; i<data['id'].length; i++){
                         var opt = document.createElement('option');
                         opt.appendChild(document.createTextNode(data['nome'][i]));
@@ -210,6 +215,10 @@
                     }
                 }
             });
+    }
+
+    function cancelarservi(){
+        document.getElementById('servinovo').style.display='none'
     }
 
     function cadastroespec(){
@@ -228,20 +237,22 @@
                     }
                 });
     }
-    function cadastroespeci(){
+    function cadastroservi(){
         $.ajax({
                 type: "GET",
-                url: "/cadastro/cadastroespecializacao",
+                url: "/cadastro/cadastroservico",
                 data: {
-                    nome:$("[name='especinovoinput']").val(),
-                    espec:$("[name='especinovoespec']").val(),
+                    nome:$("[name='servinovoinput']").val(),
+                    espec:$("[name='servinovoespec']").val(),
                 },
                 dataType: "json",
                 success: function(data) {
-                    console.log('Especialização cadastrada com sucesso');
-                    document.getElementById('especinovo').style.display='none'
+                    console.log('Serviço cadastrado com sucesso');
+                    document.getElementById('servinovo').style.display='none'
+                    filtservi();
                     }
                 });
+            
     }
 
         function limpa_formulário_cep() {
@@ -331,10 +342,10 @@
 }
 
     function cadastrarmedico(){
-        for(var o = 0; o<especiar.length; o++){
-            var sla = 'especibox'+especiar[o];
+        for(var o = 0; o<serviar.length; o++){
+            var sla = 'servibox'+serviar[o];
             if($("[name='"+sla+"']").prop('checked') == true){
-                especiaresc.push($("[name='"+sla+"']").val());
+                serviaresc.push($("[name='"+sla+"']").val());
             }
         }
         $.ajax({
@@ -342,6 +353,7 @@
             url: "/cadastro/cadastromedico",
             data: {
                 nome:$("[name='nome']").val(),
+                crn:$("[name='crn']").val(),
                 cpf:$("[name='cpf']").val(),
                 rg:$("[name='rg']").val(),
                 cep:$("[name='cep']").val(),
@@ -360,7 +372,7 @@
                 email:$("[name='email']").val(),
                 comissao:$("[name='comissao']").val(),
                 espec:$("[name='espec']").val(),
-                especi: especiaresc,
+                servi: serviaresc,
                 pagamento:$("[name='pagamento']").val(),
                 status:$("input[name=status]:checked").val(),
                 domingocheckbox:$("[name='domingocheckbox']").prop('checked'),
@@ -391,6 +403,7 @@
                 console.log('Médico cadastrado com sucesso');
                 }
             });
+            serviaresc = [];
     }
 </script>
 </html>
