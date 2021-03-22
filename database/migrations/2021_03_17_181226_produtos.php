@@ -21,6 +21,8 @@ class Produtos extends Migration
             $table->string('prod_tipo');
             $table->integer('prod_quant')->nullable();
             $table->integer('prod_estqmin')->nullable();
+            $table->double('prod_valor')->nullable();
+            $table->string('prod_serviitens')->nullable();
         });
     }
 

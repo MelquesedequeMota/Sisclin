@@ -281,5 +281,15 @@ class ConsultaController extends Controller
         return $servi;
     }
 
+    public function ConsultaCadastroProduto(Request $request){
+        $consultaselectprod = DB::table('produtos')->where('prod_tipo','Item')->get();
+        $prod = ["id"=>[], "nome"=>[]];
+        foreach($consultaselectprod as $consultaselectprod){
+            array_push($prod["id"], $consultaselectprod->prod_id);
+            array_push($prod["nome"], $consultaselectprod->prod_nome);
+        }
+        return $prod;
+    }
+
     
 }

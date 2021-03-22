@@ -29,6 +29,7 @@ Route::get('consultacadastrofunc', 'App\Http\Controllers\ConsultaController@Cons
 Route::get('consultacadastroespec', 'App\Http\Controllers\ConsultaController@ConsultaCadastroEspecialidade')->name('consultacadastroespec');
 Route::get('consultacadastroservi', 'App\Http\Controllers\ConsultaController@ConsultaCadastroServico')->name('consultacadastroservi');
 Route::get('consultacadastrocate', 'App\Http\Controllers\ConsultaController@ConsultaCadastroCategoria')->name('consultacadastrocate');
+Route::get('consultacadastroprod', 'App\Http\Controllers\ConsultaController@ConsultaCadastroProduto')->name('consultacadastroprod');
 
 Route::get('consulta/pessoa', 'App\Http\Controllers\ConsultaController@ConsultaPessoa')->name('consultapessoa');
 Route::get('consulta/medico', 'App\Http\Controllers\ConsultaController@ConsultaMedico')->name('consultamedico');

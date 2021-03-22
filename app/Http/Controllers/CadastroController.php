@@ -364,6 +364,8 @@ class CadastroController extends Controller
                 'prod_desc' => $request->desc,
                 'prod_cate' => $request->cate,
                 'prod_tipo' => $request->tipo,
+                'prod_valor' => $request->valor,
+                'prod_serviitens' => $request->serviitens,
             ]);
         }else{
             $cadastrarproduto = DB::table('produtos')->insert([
@@ -373,6 +375,7 @@ class CadastroController extends Controller
                 'prod_tipo' => $request->tipo,
                 'prod_quant' => $quant,
                 'prod_estqmin' => $request->estqmin,
+                'prod_valor' => $request->valor,
             ]);
         }
         if($cadastrarproduto == 1){
