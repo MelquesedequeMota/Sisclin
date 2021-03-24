@@ -16,6 +16,9 @@ class CadastroController extends Controller
     public function CadastrarProduto(Request $request){
         return view('CadastroProduto');
     }
+    public function CadastrarPlano(Request $request){
+        return view('CadastroPlano');
+    }
     public function CadastroDepartamento(Request $request){
         $cadastrardep = DB::table('departamentos')->insert([
             'dep_nome' => $request->nome,
@@ -379,6 +382,23 @@ class CadastroController extends Controller
             ]);
         }
         if($cadastrarproduto == 1){
+            return 1;
+        }else{
+            return 0;
+        }
+    }
+
+    public function CadastroPlano(Request $request){
+            $cadastrarplano = DB::table('planos')->insert([
+                'plan_nome' => $request->nome,
+                'plan_desc' => $request->desc,
+                'plan_qtdtitu' => $request->qtdtitu,
+                'plan_qtddep' => $request->qtddep,
+                'plan_valor' => $request->valor,
+                'plan_servicos' => $request->servicos,
+                'plan_itens' => $request->itens,
+            ]);
+        if($cadastrarplano == 1){
             return 1;
         }else{
             return 0;

@@ -42,6 +42,8 @@
     var contlinhas = 0;
     var linhas = [];
     var serviitens = "";
+    var serviitensval = [];
+    var valor = 0;
     adicionaLinha('serviitens');
     function adicionaLinha(idTabela) {
         contlinhas++;
@@ -52,8 +54,8 @@
         var celula1 = linha.insertCell(0);
         var celula2 = linha.insertCell(1);   
         var celula3 = linha.insertCell(2); 
-        celula1.innerHTML = "<select name='produto"+contlinhas+"' id='select"+contlinhas+"'><option value=''>Selecione um Produto</option></select>"; 
-        celula2.innerHTML =  "<input type='number' name='quantidade"+contlinhas+"' min = '1' value = '1'>"; 
+        celula1.innerHTML = "<select name='produto"+contlinhas+"' id='select"+contlinhas+"' onchange='calcularvalor()'><option value=''>Selecione um Produto</option></select>"; 
+        celula2.innerHTML =  "<input type='number' name='quantidade"+contlinhas+"' min = '1' value = '1' onchange='calcularvalor()'>"; 
         celula3.innerHTML =  "<button onclick='removeLinha(this)' id='"+contlinhas+"'>Remover</button>";
         pegarprodutos(contlinhas);
     }
@@ -67,9 +69,10 @@
     }
 
     function pegarprodutos(linha){
+        serviitensval = [];
         $.ajax({
                     type: "GET",
-                    url: "/consultacadastroprod",
+                    url: "/consultacadastroitem",
                     data: {},
                     dataType: "json",
                     success: function(data) {
@@ -79,9 +82,19 @@
                             opt.appendChild(document.createTextNode(data['nome'][i]));
                             opt.value = data['id'][i];
                             select.appendChild(opt);
+                            serviitensval[data['id'][i]] = data['valor'][i];
                         }
                     }
                 });
+    }
+
+    function calcularvalor(){
+        valor = 0;
+        for(var i = 1; i<=contlinhas; i++){
+            valor += serviitensval[$("[name='produto"+i+"']").val()] * $("[name='quantidade"+i+"']").val();
+        }
+        console.log(valor);
+        document.getElementById('valorinput').value = valor;
     }
 
     function tabelaserviitens(){

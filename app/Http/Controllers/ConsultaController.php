@@ -269,7 +269,7 @@ class ConsultaController extends Controller
         return $espec;
     }
 
-    public function ConsultaCadastroServico(Request $request){
+    public function ConsultaCadastroServicoMedico(Request $request){
         $consultaselectespec = DB::table('especialidades')->where('espec_id', $request->espec)->get();
         $consultaselectcate = DB::table('categorias')->where('cate_nome', $consultaselectespec[0]->espec_nome)->get();
         $consultaselectservi = DB::table('produtos')->where('prod_cate', $consultaselectcate[0]->cate_id)->get();
@@ -281,12 +281,24 @@ class ConsultaController extends Controller
         return $servi;
     }
 
-    public function ConsultaCadastroProduto(Request $request){
+    public function ConsultaCadastroItem(Request $request){
         $consultaselectprod = DB::table('produtos')->where('prod_tipo','Item')->get();
-        $prod = ["id"=>[], "nome"=>[]];
+        $prod = ["id"=>[], "nome"=>[], "valor"=>[]];
         foreach($consultaselectprod as $consultaselectprod){
             array_push($prod["id"], $consultaselectprod->prod_id);
             array_push($prod["nome"], $consultaselectprod->prod_nome);
+            array_push($prod["valor"], $consultaselectprod->prod_valor);
+        }
+        return $prod;
+    }
+
+    public function ConsultaCadastroServico(Request $request){
+        $consultaselectprod = DB::table('produtos')->where('prod_tipo','Servico')->get();
+        $prod = ["id"=>[], "nome"=>[], "valor"=>[]];
+        foreach($consultaselectprod as $consultaselectprod){
+            array_push($prod["id"], $consultaselectprod->prod_id);
+            array_push($prod["nome"], $consultaselectprod->prod_nome);
+            array_push($prod["valor"], $consultaselectprod->prod_valor);
         }
         return $prod;
     }

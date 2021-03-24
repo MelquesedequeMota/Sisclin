@@ -156,7 +156,7 @@
         if($("[name='espec']").val() != ''){
             $.ajax({
                 type: "GET",
-                url: "/consultacadastroservi",
+                url: "/consultacadastroservimed",
                 data: {espec:$("[name='espec']").val()},
                 dataType: "json",
                 success: function(data) {
