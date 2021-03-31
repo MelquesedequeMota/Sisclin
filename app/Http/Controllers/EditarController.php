@@ -11,6 +11,7 @@ use App\Models\FornecedoresJuridicos;
 use App\Models\ClientesJuridicos;
 use App\Models\Medicos;
 use App\Models\Medico_Atendimento;
+use App\Models\Produtos;
 
 class EditarController extends Controller
 {
@@ -509,6 +510,43 @@ class EditarController extends Controller
             }else{
                 return 0;
             }
+        }else{
+            return 0;
+        }
+    }
+
+    public function EditarProduto(Request $request){
+        $produto = DB::table('produtos')->where('prod_nome', $request->nome)->get()->map(function($obj){
+            return (array) $obj;
+        })->toArray();
+        $edproduto = Produtos::find($produto[0]['prod_id']);
+
+        if($request->quant == null){
+            $quant = 0;
+        }else{
+            $quant = $request->quant;
+        }
+        if($request->tipo == 'Servico'){
+                $edproduto->prod_nome = $request->nome;
+                $edproduto->prod_desc = $request->desc;
+                $edproduto->prod_cate = $request->cate;
+                $edproduto->prod_tipo = $request->tipo;
+                $edproduto->prod_quant = null;
+                $edproduto->prod_valor = $request->valor;
+                $edproduto->prod_estqmin = null;
+                $edproduto->prod_serviitens = $request->serviitens;
+        }else{
+                $edproduto->prod_nome = $request->nome;
+                $edproduto->prod_desc = $request->desc;
+                $edproduto->prod_cate = $request->cate;
+                $edproduto->prod_tipo = $request->tipo;
+                $edproduto->prod_quant = $quant;
+                $edproduto->prod_valor = $request->valor;
+                $edproduto->prod_estqmin = $request->estqmin;
+                $edproduto->prod_serviitens = null;
+        }
+        if($edproduto->save()){
+            return 1;
         }else{
             return 0;
         }

@@ -73,6 +73,10 @@ class ConsultaController extends Controller
         return view('ConsultaMedico');
     }
 
+    public function ConsultaProduto(){
+        return view('ConsultaProduto');
+    }
+
     public function ConsultaPessoaDados(Request $request){
         if(strlen($request->cpfcnpj) == 18){
             $consultafornecedoresjur = DB::table('fornecedoresjur')->where('forjur_cnpj', $request->cpfcnpj)->get();
@@ -149,6 +153,21 @@ class ConsultaController extends Controller
         return $consultafinal;
     }
 
+    public function ConsultaProdutoDados(Request $request){
+        $consultafinal = [];
+        $consultaprodutos = DB::table('produtos')->where('prod_nome', 'like', '%'.$request->nomeproduto.'%')
+        ->where('prod_cate',  'like', '%'.$request->especmedico.'%')
+        ->get();
+        $consulta = $consultaprodutos->map(function($obj){
+            return (array) $obj;
+        })->toArray();
+        foreach($consulta as $consulta){
+            $consultacate = DB::table('categorias')->where('cate_id', $consulta['prod_cate'])->get();
+            array_push($consultafinal, [$consulta['prod_nome'] ,$consulta['prod_tipo'], $consultacate[0]->cate_nome]);
+        }
+        return $consultafinal;
+    }
+
     public function ConsultaPessoaNome(Request $request){
         $consultapacientes = DB::table('pacientes')->where('pac_nome', 'like', '%'.$request->nomepessoa.'%')->get();
         $consultafornecedoresfis = DB::table('fornecedoresfis')->where('forfis_nome', 'like', '%'. $request->nomepessoa.'%')->get();
@@ -182,6 +201,15 @@ class ConsultaController extends Controller
     public function ConsultaMedicoNome(Request $request){
         $consultamedicos = DB::table('medicos')->where('med_nome', 'like', '%'.$request->nomemedico.'%')->get();
         $consulta = $consultamedicos->map(function($obj){
+            return (array) $obj;
+        })->toArray();
+        return $consulta;
+        
+    }
+
+    public function ConsultaProdutoNome(Request $request){
+        $consultaprodutos = DB::table('produtos')->where('prod_nome', 'like', '%'.$request->nomeproduto.'%')->get();
+        $consulta = $consultaprodutos->map(function($obj){
             return (array) $obj;
         })->toArray();
         return $consulta;
@@ -229,6 +257,13 @@ class ConsultaController extends Controller
     public function ConsultaMedicoEditar(Request $request){
         $consultamedicos = DB::table('medicos')->where('med_cpf', $request->cpf)->get();
         $consulta = $consultamedicos->map(function($obj){
+            return (array) $obj;
+        })->toArray();
+        return $consulta;
+    }
+    public function ConsultaProdutoEditar(Request $request){
+        $consultaprodutos = DB::table('produtos')->where('prod_nome', $request->nomeproduto)->get();
+        $consulta = $consultaprodutos->map(function($obj){
             return (array) $obj;
         })->toArray();
         return $consulta;
