@@ -12,6 +12,7 @@ use App\Models\ClientesJuridicos;
 use App\Models\Medicos;
 use App\Models\Medico_Atendimento;
 use App\Models\Produtos;
+use App\Models\Planos;
 
 class EditarController extends Controller
 {
@@ -546,6 +547,22 @@ class EditarController extends Controller
                 $edproduto->prod_serviitens = null;
         }
         if($edproduto->save()){
+            return 1;
+        }else{
+            return 0;
+        }
+    }
+
+    public function EditarPlano(Request $request){
+        $edplano = Planos::find($request->id);
+        $edplano->plan_nome = $request->nome;
+        $edplano->plan_desc = $request->desc;
+        $edplano->plan_qtdtitu = $request->qtdtitu;
+        $edplano->plan_qtddep = $request->qtddep;
+        $edplano->plan_valor = $request->valor;
+        $edplano->plan_servicos = $request->servicos;
+        $edplano->plan_itens = $request->itens;
+        if($edplano->save()){
             return 1;
         }else{
             return 0;

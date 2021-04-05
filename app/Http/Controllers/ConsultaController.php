@@ -77,6 +77,10 @@ class ConsultaController extends Controller
         return view('ConsultaProduto');
     }
 
+    public function ConsultaPlano(){
+        return view('ConsultaPlano');
+    }
+
     public function ConsultaPessoaDados(Request $request){
         if(strlen($request->cpfcnpj) == 18){
             $consultafornecedoresjur = DB::table('fornecedoresjur')->where('forjur_cnpj', $request->cpfcnpj)->get();
@@ -168,6 +172,15 @@ class ConsultaController extends Controller
         return $consultafinal;
     }
 
+    public function ConsultaPlanoDados(Request $request){
+        $consultaplanos = DB::table('planos')->where('plan_nome', 'like', '%'.$request->nomeplano.'%')
+        ->get();
+        $consulta = $consultaplanos->map(function($obj){
+            return (array) $obj;
+        })->toArray();
+        return $consulta;
+    }
+
     public function ConsultaPessoaNome(Request $request){
         $consultapacientes = DB::table('pacientes')->where('pac_nome', 'like', '%'.$request->nomepessoa.'%')->get();
         $consultafornecedoresfis = DB::table('fornecedoresfis')->where('forfis_nome', 'like', '%'. $request->nomepessoa.'%')->get();
@@ -210,6 +223,15 @@ class ConsultaController extends Controller
     public function ConsultaProdutoNome(Request $request){
         $consultaprodutos = DB::table('produtos')->where('prod_nome', 'like', '%'.$request->nomeproduto.'%')->get();
         $consulta = $consultaprodutos->map(function($obj){
+            return (array) $obj;
+        })->toArray();
+        return $consulta;
+        
+    }
+
+    public function ConsultaPlanoNome(Request $request){
+        $consultaplanos = DB::table('planos')->where('plan_nome', 'like', '%'.$request->nomeproduto.'%')->get();
+        $consulta = $consultaplanos->map(function($obj){
             return (array) $obj;
         })->toArray();
         return $consulta;
@@ -264,6 +286,13 @@ class ConsultaController extends Controller
     public function ConsultaProdutoEditar(Request $request){
         $consultaprodutos = DB::table('produtos')->where('prod_nome', $request->nomeproduto)->get();
         $consulta = $consultaprodutos->map(function($obj){
+            return (array) $obj;
+        })->toArray();
+        return $consulta;
+    }
+    public function ConsultaPlanoEditar(Request $request){
+        $consultaplanos = DB::table('planos')->where('plan_nome', $request->nomeplano)->get();
+        $consulta = $consultaplanos->map(function($obj){
             return (array) $obj;
         })->toArray();
         return $consulta;
