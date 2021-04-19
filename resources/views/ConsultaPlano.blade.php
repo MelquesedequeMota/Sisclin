@@ -19,14 +19,14 @@
         <div id='tabela'><table border='1px'id='pesquisarplanotable'>
             <tr>
                 <th>Nome do Plano</th>
-                <th>Descrição do produto</th>
-                <th>Valor do Produto</th>
+                <th>Descrição do Plano</th>
+                <th>Quantidade de Dependentes</th>
+                <th>Valor do Plano</th>
                 <th>Editar</th>
             </tr>
         </table></div>
     <div class='input' id='nome'>Nome do Plano: <input type='text' name='nome'id ='nomeinput'><br>
     <div class='input' id='desc'>Descrição do Plano: <textarea name='desc' id='descinput'></textarea><br>
-    <div class='input' id='qtdtitu'>Quantidade máxima de titulares: <input type='number' name='qtdtitu' id ='qtdtituinput' min='1'></div><br>
     <div class='input' id='qtddep'>Quantidade máxima de dependentes por titular: <input type='number' name='qtddep' id ='qtddepinput' min='1'></div><br>
     <div class='input' id='tabelaprodutosservico'>
         <button onclick="adicionaLinhaServico('planoservicos')">Adicionar</button>
@@ -182,7 +182,6 @@
                 id:planoatual,
                 nome:$("[name='nome']").val(),
                 desc:$("[name='desc']").val(),
-                qtdtitu:$("[name='qtdtitu']").val(),
                 qtddep:$("[name='qtddep']").val(),
                 valor:$("[name='valor']").val(),
                 servicos:planoservicos,
@@ -247,11 +246,13 @@ function escondertabela(){
                         var celula2 = linha.insertCell(1);   
                         var celula3 = linha.insertCell(2);
                         var celula4 = linha.insertCell(3);
+                        var celula5 = linha.insertCell(3);
                         dadoslinhas.push(data[i]['plan_nome']);
                         celula1.innerHTML=data[i]['plan_nome'];
                         celula2.innerHTML=data[i]['plan_desc'];
-                        celula3.innerHTML=data[i]['plan_valor'];
-                        celula4.innerHTML="<input type='button' name='editareste' id='"+i+"' value='Editar' onclick='editar(this)'>";
+                        celula2.innerHTML=data[i]['plan_qtddep'];
+                        celula4.innerHTML=data[i]['plan_valor'];
+                        celula5.innerHTML="<input type='button' name='editareste' id='"+i+"' value='Editar' onclick='editar(this)'>";
                         
                     }
                 }

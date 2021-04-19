@@ -557,7 +557,6 @@ class EditarController extends Controller
         $edplano = Planos::find($request->id);
         $edplano->plan_nome = $request->nome;
         $edplano->plan_desc = $request->desc;
-        $edplano->plan_qtdtitu = $request->qtdtitu;
         $edplano->plan_qtddep = $request->qtddep;
         $edplano->plan_valor = $request->valor;
         $edplano->plan_servicos = $request->servicos;

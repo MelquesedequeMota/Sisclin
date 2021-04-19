@@ -16,7 +16,6 @@
 <body>
     <div class='input' id='nome'>Nome do Plano: <input type='text' name='nome'id ='nomeinput'><br>
     <div class='input' id='desc'>Descrição do Plano: <textarea name='desc' id='descinput'></textarea><br>
-    <div class='input' id='tipo'>Quantidade máxima de titulares: <input type='number' name='qtdtitu' id ='qtdtituinput' min='1'></div><br>
     <div class='input' id='tipo'>Quantidade máxima de dependentes por titular: <input type='number' name='qtddep' id ='qtddepinput' min='1'></div><br>
     <div class='input' id='tabelaprodutosservico'>
         <button onclick="adicionaLinhaServico('planoservicos')">Adicionar</button>
@@ -169,7 +168,6 @@
             data: {
                 nome:$("[name='nome']").val(),
                 desc:$("[name='desc']").val(),
-                qtdtitu:$("[name='qtdtitu']").val(),
                 qtddep:$("[name='qtddep']").val(),
                 valor:$("[name='valor']").val(),
                 servicos:planoservicos,

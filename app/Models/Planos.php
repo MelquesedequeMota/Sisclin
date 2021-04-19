@@ -11,7 +11,6 @@ class Planos extends Model
     protected $fillable = [
         'prod_nome',
         'prod_desc',
-        'prod_qtdtitu',
         'prod_qtddep',
         'prod_valor',
         'prod_servicos',

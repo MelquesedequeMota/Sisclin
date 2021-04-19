@@ -19,6 +19,9 @@ class CadastroController extends Controller
     public function CadastrarPlano(Request $request){
         return view('CadastroPlano');
     }
+    public function CadastrarContrato(Request $request){
+        return view('CadastroContrato');
+    }
     public function CadastroDepartamento(Request $request){
         $cadastrardep = DB::table('departamentos')->insert([
             'dep_nome' => $request->nome,
@@ -392,7 +395,6 @@ class CadastroController extends Controller
             $cadastrarplano = DB::table('planos')->insert([
                 'plan_nome' => $request->nome,
                 'plan_desc' => $request->desc,
-                'plan_qtdtitu' => $request->qtdtitu,
                 'plan_qtddep' => $request->qtddep,
                 'plan_valor' => $request->valor,
                 'plan_servicos' => $request->servicos,
@@ -404,4 +406,64 @@ class CadastroController extends Controller
             return 0;
         }
     }
+
+    public function CadastroContrato(Request $request){
+        $dep = [];
+        for($i = 0; $i < count($request->dep); $i++){
+            array_push($dep, $request->dep[$i][0]);
+        }
+        $dep = implode(',',$dep);
+        $idtitularpaciente = DB::table('pacientes')->where('pac_cpf', $request->titu)->get();
+        $idtitularforfis = DB::table('fornecedoresfis')->where('forfis_cpf', $request->titu)->get();
+        $idtitularfunc = DB::table('funcionarios')->where('func_cpf', $request->titu)->get();
+        $idtitularclijur = DB::table('clientesjur')->where('clijur_cnpj', $request->titu)->get();
+        $idtitularforjur = DB::table('fornecedoresjur')->where('forjur_cnpj', $request->titu)->get();
+        if(count($idtitularpaciente) !=0 ){
+            $id = $idtitularpaciente->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+            $id = $id[0]["pac_id"];
+            $data = 1;
+        }else if(count($idtitularforfis) !=0 ){
+            $id = $idtitularforfis->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+            $id = $id[0]["forfis_id"];
+            $data = 2;
+        }else if(count($idtitularfunc) !=0 ){
+            $id = $idtitularfunc->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+            $id = $id[0]["func_id"];
+            $data = 3;
+        }else if(count($idtitularclijur) !=0 ){
+            $id = $idtitularclijur->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+            $id = $id[0]["clijur_id"];
+            $data = 4;
+        }else if(count($idtitularforjur) !=0 ){
+            $id = $idtitularforjur->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+            $id = $id[0]["forjur_id"];
+            $data = 5;
+        }
+        $cont_id = date('Ym') . str_pad($id , 4 , '0' , STR_PAD_LEFT) . $data;
+        $checkcont = DB::table('contratos')->where('cont_id', 'like', '%'.$cont_id.'%')->get();
+        $contatual = count($checkcont) + 1;
+        $cont_id = $cont_id.$contatual;
+        $cadastrarcont = DB::table('contratos')->insert([
+            'cont_id' => $cont_id,
+            'cont_plano' => $request->plano,
+            'cont_titu' => $request->titu,
+            'cont_dep' => $dep,
+            'cont_diapag' => $request->diapag,
+        ]);
+    if($cadastrarcont == 1){
+        return 1;
+    }else{
+        return 0;
+    }
+}
 }

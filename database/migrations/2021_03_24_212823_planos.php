@@ -15,9 +15,8 @@ class Planos extends Migration
     {
         Schema::create('planos', function (Blueprint $table) {
             $table->bigIncrements('plan_id');
-            $table->string('plan_nome')->unique();
+            $table->string('plan_nome');
             $table->string('plan_desc')->nullable();
-            $table->integer('plan_qtdtitu')->nullable();
             $table->integer('plan_qtddep')->nullable();
             $table->double('plan_valor')->nullable();
             $table->string('plan_servicos')->nullable();
