@@ -41,6 +41,7 @@ Route::get('consulta/pessoa', 'App\Http\Controllers\ConsultaController@ConsultaP
 Route::get('consulta/medico', 'App\Http\Controllers\ConsultaController@ConsultaMedico')->name('consultamedico');
 Route::get('consulta/produto', 'App\Http\Controllers\ConsultaController@ConsultaProduto')->name('consultaproduto');
 Route::get('consulta/plano', 'App\Http\Controllers\ConsultaController@ConsultaPlano')->name('consultaplano');
+Route::get('consulta/contrato', 'App\Http\Controllers\ConsultaController@ConsultaContrato')->name('consultacontrato');
 Route::get('consulta/pessoa/nome', 'App\Http\Controllers\ConsultaController@ConsultaPessoaNome')->name('consultapessoanome');
 Route::get('consulta/pessoa/dados', 'App\Http\Controllers\ConsultaController@ConsultaPessoaDados')->name('consultapessoadados');
 Route::get('consulta/pessoa/dadosedit', 'App\Http\Controllers\ConsultaController@ConsultaPessoaEditar')->name('consultapessoaeditar');
@@ -56,11 +57,16 @@ Route::get('consulta/produto/dadosedit', 'App\Http\Controllers\ConsultaControlle
 Route::get('consulta/plano/nome', 'App\Http\Controllers\ConsultaController@ConsultaPlanoNome')->name('consultaplanonome');
 Route::get('consulta/plano/dados', 'App\Http\Controllers\ConsultaController@ConsultaPlanoDados')->name('consultaplanodados');
 Route::get('consulta/plano/dadosedit', 'App\Http\Controllers\ConsultaController@ConsultaPlanoEditar')->name('consultaplanoeditar');
+Route::get('consulta/contrato/nome', 'App\Http\Controllers\ConsultaController@ConsultaContratoNome')->name('consultacontratonome');
+Route::get('consulta/contrato/dados', 'App\Http\Controllers\ConsultaController@ConsultaContratoDados')->name('consultacontratodados');
+Route::get('consulta/contrato/plano', 'App\Http\Controllers\ConsultaController@ConsultaPlanoContrato')->name('consultaplanocontrato');
+Route::get('consulta/contrato/dadosedit', 'App\Http\Controllers\ConsultaController@ConsultaContratoEditar')->name('consultacontratoeditar');
 
 Route::get('editar/editarpaciente', 'App\Http\Controllers\EditarController@EditarPaciente')->name('editarpaciente');
 Route::get('editar/editarmedico', 'App\Http\Controllers\EditarController@EditarMedico')->name('editarmedico');
 Route::get('editar/editarproduto', 'App\Http\Controllers\EditarController@EditarProduto')->name('editarproduto');
 Route::get('editar/editarplano', 'App\Http\Controllers\EditarController@EditarPlano')->name('editarplano');
+Route::get('editar/editarcontrato', 'App\Http\Controllers\EditarController@EditarContrato')->name('editarcontrato');
 Route::get('editar/editarfornecedorfisico', 'App\Http\Controllers\EditarController@EditarFornecedorFisico')->name('editarfornecedorfisico');
 Route::get('editar/editarfornecedorjuridico', 'App\Http\Controllers\EditarController@EditarFornecedorJuridico')->name('editarfornecedorjuridico');
 Route::get('editar/editarclientejuridico', 'App\Http\Controllers\EditarController@EditarClienteJuridico')->name('editarclientejuridico');

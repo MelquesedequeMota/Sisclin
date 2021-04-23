@@ -152,7 +152,7 @@
     var dadoslinhas = [];
     var sessao = '';
     reset();
-    escondertabela()
+    escondertabela();
     $('#tel1input').inputmask('(99) 9999[9]-9999');
     $('#tel2input').inputmask('(99) 9999[9]-9999');
     $('#contatorepinput').inputmask('(99) 9999[9]-9999');

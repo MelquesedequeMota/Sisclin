@@ -13,6 +13,7 @@ use App\Models\Medicos;
 use App\Models\Medico_Atendimento;
 use App\Models\Produtos;
 use App\Models\Planos;
+use App\Models\Contratos;
 
 class EditarController extends Controller
 {
@@ -562,6 +563,24 @@ class EditarController extends Controller
         $edplano->plan_servicos = $request->servicos;
         $edplano->plan_itens = $request->itens;
         if($edplano->save()){
+            return 1;
+        }else{
+            return 0;
+        }
+    }
+
+    public function EditarContrato(Request $request){
+        $dep = [];
+        for($i = 0; $i < count($request->dep); $i++){
+            array_push($dep, $request->dep[$i][0]);
+        }
+        $dep = implode(',',$dep);
+        $edcont = Contratos::find($request->contratoatual);
+        $edcont->cont_plano = $request->plano;
+        $edcont->cont_titu = $request->titu;
+        $edcont->cont_dep = $dep;
+        $edcont->cont_diapag = $request->diapag;
+        if($edcont->save()){
             return 1;
         }else{
             return 0;

@@ -81,6 +81,10 @@ class ConsultaController extends Controller
         return view('ConsultaPlano');
     }
 
+    public function ConsultaContrato(){
+        return view('ConsultaContrato');
+    }
+
     public function ConsultaPessoaDados(Request $request){
         if(strlen($request->cpfcnpj) == 18){
             $consultafornecedoresjur = DB::table('fornecedoresjur')->where('forjur_cnpj', $request->cpfcnpj)->get();
@@ -179,6 +183,107 @@ class ConsultaController extends Controller
             return (array) $obj;
         })->toArray();
         return $consulta;
+    }
+
+    public function ConsultaPlanoContrato(Request $request){
+        $consultaplano = DB::table('planos')->where('plan_id',$request->plan_id)
+        ->get();
+        $consulta = $consultaplano->map(function($obj){
+            return (array) $obj;
+        })->toArray();
+        return $consulta;
+    }
+
+    public function ConsultaContratoDados(Request $request){
+        $consultafinal = [];
+        $nome = [];
+        $cpfcnpj = [];
+        $consultapacientes = DB::table('pacientes')->where('pac_nome', 'like', '%'.$request->nometitular.'%')->get();
+        $consultafornecedoresfis = DB::table('fornecedoresfis')->where('forfis_nome', 'like', '%'. $request->nometitular.'%')->get();
+        $consultafuncionarios = DB::table('funcionarios')->where('func_nome', 'like', '%'. $request->nometitular.'%')->get();
+        $consultafornecedoresjur = DB::table('fornecedoresjur')->where('forjur_nome', 'like', '%'. $request->nometitular.'%')->get();
+        $consultaclientesjur = DB::table('clientesjur')->where('clijur_nome', 'like', '%'. $request->nometitular.'%')->get();
+        if(count($consultapacientes) !=0 ){
+            $consultapessoa = $consultapacientes->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+            foreach($consultapessoa as $consultapessoa){
+                array_push($nome, $consultapessoa['pac_nome']);
+                array_push($cpfcnpj, $consultapessoa['pac_cpf']);
+            }
+            
+        }if(count($consultafornecedoresfis) !=0 ){
+            $consultapessoa = $consultafornecedoresfis->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+            foreach($consultapessoa as $consultapessoa){
+                array_push($nome, $consultapessoa['forfis_nome']);
+                array_push($cpfcnpj, $consultapessoa['forfis_cpf']);
+            }
+
+        }if(count($consultafuncionarios) !=0 ){
+            $consultapessoa = $consultafuncionarios->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+            foreach($consultapessoa as $consultapessoa){
+                array_push($nome, $consultapessoa['func_nome']);
+                array_push($cpfcnpj, $consultapessoa['func_cpf']);
+            }
+
+        }if(count($consultaclientesjur) !=0 ){
+            $consultapessoa = $consultaclientesjur->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+            foreach($consultapessoa as $consultapessoa){
+                array_push($nome, $consultapessoa['clijur_nome']);
+                array_push($cpfcnpj, $consultapessoa['clijur_cnpj']);
+            }
+            
+        }if(count($consultafornecedoresjur) !=0 ){
+            $consultapessoa = $consultafornecedoresjur->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+            foreach($consultapessoa as $consultapessoa){
+                array_push($nome, $consultapessoa['forjur_nome']);
+                array_push($cpfcnpj, $consultapessoa['forjur_cnpj']);
+            }
+            
+        }
+        $cpfcnpj2 = [];
+        $cpfcnpj3 = [];
+        $idcpfcnpj = [];
+        for($i = 0; $i<count($cpfcnpj); $i++){
+            $cpfcnpj3 = $cpfcnpj2;
+            array_push($cpfcnpj2, $cpfcnpj[$i]);
+            $cpfcnpj2 = array_unique($cpfcnpj2);
+            if($cpfcnpj2 != $cpfcnpj3){
+                array_push($idcpfcnpj, $i);
+            }
+        }
+        $pessoas = [];
+        for($i = 0; $i < count($cpfcnpj2); $i++){
+            array_push($pessoas, [$cpfcnpj2[$i], $nome[$idcpfcnpj[$i]]]);
+        }
+        
+        foreach($pessoas as $pessoas){
+            $consultacontratos = DB::table('contratos')->where('cont_id', 'like', '%'.$request->cont_id.'%')
+            ->where('cont_titu', 'like', '%'.$pessoas[0].'%')
+            ->get();
+            $consulta = $consultacontratos->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+            
+            for($i = 0; $i<count($consulta); $i++){
+                $consultaplanos = DB::table('planos')->where('plan_id', $consulta[0]['cont_plano'])->get();
+                $consultaplano = $consultaplanos->map(function($obj){
+                    return (array) $obj;
+                })->toArray();
+                array_push($consultafinal, [$consulta[$i]['cont_id'], $pessoas[1], $consultaplano[0]['plan_nome']]);
+            }
+            
+        }
+        return $consultafinal;
+        
     }
 
     public function ConsultaPessoaNome(Request $request){
@@ -293,6 +398,14 @@ class ConsultaController extends Controller
     public function ConsultaPlanoEditar(Request $request){
         $consultaplanos = DB::table('planos')->where('plan_nome', $request->nomeplano)->get();
         $consulta = $consultaplanos->map(function($obj){
+            return (array) $obj;
+        })->toArray();
+        return $consulta;
+    }
+
+    public function ConsultaContratoEditar(Request $request){
+        $consultacontratos = DB::table('contratos')->where('cont_id', $request->cont_id)->get();
+        $consulta = $consultacontratos->map(function($obj){
             return (array) $obj;
         })->toArray();
         return $consulta;
