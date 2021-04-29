@@ -273,7 +273,7 @@
                         celula1.innerHTML=data[i]['plan_nome'];
                         celula2.innerHTML=data[i]['plan_desc'];
                         celula3.innerHTML=data[i]['plan_qtddep'];
-                        celula4.innerHTML=data[i]['plan_valor'];
+                        celula4.innerHTML=data[i]['plan_valor'].toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});;
                         celula5.innerHTML="<input type='button' name='selecionareste' id='"+i+"' value='Add' onclick='selecionarplan(this)'>";
                         
                     }

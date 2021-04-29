@@ -321,6 +321,8 @@ class CadastroController extends Controller
             'med_comissao' => $request->comissao,
             'med_espec' => $request->espec,
             'med_servi' => $servi,
+            'med_maxaten' => $request->maximoatendimento,
+            'med_maxret' => $request->maximoretorno,
             'med_diapag' => $request->pagamento,
             'med_status' => $request->status,
         ]);

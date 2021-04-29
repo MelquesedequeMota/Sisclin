@@ -36,6 +36,8 @@ class Medicos extends Migration
             $table->integer('med_espec');
             $table->string('med_servi')->nullable();
             $table->integer('med_comissao');
+            $table->integer('med_maxaten');
+            $table->integer('med_maxret');
             $table->integer('med_diapag');
             $table->string('med_status');
         });

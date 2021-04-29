@@ -449,7 +449,7 @@ class ConsultaController extends Controller
     public function ConsultaCadastroServicoMedico(Request $request){
         $consultaselectespec = DB::table('especialidades')->where('espec_id', $request->espec)->get();
         $consultaselectcate = DB::table('categorias')->where('cate_nome', $consultaselectespec[0]->espec_nome)->get();
-        $consultaselectservi = DB::table('produtos')->where('prod_cate', $consultaselectcate[0]->cate_id)->get();
+        $consultaselectservi = DB::table('produtos')->where('prod_cate', $consultaselectcate[0]->cate_id)->where('prod_tipo', 'Servico')->get();
         $servi = ["id"=>[], "nome"=>[]];
         foreach($consultaselectservi as $consultaselectservi){
             array_push($servi["id"], $consultaselectservi->prod_id);

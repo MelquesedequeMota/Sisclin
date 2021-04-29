@@ -85,13 +85,15 @@
         var i=linha.parentNode.parentNode.rowIndex;
         document.getElementById('planoitens').deleteRow(i);
         linhas.splice(linha.id -1, 1);
+        calcularvalor();
         
     }
 
     function removeLinhaServico(linha) {
         var i=linha.parentNode.parentNode.rowIndex;
-        document.getElementById('planoservico').deleteRow(i);
+        document.getElementById('planoservicos').deleteRow(i);
         linhas.splice(linha.id -1, 1);
+        calcularvalor();
         
     }
 
@@ -142,9 +144,9 @@
                 valor += planoitensval[$("[name='produtoitem"+i+"']").val()] * $("[name='quantidadeitem"+i+"']").val();
             }    
         }
-        for(var o = 1; o<=contlinhas; o++){
-            if(planoservicosval[$("[name='produtoservico"+i+"']").val()]){
-                valor += planoservicosval[$("[name='produtoservico"+i+"']").val()];
+        for(var o = 1; o<=contlinhas1; o++){
+            if(planoservicosval[$("[name='produtoservico"+o+"']").val()]){
+                valor += planoservicosval[$("[name='produtoservico"+o+"']").val()];
             }   
         }
         document.getElementById('valorinput').value = valor;
