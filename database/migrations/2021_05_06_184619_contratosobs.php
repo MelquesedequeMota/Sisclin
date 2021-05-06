@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Contratos extends Migration
+class Contratosobs extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class Contratos extends Migration
      */
     public function up()
     {
-        Schema::create('contratos', function (Blueprint $table) {
-            $table->bigInteger('cont_id');
-            $table->string('cont_plano');
-            $table->integer('cont_diapag');
+        Schema::create('contratosobs', function (Blueprint $table) {
+            $table->bigInteger('contobs_id');
+            $table->string('contobs_idpessoa');
+            $table->string('contobs_status');
         });
     }
 

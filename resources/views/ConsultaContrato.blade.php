@@ -340,7 +340,7 @@
 
           $.ajax({
               type: "GET",
-              url: "/consulta/pessoa/dados",
+              url: "/consulta/contratopessoa/dados",
               data: {cpfcnpj: dados['cont_titu'] , nomepessoa:''},
               dataType: "json",
               success: function(data) {
@@ -395,7 +395,7 @@
           for(var i = 0; i<dependentesdados.length; i++){
               $.ajax({
                 type: "GET",
-                url: "/consulta/pessoa/dados",
+                url: "/consulta/contratopessoa/dados",
                 data: {cpfcnpj: dependentesdados[i] , nomepessoa:''},
                 dataType: "json",
                 success: function(data) {

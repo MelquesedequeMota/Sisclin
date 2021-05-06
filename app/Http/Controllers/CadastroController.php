@@ -411,10 +411,45 @@ class CadastroController extends Controller
 
     public function CadastroContrato(Request $request){
         $dep = [];
+        $contobs = [];
+        $contobserro = 0;
         for($i = 0; $i < count($request->dep); $i++){
-            array_push($dep, $request->dep[$i][0]);
+            $depatual = $request->dep[$i][0];
+
+            $iddeppaciente = DB::table('pacientes')->where('pac_cpf', $depatual)->get();
+            $iddepforfis = DB::table('fornecedoresfis')->where('forfis_cpf', $depatual)->get();
+            $iddepfunc = DB::table('funcionarios')->where('func_cpf', $depatual)->get();
+            $iddepclijur = DB::table('clientesjur')->where('clijur_cnpj', $depatual)->get();
+            $iddepforjur = DB::table('fornecedoresjur')->where('forjur_cnpj', $depatual)->get();
+            if(count($iddeppaciente) !=0 ){
+                $id = $iddeppaciente->map(function($obj){
+                    return (array) $obj;
+                })->toArray();
+                $id = str_pad($id[0]["pac_id"] , 4 , '0' , STR_PAD_LEFT) . "1";
+            }else if(count($iddepforfis) !=0 ){
+                $id = $iddepforfis->map(function($obj){
+                    return (array) $obj;
+                })->toArray();
+                $id = str_pad($id[0]["forfis_id"], 4 , '0' , STR_PAD_LEFT) . "2";
+            }else if(count($iddepfunc) !=0 ){
+                $id = $iddepfunc->map(function($obj){
+                    return (array) $obj;
+                })->toArray();
+                $id = str_pad($id[0]["func_id"] , 4 , '0' , STR_PAD_LEFT) . "3";
+            }else if(count($iddepclijur) !=0 ){
+                $id = $iddepclijur->map(function($obj){
+                    return (array) $obj;
+                })->toArray();
+                $id = str_pad($id[0]["clijur_id"] , 4 , '0' , STR_PAD_LEFT) . "4";
+            }else if(count($iddepforjur) !=0 ){
+                $id = $iddepforjur->map(function($obj){
+                    return (array) $obj;
+                })->toArray();
+                $id = str_pad($id[0]["forjur_id"] , 4 , '0' , STR_PAD_LEFT) . "5";
+            }
+
+            array_push($dep, $id);
         }
-        $dep = implode(',',$dep);
         $idtitularpaciente = DB::table('pacientes')->where('pac_cpf', $request->titu)->get();
         $idtitularforfis = DB::table('fornecedoresfis')->where('forfis_cpf', $request->titu)->get();
         $idtitularfunc = DB::table('funcionarios')->where('func_cpf', $request->titu)->get();
@@ -455,15 +490,43 @@ class CadastroController extends Controller
         $checkcont = DB::table('contratos')->where('cont_id', 'like', '%'.$cont_id.'%')->get();
         $contatual = count($checkcont) + 1;
         $cont_id = $cont_id.$contatual;
+        $cont_titu = str_pad($id , 4 , '0' , STR_PAD_LEFT) . $data;
+        array_push($contobs, $cont_titu);
+        for($i = 0; $i < count($dep); $i++){
+            array_push($contobs, $dep[$i]);
+        }
         $cadastrarcont = DB::table('contratos')->insert([
             'cont_id' => $cont_id,
             'cont_plano' => $request->plano,
-            'cont_titu' => $request->titu,
-            'cont_dep' => $dep,
             'cont_diapag' => $request->diapag,
         ]);
     if($cadastrarcont == 1){
-        return 1;
+        $ultimocontrato = DB::table('contratos')->orderBy('cont_id', 'desc')->first();
+        for($i = 0; $i < count($contobs); $i++){
+            if($i == 0){
+                $cadastrarcontobs = DB::table('contratosobs')->insert([
+                    'contobs_id' => $cont_id,
+                    'contobs_idpessoa' => $contobs[$i],
+                    'contobs_status' => 'Titular',
+                ]);
+            }else{
+                $cadastrarcontobs = DB::table('contratosobs')->insert([
+                    'contobs_id' => $cont_id,
+                    'contobs_idpessoa' => $contobs[$i],
+                    'contobs_status' => 'Dependente',
+                ]);
+            }
+
+            if($cadastrarcont != 1){
+                $contobserro = 1;
+            }
+        }
+
+        if($contobserro == 0){
+            return 1;
+        }else{
+            return 0;
+        }
     }else{
         return 0;
     }
