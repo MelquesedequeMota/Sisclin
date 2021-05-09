@@ -340,8 +340,8 @@
 
           $.ajax({
               type: "GET",
-              url: "/consulta/contratopessoa/dados",
-              data: {cpfcnpj: dados['cont_titu'] , nomepessoa:''},
+              url: "/consulta/contratotitu/dados",
+              data: {cont_id: dados['cont_id']},
               dataType: "json",
               success: function(data) {
                 if(data[0]['pac_nome']){
@@ -391,54 +391,54 @@
               }
           });
           apagartabeladepdados();
-          var dependentesdados = dados['cont_dep'].split(',');
-          for(var i = 0; i<dependentesdados.length; i++){
               $.ajax({
                 type: "GET",
-                url: "/consulta/contratopessoa/dados",
-                data: {cpfcnpj: dependentesdados[i] , nomepessoa:''},
+                url: "/consulta/contratodep/dados",
+                data: {cont_id: dados['cont_id']},
                 dataType: "json",
                 success: function(data) {
-                  if(data[0]['pac_nome']){
-                    var nomepessoadados = data[0]['pac_nome'];
-                    var cpfcnpjpessoadados = data[0]['pac_cpf'];
+                  for(var i = 0; i<data.length; i++){
+                    if(data[i][0]['pac_nome']){
+                    var nomepessoadados = data[i][0]['pac_nome'];
+                    var cpfcnpjpessoadados = data[i][0]['pac_cpf'];
                     var tipopessoadados = 'Física';
-                  }else if(data[0]['forfis_nome']){
-                    var nomepessoadados = data[0]['forfis_nome'];
-                    var cpfcnpjpessoadados = data[0]['forfis_cpf'];
-                    var tipopessoadados = 'Física';
-                  }else if(data[0]['func_nome']){
-                    var nomepessoadados = data[0]['func_nome'];
-                    var cpfcnpjpessoadados = data[0]['func_cpf'];
-                    var tipopessoadados = 'Física';
-                  }else if(data[0]['forjur_nome']){
-                    var nomepessoadados = data[0]['forjur_nome'];
-                    var cpfcnpjpessoadados = data[0]['forjur_cnpj'];
-                    var tipopessoadados = 'Jurídica';
-                  }else if(data[0]['clijur_nome']){
-                    var nomepessoadados = data[0]['clijur_nome'];
-                    var cpfcnpjpessoadados = data[0]['clijur_cnpj'];
-                    var tipopessoadados = 'Jurídica';
+                    }else if(data[i][0]['forfis_nome']){
+                      var nomepessoadados = data[i][0]['forfis_nome'];
+                      var cpfcnpjpessoadados = data[i][0]['forfis_cpf'];
+                      var tipopessoadados = 'Física';
+                    }else if(data[i][0]['func_nome']){
+                      var nomepessoadados = data[i][0]['func_nome'];
+                      var cpfcnpjpessoadados = data[i][0]['func_cpf'];
+                      var tipopessoadados = 'Física';
+                    }else if(data[i][0]['forjur_nome']){
+                      var nomepessoadados = data[i][0]['forjur_nome'];
+                      var cpfcnpjpessoadados = data[i][0]['forjur_cnpj'];
+                      var tipopessoadados = 'Jurídica';
+                    }else if(data[i][0]['clijur_nome']){
+                      var nomepessoadados = data[i][0]['clijur_nome'];
+                      var cpfcnpjpessoadados = data[i][0]['clijur_cnpj'];
+                      var tipopessoadados = 'Jurídica';
+                    }
+                    var tabela = document.getElementById('tabeladependentes');
+                    var numeroLinhas = tabela.rows.length;
+                    var linha = tabela.insertRow(numeroLinhas);
+                    var celula1 = linha.insertCell(0);
+                    var celula2 = linha.insertCell(1);   
+                    var celula3 = linha.insertCell(2); 
+                    var celula4 = linha.insertCell(3);
+                    celula1.innerHTML=cpfcnpjpessoadados;
+                    celula2.innerHTML=nomepessoadados;
+                    celula3.innerHTML=tipopessoadados;
+                    celula4.innerHTML="<input type='button' name='selecionareste' id='"+numeroLinhas+"' value='Editar' onclick='editardep(this)'><input type='button' name='remover' id='"+numeroLinhas+"' value='Remover' onclick='deletarlinhadep(this)'>";
+                    selecdep.push([cpfcnpjpessoadados, nomepessoadados, tipopessoadados]);
                   }
                   
-                  var tabela = document.getElementById('tabeladependentes');
-                  var numeroLinhas = tabela.rows.length;
-                  var linha = tabela.insertRow(numeroLinhas);
-                  var celula1 = linha.insertCell(0);
-                  var celula2 = linha.insertCell(1);   
-                  var celula3 = linha.insertCell(2); 
-                  var celula4 = linha.insertCell(3);
-                  celula1.innerHTML=cpfcnpjpessoadados;
-                  celula2.innerHTML=nomepessoadados;
-                  celula3.innerHTML=tipopessoadados;
-                  celula4.innerHTML="<input type='button' name='selecionareste' id='"+numeroLinhas+"' value='Editar' onclick='editardep(this)'><input type='button' name='remover' id='"+numeroLinhas+"' value='Remover' onclick='deletarlinhadep(this)'>";
-                  selecdep.push([cpfcnpjpessoadados, nomepessoadados, tipopessoadados]);
                   $('#DepModal').modal('hide');
                   apagartabeladep();
 
                 }
             });
-          }
+          
         
         
     }

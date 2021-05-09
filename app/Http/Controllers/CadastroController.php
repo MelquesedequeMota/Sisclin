@@ -507,13 +507,15 @@ class CadastroController extends Controller
                 $cadastrarcontobs = DB::table('contratosobs')->insert([
                     'contobs_id' => $cont_id,
                     'contobs_idpessoa' => $contobs[$i],
-                    'contobs_status' => 'Titular',
+                    'contobs_tipo' => 'Titular',
+                    'contobs_status' => 'Ativo'
                 ]);
             }else{
                 $cadastrarcontobs = DB::table('contratosobs')->insert([
                     'contobs_id' => $cont_id,
                     'contobs_idpessoa' => $contobs[$i],
-                    'contobs_status' => 'Dependente',
+                    'contobs_tipo' => 'Dependente',
+                    'contobs_status' => 'Ativo'
                 ]);
             }
 

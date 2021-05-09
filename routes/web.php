@@ -59,7 +59,8 @@ Route::get('consulta/plano/dados', 'App\Http\Controllers\ConsultaController@Cons
 Route::get('consulta/plano/dadosedit', 'App\Http\Controllers\ConsultaController@ConsultaPlanoEditar')->name('consultaplanoeditar');
 Route::get('consulta/contrato/nome', 'App\Http\Controllers\ConsultaController@ConsultaContratoNome')->name('consultacontratonome');
 Route::get('consulta/contrato/dados', 'App\Http\Controllers\ConsultaController@ConsultaContratoDados')->name('consultacontratodados');
-Route::get('consulta/contratopessoa/dados', 'App\Http\Controllers\ConsultaController@ConsultaContratoPessoaDados')->name('consultacontratopessoadados');
+Route::get('consulta/contratotitu/dados', 'App\Http\Controllers\ConsultaController@ConsultaContratoTitularDados')->name('consultacontratotitudados');
+Route::get('consulta/contratodep/dados', 'App\Http\Controllers\ConsultaController@ConsultaContratoDependenteDados')->name('consultacontratodepdados');
 Route::get('consulta/contrato/plano', 'App\Http\Controllers\ConsultaController@ConsultaPlanoContrato')->name('consultaplanocontrato');
 Route::get('consulta/contrato/dadosedit', 'App\Http\Controllers\ConsultaController@ConsultaContratoEditar')->name('consultacontratoeditar');
 

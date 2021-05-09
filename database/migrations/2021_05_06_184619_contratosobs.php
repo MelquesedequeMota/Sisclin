@@ -16,6 +16,7 @@ class Contratosobs extends Migration
         Schema::create('contratosobs', function (Blueprint $table) {
             $table->bigInteger('contobs_id');
             $table->string('contobs_idpessoa');
+            $table->string('contobs_tipo');
             $table->string('contobs_status');
         });
     }

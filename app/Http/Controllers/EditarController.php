@@ -570,6 +570,7 @@ class EditarController extends Controller
     }
 
     public function EditarContrato(Request $request){
+        dd($request->all());
         $dep = [];
         for($i = 0; $i < count($request->dep); $i++){
             array_push($dep, $request->dep[$i][0]);

@@ -197,7 +197,7 @@ class ConsultaController extends Controller
     public function ConsultaContratoDados(Request $request){
         $consultafinal = [];
         $nome = [];
-        $cpfcnpj = [];
+        $idtitu = [];
         $consultapacientes = DB::table('pacientes')->where('pac_nome', 'like', '%'.$request->nometitular.'%')->get();
         $consultafornecedoresfis = DB::table('fornecedoresfis')->where('forfis_nome', 'like', '%'. $request->nometitular.'%')->get();
         $consultafuncionarios = DB::table('funcionarios')->where('func_nome', 'like', '%'. $request->nometitular.'%')->get();
@@ -209,7 +209,7 @@ class ConsultaController extends Controller
             })->toArray();
             foreach($consultapessoa as $consultapessoa){
                 array_push($nome, $consultapessoa['pac_nome']);
-                array_push($cpfcnpj, $consultapessoa['pac_cpf']);
+                array_push($idtitu, str_pad($consultapessoa['pac_id'] , 4 , '0' , STR_PAD_LEFT) . "1");
             }
             
         }if(count($consultafornecedoresfis) !=0 ){
@@ -218,7 +218,7 @@ class ConsultaController extends Controller
             })->toArray();
             foreach($consultapessoa as $consultapessoa){
                 array_push($nome, $consultapessoa['forfis_nome']);
-                array_push($cpfcnpj, $consultapessoa['forfis_cpf']);
+                array_push($idtitu, str_pad($consultapessoa['forfis_id'] , 4 , '0' , STR_PAD_LEFT) . "2");
             }
 
         }if(count($consultafuncionarios) !=0 ){
@@ -227,7 +227,7 @@ class ConsultaController extends Controller
             })->toArray();
             foreach($consultapessoa as $consultapessoa){
                 array_push($nome, $consultapessoa['func_nome']);
-                array_push($cpfcnpj, $consultapessoa['func_cpf']);
+                array_push($idtitu, str_pad($consultapessoa['func_id'] , 4 , '0' , STR_PAD_LEFT) . "3");
             }
 
         }if(count($consultaclientesjur) !=0 ){
@@ -236,7 +236,7 @@ class ConsultaController extends Controller
             })->toArray();
             foreach($consultapessoa as $consultapessoa){
                 array_push($nome, $consultapessoa['clijur_nome']);
-                array_push($cpfcnpj, $consultapessoa['clijur_cnpj']);
+                array_push($idtitu, str_pad($consultapessoa['clijur_id'] , 4 , '0' , STR_PAD_LEFT) . "4");
             }
             
         }if(count($consultafornecedoresjur) !=0 ){
@@ -245,45 +245,147 @@ class ConsultaController extends Controller
             })->toArray();
             foreach($consultapessoa as $consultapessoa){
                 array_push($nome, $consultapessoa['forjur_nome']);
-                array_push($cpfcnpj, $consultapessoa['forjur_cnpj']);
+                array_push($idtitu, str_pad($consultapessoa['forjur_id'] , 4 , '0' , STR_PAD_LEFT) . "5");
             }
             
-        }
-        $cpfcnpj2 = [];
-        $cpfcnpj3 = [];
-        $idcpfcnpj = [];
-        for($i = 0; $i<count($cpfcnpj); $i++){
-            $cpfcnpj3 = $cpfcnpj2;
-            array_push($cpfcnpj2, $cpfcnpj[$i]);
-            $cpfcnpj2 = array_unique($cpfcnpj2);
-            if($cpfcnpj2 != $cpfcnpj3){
-                array_push($idcpfcnpj, $i);
-            }
-        }
-        $pessoas = [];
-        for($i = 0; $i < count($cpfcnpj2); $i++){
-            array_push($pessoas, [$cpfcnpj2[$i], $nome[$idcpfcnpj[$i]]]);
         }
         
+        $pessoas = [];
+        for($i = 0; $i < count($idtitu); $i++){
+            array_push($pessoas, [$idtitu[$i], $nome[$i]]);
+        }
         foreach($pessoas as $pessoas){
-            $consultacontratos = DB::table('contratos')->where('cont_id', 'like', '%'.$request->cont_id.'%')
-            ->where('cont_titu', 'like', '%'.$pessoas[0].'%')
+            $consultacontratos = DB::table('contratosobs')->where('contobs_id', 'like', '%'.$request->cont_id.'%')
+            ->where('contobs_idpessoa', 'like', '%'.$pessoas[0].'%')
+            ->where('contobs_tipo', 'Titular')
+            ->where('contobs_status', 'Ativo')
             ->get();
-            $consulta = $consultacontratos->map(function($obj){
+            $consultacontratos2 = $consultacontratos->map(function($obj){
                 return (array) $obj;
             })->toArray();
-            
-            for($i = 0; $i<count($consulta); $i++){
-                $consultaplanos = DB::table('planos')->where('plan_id', $consulta[0]['cont_plano'])->get();
+            $planos = [];
+            for($i = 0; $i < count($consultacontratos2); $i++){
+                $consultacontrato = DB::table('contratos')->where('cont_id', $consultacontratos2[0]['contobs_id'])
+                ->get();
+                $consultacontrato2 = $consultacontrato->map(function($obj){
+                    return (array) $obj;
+                })->toArray();
+                array_push($planos, $consultacontrato2[0]['cont_plano']);
+            }
+
+            for($i = 0; $i<count($planos); $i++){
+                $consultaplanos = DB::table('planos')->where('plan_id', $planos[$i])->get();
                 $consultaplano = $consultaplanos->map(function($obj){
                     return (array) $obj;
                 })->toArray();
-                array_push($consultafinal, [$consulta[$i]['cont_id'], $pessoas[1], $consultaplano[0]['plan_nome']]);
+                array_push($consultafinal, [$consultacontratos2[$i]['contobs_id'], $pessoas[1], $consultaplano[0]['plan_nome']]);
             }
             
         }
         return $consultafinal;
         
+    }
+
+    public function ConsultaContratoTitularDados(Request $request){
+        $consultacontratos = DB::table('contratosobs')->where('contobs_id', 'like', '%'.$request->cont_id.'%')
+            ->where('contobs_tipo', 'Titular')
+            ->where('contobs_status', 'Ativo')
+            ->get();
+        $consultacontratos2 = $consultacontratos->map(function($obj){
+            return (array) $obj;
+        })->toArray();
+        if($consultacontratos2[0]['contobs_idpessoa'][4] == "1"){
+            $consultapessoa = DB::table('pacientes')
+            ->where('pac_id', substr($consultacontratos2[0]['contobs_idpessoa'], 0, 4))
+            ->get();
+            $consultapessoa2 = $consultapessoa->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+        }else if($consultacontratos2[0]['contobs_idpessoa'][4] == "2"){
+            $consultapessoa = DB::table('fornecedoresfis')
+            ->where('forfis_id', substr($consultacontratos2[0]['contobs_idpessoa'], 0, 4))
+            ->get();
+            $consultapessoa2 = $consultapessoa->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+        }else if($consultacontratos2[0]['contobs_idpessoa'][4] == "3"){
+            $consultapessoa = DB::table('funcionarios')
+            ->where('func_id', substr($consultacontratos2[0]['contobs_idpessoa'], 0, 4))
+            ->get();
+            $consultapessoa2 = $consultapessoa->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+        }else if($consultacontratos2[0]['contobs_idpessoa'][4] == "4"){
+            $consultapessoa = DB::table('clientesjur')
+            ->where('clijur_id', substr($consultacontratos2[0]['contobs_idpessoa'], 0, 4))
+            ->get();
+            $consultapessoa2 = $consultapessoa->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+        }else if($consultacontratos2[0]['contobs_idpessoa'][4] == "5"){
+            $consultapessoa = DB::table('fornecedoresjur')
+            ->where('forjur_id', substr($consultacontratos2[0]['contobs_idpessoa'], 0, 4))
+            ->get();
+            $consultapessoa2 = $consultapessoa->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+        }
+        return $consultapessoa2;
+    }
+
+    public function ConsultaContratoDependenteDados(Request $request){
+        $consultacontratos = DB::table('contratosobs')->where('contobs_id', 'like', '%'.$request->cont_id.'%')
+            ->where('contobs_tipo', 'Dependente')
+            ->where('contobs_status', 'Ativo')
+            ->get();
+        $consultacontratos2 = $consultacontratos->map(function($obj){
+            return (array) $obj;
+        })->toArray();
+        $resultconsultas = [];
+        for($i = 0; $i < count($consultacontratos2); $i++){
+            if($consultacontratos2[$i]['contobs_idpessoa'][4] == "1"){
+                $consultapessoa = DB::table('pacientes')
+                ->where('pac_id', substr($consultacontratos2[$i]['contobs_idpessoa'], 0, 4))
+                ->get();
+                $consultapessoa2 = $consultapessoa->map(function($obj){
+                    return (array) $obj;
+                })->toArray();
+                array_push($resultconsultas, $consultapessoa2);
+            }else if($consultacontratos2[$i]['contobs_idpessoa'][4] == "2"){
+                $consultapessoa = DB::table('fornecedoresfis')
+                ->where('forfis_id', substr($consultacontratos2[$i]['contobs_idpessoa'], 0, 4))
+                ->get();
+                $consultapessoa2 = $consultapessoa->map(function($obj){
+                    return (array) $obj;
+                })->toArray();
+                array_push($resultconsultas, $consultapessoa2);
+            }else if($consultacontratos2[$i]['contobs_idpessoa'][4] == "3"){
+                $consultapessoa = DB::table('funcionarios')
+                ->where('func_id', substr($consultacontratos2[$i]['contobs_idpessoa'], 0, 4))
+                ->get();
+                $consultapessoa2 = $consultapessoa->map(function($obj){
+                    return (array) $obj;
+                })->toArray();
+                array_push($resultconsultas, $consultapessoa2);
+            }else if($consultacontratos2[$i]['contobs_idpessoa'][4] == "4"){
+                $consultapessoa = DB::table('clientesjur')
+                ->where('clijur_id', substr($consultacontratos2[$i]['contobs_idpessoa'], 0, 4))
+                ->get();
+                $consultapessoa2 = $consultapessoa->map(function($obj){
+                    return (array) $obj;
+                })->toArray();
+                array_push($resultconsultas, $consultapessoa2);
+            }else if($consultacontratos2[$i]['contobs_idpessoa'][4] == "5"){
+                $consultapessoa = DB::table('fornecedoresjur')
+                ->where('forjur_id', substr($consultacontratos2[$i]['contobs_idpessoa'], 0, 4))
+                ->get();
+                $consultapessoa2 = $consultapessoa->map(function($obj){
+                    return (array) $obj;
+                })->toArray();
+                array_push($resultconsultas, $consultapessoa2);
+            }
+        }
+        return $resultconsultas;
     }
 
     public function ConsultaPessoaNome(Request $request){

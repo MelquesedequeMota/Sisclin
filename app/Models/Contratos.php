@@ -11,8 +11,6 @@ class Contratos extends Model
     protected $fillable = [
         'cont_id',
         'cont_plano',
-        'cont_titu',
-        'cont_dep',
         'cont_diapag',
     ];
     public $timestamps = false;
