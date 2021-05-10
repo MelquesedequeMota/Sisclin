@@ -499,6 +499,7 @@ class CadastroController extends Controller
             'cont_id' => $cont_id,
             'cont_plano' => $request->plano,
             'cont_diapag' => $request->diapag,
+            'cont_status' => 'Ativo',
         ]);
     if($cadastrarcont == 1){
         $ultimocontrato = DB::table('contratos')->orderBy('cont_id', 'desc')->first();

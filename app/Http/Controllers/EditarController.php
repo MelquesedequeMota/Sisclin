@@ -14,6 +14,7 @@ use App\Models\Medico_Atendimento;
 use App\Models\Produtos;
 use App\Models\Planos;
 use App\Models\Contratos;
+use App\Models\ContratosObs;
 
 class EditarController extends Controller
 {
@@ -570,19 +571,140 @@ class EditarController extends Controller
     }
 
     public function EditarContrato(Request $request){
-        dd($request->all());
-        $dep = [];
-        for($i = 0; $i < count($request->dep); $i++){
-            array_push($dep, $request->dep[$i][0]);
-        }
-        $dep = implode(',',$dep);
+        $operacaoatualcount = 0;
         $edcont = Contratos::find($request->contratoatual);
         $edcont->cont_plano = $request->plano;
-        $edcont->cont_titu = $request->titu;
-        $edcont->cont_dep = $dep;
         $edcont->cont_diapag = $request->diapag;
+        $edcont->cont_status = "Ativo";
         if($edcont->save()){
-            return 1;
+            $consultaobs = DB::table('contratosobs')->where('contobs_id',$edcont->cont_id)->get();
+            $consulta = $consultaobs->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+            for($i = 0; $i < count($consulta); $i++){
+                DB::table('contratosobs')
+                ->where('contobs_id', $edcont->cont_id)
+                ->where('contobs_idpessoa', $consulta[$i]['contobs_idpessoa'])
+                ->update(["contobs_status" => "Não Ativo"]);
+            }
+
+        $idtitularpaciente = DB::table('pacientes')->where('pac_cpf', $request->titu)->get();
+        $idtitularforfis = DB::table('fornecedoresfis')->where('forfis_cpf', $request->titu)->get();
+        $idtitularfunc = DB::table('funcionarios')->where('func_cpf', $request->titu)->get();
+        $idtitularclijur = DB::table('clientesjur')->where('clijur_cnpj', $request->titu)->get();
+        $idtitularforjur = DB::table('fornecedoresjur')->where('forjur_cnpj', $request->titu)->get();
+        if(count($idtitularpaciente) !=0 ){
+            $id = $idtitularpaciente->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+            $id = $id[0]["pac_id"];
+            $data = 1;
+        }else if(count($idtitularforfis) !=0 ){
+            $id = $idtitularforfis->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+            $id = $id[0]["forfis_id"];
+            $data = 2;
+        }else if(count($idtitularfunc) !=0 ){
+            $id = $idtitularfunc->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+            $id = $id[0]["func_id"];
+            $data = 3;
+        }else if(count($idtitularclijur) !=0 ){
+            $id = $idtitularclijur->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+            $id = $id[0]["clijur_id"];
+            $data = 4;
+        }else if(count($idtitularforjur) !=0 ){
+            $id = $idtitularforjur->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+            $id = $id[0]["forjur_id"];
+            $data = 5;
+        }
+        $cont_titu = str_pad($id , 4 , '0' , STR_PAD_LEFT) . $data;
+        $consultatitu = DB::table('contratosobs')
+            ->where('contobs_id', $edcont->cont_id)
+            ->where('contobs_idpessoa', $cont_titu)
+            ->where('contobs_tipo', 'Titular')
+            ->get();
+        if(count($consultatitu) > 0){
+            DB::table('contratosobs')
+            ->where('contobs_id', $edcont->cont_id)
+            ->where('contobs_idpessoa', $cont_titu)
+            ->where('contobs_tipo', 'Titular')
+            ->update(["contobs_status" => "Ativo"]);
+        }else{
+            DB::table('contratosobs')->insert([
+                'contobs_id' => $edcont->cont_id,
+                'contobs_idpessoa' => $cont_titu,
+                'contobs_tipo' => 'Titular',
+                'contobs_status' => 'Ativo'
+            ]);
+        }
+
+            for($i = 0; $i < count($request->dep); $i++){
+                $depatual = $request->dep[$i][0];
+    
+                $iddeppaciente = DB::table('pacientes')->where('pac_cpf', $depatual)->get();
+                $iddepforfis = DB::table('fornecedoresfis')->where('forfis_cpf', $depatual)->get();
+                $iddepfunc = DB::table('funcionarios')->where('func_cpf', $depatual)->get();
+                $iddepclijur = DB::table('clientesjur')->where('clijur_cnpj', $depatual)->get();
+                $iddepforjur = DB::table('fornecedoresjur')->where('forjur_cnpj', $depatual)->get();
+                if(count($iddeppaciente) !=0 ){
+                    $id = $iddeppaciente->map(function($obj){
+                        return (array) $obj;
+                    })->toArray();
+                    $id = str_pad($id[0]["pac_id"] , 4 , '0' , STR_PAD_LEFT) . "1";
+                }else if(count($iddepforfis) !=0 ){
+                    $id = $iddepforfis->map(function($obj){
+                        return (array) $obj;
+                    })->toArray();
+                    $id = str_pad($id[0]["forfis_id"], 4 , '0' , STR_PAD_LEFT) . "2";
+                }else if(count($iddepfunc) !=0 ){
+                    $id = $iddepfunc->map(function($obj){
+                        return (array) $obj;
+                    })->toArray();
+                    $id = str_pad($id[0]["func_id"] , 4 , '0' , STR_PAD_LEFT) . "3";
+                }else if(count($iddepclijur) !=0 ){
+                    $id = $iddepclijur->map(function($obj){
+                        return (array) $obj;
+                    })->toArray();
+                    $id = str_pad($id[0]["clijur_id"] , 4 , '0' , STR_PAD_LEFT) . "4";
+                }else if(count($iddepforjur) !=0 ){
+                    $id = $iddepforjur->map(function($obj){
+                        return (array) $obj;
+                    })->toArray();
+                    $id = str_pad($id[0]["forjur_id"] , 4 , '0' , STR_PAD_LEFT) . "5";
+                }
+                $consultadep = DB::table('contratosobs')
+                ->where('contobs_id', $edcont->cont_id)
+                ->where('contobs_idpessoa', $id)
+                ->where('contobs_tipo', 'Dependente')
+                ->get();
+                if(count($consultadep) > 0){
+                    $operacaoatual = DB::table('contratosobs')
+                    ->where('contobs_id', $edcont->cont_id)
+                    ->where('contobs_idpessoa', $id)
+                    ->where('contobs_tipo', 'Dependente')
+                    ->update(["contobs_status" => 'Ativo']);
+                }else{
+                    $operacaoatual = DB::table('contratosobs')->insert([
+                        'contobs_id' => $edcont->cont_id,
+                        'contobs_idpessoa' => $id,
+                        'contobs_tipo' => 'Dependente',
+                        'contobs_status' => 'Ativo'
+                    ]);
+                }
+                $operacaoatualcount++;
+            }
+            if($operacaoatualcount == count($request->dep)){
+                return 1;
+            }else{
+                return 0;
+            }
         }else{
             return 0;
         }

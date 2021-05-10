@@ -17,6 +17,7 @@ class Contratos extends Migration
             $table->bigInteger('cont_id');
             $table->string('cont_plano');
             $table->integer('cont_diapag');
+            $table->integer('cont_status');
         });
     }
 

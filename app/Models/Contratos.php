@@ -12,6 +12,7 @@ class Contratos extends Model
         'cont_id',
         'cont_plano',
         'cont_diapag',
+        'cont_status',
     ];
     public $timestamps = false;
 }
