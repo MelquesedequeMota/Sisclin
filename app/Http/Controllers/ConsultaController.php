@@ -548,6 +548,16 @@ class ConsultaController extends Controller
         return $espec;
     }
 
+    public function ConsultaEspecialidadeMedico(Request $request){
+        $consultaselecmedico = DB::table('medicos')->where('med_espec', $request->espec)->get();
+        $medico = ["id"=>[], "nome"=>[]];
+        foreach($consultaselecmedico as $consultaselecmedico){
+            array_push($medico["id"], $consultaselecmedico->med_id);
+            array_push($medico["nome"], $consultaselecmedico->med_nome);
+        }
+        return $medico;
+    }
+
     public function ConsultaCadastroServicoMedico(Request $request){
         $consultaselectespec = DB::table('especialidades')->where('espec_id', $request->espec)->get();
         $consultaselectcate = DB::table('categorias')->where('cate_nome', $consultaselectespec[0]->espec_nome)->get();

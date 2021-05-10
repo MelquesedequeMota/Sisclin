@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Datetime;
 
 class CadastroController extends Controller
 {
@@ -21,6 +22,9 @@ class CadastroController extends Controller
     }
     public function CadastrarContrato(Request $request){
         return view('CadastroContrato');
+    }
+    public function CadastrarAgenda(Request $request){
+        return view('CadastroAgenda');
     }
     public function CadastroDepartamento(Request $request){
         $cadastrardep = DB::table('departamentos')->insert([

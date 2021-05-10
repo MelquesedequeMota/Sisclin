@@ -12,6 +12,7 @@ Route::get('cadastro/medico', 'App\Http\Controllers\CadastroController@Cadastrar
 Route::get('cadastro/produto', 'App\Http\Controllers\CadastroController@CadastrarProduto')->name('cadastrarproduto');
 Route::get('cadastro/plano', 'App\Http\Controllers\CadastroController@CadastrarPlano')->name('cadastrarplano');
 Route::get('cadastro/contrato', 'App\Http\Controllers\CadastroController@CadastrarContrato')->name('cadastrarcontrato');
+Route::get('cadastro/agenda', 'App\Http\Controllers\CadastroController@CadastrarAgenda')->name('cadastraragenda');
 Route::get('cadastro/cadastroespecialidade', 'App\Http\Controllers\CadastroController@CadastroEspecialidade')->name('cadastroespec');
 Route::get('cadastro/cadastropaciente', 'App\Http\Controllers\CadastroController@CadastroPaciente')->name('cadastropaciente');
 Route::get('cadastro/cadastrofornecedorfisico', 'App\Http\Controllers\CadastroController@CadastroFornecedorFisico')->name('cadastrofornecedorfisico');
@@ -36,6 +37,7 @@ Route::get('consultacadastroservimed', 'App\Http\Controllers\ConsultaController@
 Route::get('consultacadastrocate', 'App\Http\Controllers\ConsultaController@ConsultaCadastroCategoria')->name('consultacadastrocate');
 Route::get('consultacadastroitem', 'App\Http\Controllers\ConsultaController@ConsultaCadastroItem')->name('consultacadastroitem');
 Route::get('consultacadastroservi', 'App\Http\Controllers\ConsultaController@ConsultaCadastroServico')->name('consultacadastroservi');
+Route::get('consultaespecmedico', 'App\Http\Controllers\ConsultaController@ConsultaEspecialidadeMedico')->name('consultaespecmedico');
 
 Route::get('consulta/pessoa', 'App\Http\Controllers\ConsultaController@ConsultaPessoa')->name('consultapessoa');
 Route::get('consulta/medico', 'App\Http\Controllers\ConsultaController@ConsultaMedico')->name('consultamedico');
