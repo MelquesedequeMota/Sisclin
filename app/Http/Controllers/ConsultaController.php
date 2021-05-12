@@ -557,6 +557,161 @@ class ConsultaController extends Controller
         }
         return $medico;
     }
+    public function ConsultaAgendadeMedico(Request $request){
+        $data = explode('-',$request->dia);
+        $data = $data[1] . "/" . $data[2] . "/" . $data[0];
+        $datadia = date('l', strtotime($data));
+        switch($datadia){
+            case 'Monday':
+                $datadia = 'medat_segunda';
+            break;
+
+            case 'Tuesday':
+                $datadia = 'medat_terca';
+            break;
+
+            case 'Wednesday':
+                $datadia = 'medat_quarta';
+            break;
+            
+            case 'Thursday':
+                $datadia = 'medat_quinta';
+            break;
+            
+            case 'Friday':
+                $datadia = 'medat_sexta';
+            break;
+            
+            case 'Saturday':
+                $datadia = 'medat_sabado';
+            break;
+            
+            case 'Sunday':
+                $datadia = 'medat_domingo';
+            break;
+        }
+        $consultaagendamedico = DB::table('medico_atendimento')
+        ->where('med_id', $request->medico)
+        ->get();
+        $consultaagenda = $consultaagendamedico->map(function($obj){
+            return (array) $obj;
+        })->toArray();
+        if($consultaagenda[0][$datadia] != ""){
+            $horasagenda = explode(' - ',$consultaagenda[0][$datadia]);
+            $horas = [];
+            $i = 0;
+            $dataagr = date('d/m/y '.$horasagenda[0]);
+            $data = explode(' ', $dataagr);
+            array_push($horas, $data[1]);
+            $datawhile = [$data[0]];
+            while($datawhile[0] == $data[0] && $data[1] < $horasagenda[1]){
+                $bgl = '+ '.$consultaagenda[0]['medat_tempoconsulta'].' minutes';
+                $dataagr = strtotime($horas[$i] . $bgl);
+                $dataagr = date('d/m/y H:i:s', $dataagr);
+                $data = explode(' ', $dataagr);
+                array_push($horas, $data[1]);
+                $i++;
+            }
+            array_pop($horas);
+            $consultaselecmedico = DB::table('medicos')->where('med_id', $request->medico)->get();
+            $consulta = $consultaselecmedico->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+            $servicos = $consulta[0]['med_servi'];
+            $servicos = explode(',', $servicos);
+            $servi = ["id"=>[], "nome"=>[]];
+            for($i = 0; $i < count($servicos); $i++){
+                $consultaselectservi = DB::table('produtos')->where('prod_id', $servicos[$i])->get();
+            
+                foreach($consultaselectservi as $consultaselectservi){
+                    array_push($servi["id"], $consultaselectservi->prod_id);
+                    array_push($servi["nome"], $consultaselectservi->prod_nome);
+                }
+
+            }
+            
+            $retorno = [$consulta[0]['med_id'], $servi, $horas];
+            return $retorno;
+        }else{
+            return 2;
+        }
+    }
+
+    public function ConsultaAgendaNomeContrato(Request $request){
+        $nome = [];
+        $idtitu = [];
+        $consultapacientes = DB::table('pacientes')->where('pac_nome', 'like', '%'.$request->nomepessoa.'%')->get();
+        $consultafornecedoresfis = DB::table('fornecedoresfis')->where('forfis_nome', 'like', '%'. $request->nomepessoa.'%')->get();
+        $consultafuncionarios = DB::table('funcionarios')->where('func_nome', 'like', '%'. $request->nomepessoa.'%')->get();
+        $consultafornecedoresjur = DB::table('fornecedoresjur')->where('forjur_nome', 'like', '%'. $request->nomepessoa.'%')->get();
+        $consultaclientesjur = DB::table('clientesjur')->where('clijur_nome', 'like', '%'. $request->nomepessoa.'%')->get();
+        if(count($consultapacientes) !=0 ){
+            $consultapessoa = $consultapacientes->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+            foreach($consultapessoa as $consultapessoa){
+                array_push($nome, $consultapessoa['pac_nome']);
+                array_push($idtitu, str_pad($consultapessoa['pac_id'] , 4 , '0' , STR_PAD_LEFT) . "1");
+            }
+            
+        }if(count($consultafornecedoresfis) !=0 ){
+            $consultapessoa = $consultafornecedoresfis->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+            foreach($consultapessoa as $consultapessoa){
+                array_push($nome, $consultapessoa['forfis_nome']);
+                array_push($idtitu, str_pad($consultapessoa['forfis_id'] , 4 , '0' , STR_PAD_LEFT) . "2");
+            }
+
+        }if(count($consultafuncionarios) !=0 ){
+            $consultapessoa = $consultafuncionarios->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+            foreach($consultapessoa as $consultapessoa){
+                array_push($nome, $consultapessoa['func_nome']);
+                array_push($idtitu, str_pad($consultapessoa['func_id'] , 4 , '0' , STR_PAD_LEFT) . "3");
+            }
+
+        }if(count($consultaclientesjur) !=0 ){
+            $consultapessoa = $consultaclientesjur->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+            foreach($consultapessoa as $consultapessoa){
+                array_push($nome, $consultapessoa['clijur_nome']);
+                array_push($idtitu, str_pad($consultapessoa['clijur_id'] , 4 , '0' , STR_PAD_LEFT) . "4");
+            }
+            
+        }if(count($consultafornecedoresjur) !=0 ){
+            $consultapessoa = $consultafornecedoresjur->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+            foreach($consultapessoa as $consultapessoa){
+                array_push($nome, $consultapessoa['forjur_nome']);
+                array_push($idtitu, str_pad($consultapessoa['forjur_id'] , 4 , '0' , STR_PAD_LEFT) . "5");
+            }
+            
+        }
+        $pessoas = [];
+        for($i = 0; $i < count($idtitu); $i++){
+            array_push($pessoas, [$idtitu[$i], $nome[$i]]);
+        }
+        $result = [];
+        foreach($pessoas as $pessoas){
+            $consultacontratos = DB::table('contratosobs')
+            ->where('contobs_idpessoa', 'like', '%'.$pessoas[0].'%')
+            ->where('contobs_status', 'Ativo')
+            ->get();
+            $consultacontratos2 = $consultacontratos->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+            if(count($consultacontratos2) > 0){
+                for($i = 0; $i < count($consultacontratos2); $i++){
+                    array_push($result, [$pessoas[1], $consultacontratos2[$i]['contobs_id']]);
+                }
+            }
+        }
+        return $result;
+    }
 
     public function ConsultaCadastroServicoMedico(Request $request){
         $consultaselectespec = DB::table('especialidades')->where('espec_id', $request->espec)->get();

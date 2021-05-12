@@ -28,6 +28,7 @@ Route::get('cadastro/cadastrosetor', 'App\Http\Controllers\CadastroController@Ca
 Route::get('cadastro/cadastrofuncao', 'App\Http\Controllers\CadastroController@CadastroFuncao')->name('cadastrofuncao');
 Route::get('cadastro/cadastroservico', 'App\Http\Controllers\CadastroController@CadastroServico')->name('cadastroservico');
 Route::get('cadastro/cadastrocategoria', 'App\Http\Controllers\CadastroController@CadastroCategoria')->name('cadastrocategoria');
+Route::get('cadastro/cadastroagendamedico', 'App\Http\Controllers\CadastroController@CadastroAgendaMedico')->name('cadastroagendamedico');
 
 Route::get('consultacadastrodep', 'App\Http\Controllers\ConsultaController@ConsultaCadastroDepartamento')->name('consultacadastrodep');
 Route::get('consultacadastroset', 'App\Http\Controllers\ConsultaController@ConsultaCadastroSetor')->name('consultacadastroset');
@@ -38,6 +39,7 @@ Route::get('consultacadastrocate', 'App\Http\Controllers\ConsultaController@Cons
 Route::get('consultacadastroitem', 'App\Http\Controllers\ConsultaController@ConsultaCadastroItem')->name('consultacadastroitem');
 Route::get('consultacadastroservi', 'App\Http\Controllers\ConsultaController@ConsultaCadastroServico')->name('consultacadastroservi');
 Route::get('consultaespecmedico', 'App\Http\Controllers\ConsultaController@ConsultaEspecialidadeMedico')->name('consultaespecmedico');
+Route::get('consultaagendamedico', 'App\Http\Controllers\ConsultaController@ConsultaAgendadeMedico')->name('consultaagendamedico');
 
 Route::get('consulta/pessoa', 'App\Http\Controllers\ConsultaController@ConsultaPessoa')->name('consultapessoa');
 Route::get('consulta/medico', 'App\Http\Controllers\ConsultaController@ConsultaMedico')->name('consultamedico');
@@ -65,6 +67,7 @@ Route::get('consulta/contratotitu/dados', 'App\Http\Controllers\ConsultaControll
 Route::get('consulta/contratodep/dados', 'App\Http\Controllers\ConsultaController@ConsultaContratoDependenteDados')->name('consultacontratodepdados');
 Route::get('consulta/contrato/plano', 'App\Http\Controllers\ConsultaController@ConsultaPlanoContrato')->name('consultaplanocontrato');
 Route::get('consulta/contrato/dadosedit', 'App\Http\Controllers\ConsultaController@ConsultaContratoEditar')->name('consultacontratoeditar');
+Route::get('consulta/agenda/nomecontrato', 'App\Http\Controllers\ConsultaController@ConsultaAgendaNomeContrato')->name('consultaagendanomecontrato');
 
 Route::get('editar/editarpaciente', 'App\Http\Controllers\EditarController@EditarPaciente')->name('editarpaciente');
 Route::get('editar/editarmedico', 'App\Http\Controllers\EditarController@EditarMedico')->name('editarmedico');

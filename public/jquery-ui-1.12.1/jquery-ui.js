@@ -5836,7 +5836,7 @@ $.widget( "ui.autocomplete", {
 				label = ui.item.attr( "aria-label" ) || item.value;
 				if ( label && $.trim( label ).length ) {
 					this.liveRegion.children().hide();
-					$( "<div>" ).text( label ).appendTo( this.liveRegion );
+					$( "2" ).text( label ).appendTo( this.liveRegion );
 				}
 			},
 			menuselect: function( event, ui ) {
@@ -5870,7 +5870,7 @@ $.widget( "ui.autocomplete", {
 			}
 		} );
 
-		this.liveRegion = $( "<div>", {
+		this.liveRegion = $( "2", {
 			role: "status",
 			"aria-live": "assertive",
 			"aria-relevant": "additions"

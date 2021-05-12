@@ -537,5 +537,79 @@ class CadastroController extends Controller
     }else{
         return 0;
     }
-}
+    }
+    public function CadastroAgendaMedico(Request $request){
+        $idall = [];
+        $pessoadados = explode(' - ',$request->dados[0]);
+        $idtitularpaciente = DB::table('pacientes')->where('pac_nome', $pessoadados[0])->get();
+        $idtitularforfis = DB::table('fornecedoresfis')->where('forfis_nome', $pessoadados[0])->get();
+        $idtitularfunc = DB::table('funcionarios')->where('func_nome', $pessoadados[0])->get();
+        $idtitularclijur = DB::table('clientesjur')->where('clijur_nome', $pessoadados[0])->get();
+        $idtitularforjur = DB::table('fornecedoresjur')->where('forjur_nome', $pessoadados[0])->get();
+        if(count($idtitularpaciente) !=0 ){
+            $id = $idtitularpaciente->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+            $id = $id[0]["pac_id"];
+            $data = 1;
+            array_push($idall, str_pad($id , 4 , '0' , STR_PAD_LEFT) . $data);
+        }if(count($idtitularforfis) !=0 ){
+            $id = $idtitularforfis->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+            $id = $id[0]["forfis_id"];
+            $data = 2;
+            array_push($idall, str_pad($id , 4 , '0' , STR_PAD_LEFT) . $data);
+        }if(count($idtitularfunc) !=0 ){
+            $id = $idtitularfunc->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+            $id = $id[0]["func_id"];
+            $data = 3;
+            array_push($idall, str_pad($id , 4 , '0' , STR_PAD_LEFT) . $data);
+        }if(count($idtitularclijur) !=0 ){
+            $id = $idtitularclijur->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+            $id = $id[0]["clijur_id"];
+            $data = 4;
+            array_push($idall, str_pad($id , 4 , '0' , STR_PAD_LEFT) . $data);
+        }if(count($idtitularforjur) !=0 ){
+            $id = $idtitularforjur->map(function($obj){
+                return (array) $obj;
+            })->toArray();
+            $id = $id[0]["forjur_id"];
+            $data = 5;
+            array_push($idall, str_pad($id , 4 , '0' , STR_PAD_LEFT) . $data);
+        }
+
+        foreach($idall as $idall){
+            $contrato = DB::table('contratosobs')
+            ->where('contobs_id', $pessoadados[1])
+            ->where('contobs_idpessoa', $idall)
+            ->where('contobs_status', 'Ativo')
+            ->get();
+            if(count($contrato) > 0){
+                $idpessoa = $contrato[0]->contobs_idpessoa;
+            }
+        }
+        $data = explode('-',$request->dados[4]);
+        $data = $data[2] . "/" . $data[1] . "/" . $data[0];
+        $datahora = $data . ' - ' . $request->dados[3];
+        $cadastraragenda = DB::table('agendas')->insert([
+            'age_idpessoa' => $idpessoa,
+            'age_data' => $datahora,
+            'age_serv' => $request->dados[1],
+            'age_med' => $request->dados[5],
+            'age_status' => $request->dados[2],
+        ]);
+        
+        if($cadastraragenda == 1){
+            return 1;
+        }else{
+            return 0;
+        }
+        
+        
+    }
 }
