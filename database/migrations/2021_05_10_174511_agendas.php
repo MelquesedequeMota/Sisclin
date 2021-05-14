@@ -16,6 +16,7 @@ class Agendas extends Migration
         Schema::create('agendas', function (Blueprint $table) {
             $table->bigIncrements('age_id');
             $table->string('age_idpessoa');
+            $table->string('age_contrato');
             $table->string('age_data');
             $table->string('age_serv');
             $table->string('age_med');

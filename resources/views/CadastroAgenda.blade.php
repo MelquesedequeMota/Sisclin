@@ -41,7 +41,6 @@ Data: <input type='date' name='pesquisardataagenda' id='pesquisardataagenda' onc
                 data: {nomepessoa:nome},
                 dataType: "json",
                 success: function(data){
-                    console.log(data);
                     for(i=0; i<data.length; i++){
                         nomes.push(data[i][0] + " - " +  data[i][1]);
                     }
@@ -109,7 +108,7 @@ Data: <input type='date' name='pesquisardataagenda' id='pesquisardataagenda' onc
                             document.getElementById('horarios').innerHTML = 'Médico não disponível nesse dia';
                         }else{
                             for(var counthorarios = 0; counthorarios < data[2].length; counthorarios++){
-                                document.getElementById('horarios').innerHTML += "<div id='"+data[2][counthorarios]+"'> <input type='button' value='"+data[2][counthorarios]+"' disabled><input type='text' name='pessoa"+counthorarios+"' id='pessoa"+counthorarios+"' placeholder='Selecione o Paciente' onkeypress='pesquisarnome(this)' onfocusout='salvaragenda(this)'><select name='servicoselect"+counthorarios+"' id='servicoselect"+counthorarios+"' onchange='salvaragenda(this)'><option value=''>Selecione o Serviço</option></select><select name='statusselect"+counthorarios+"' id='statusselect"+counthorarios+"' onchange='salvaragenda(this)'><option>Livre</option></select></div>";
+                                document.getElementById('horarios').innerHTML += "<div id='"+data[2][counthorarios]+"'> <input type='button' value='"+data[2][counthorarios]+"' disabled><input type='text' name='pessoa"+counthorarios+"' id='pessoa"+counthorarios+"' placeholder='Selecione o Paciente' onkeypress='pesquisarnome(this)' onfocusout='salvaragenda(this)'><select name='servicoselect"+counthorarios+"' id='servicoselect"+counthorarios+"' onchange='salvaragenda(this)'><option value=''>Selecione o Serviço</option></select><select name='statusselect"+counthorarios+"' id='statusselect"+counthorarios+"' onchange='salvaragenda(this)'><option value='Livre'>Livre</option><option value='Ocupado'>Ocupado</option></select></div>";
                                 var select = document.getElementById('servicoselect'+counthorarios);
                                 for(var i = 0; i<data[1]['id'].length; i++){
                                     var opt = document.createElement('option');
@@ -118,23 +117,48 @@ Data: <input type='date' name='pesquisardataagenda' id='pesquisardataagenda' onc
                                     select.appendChild(opt);
                                 }
                             }
-                            
+                            preencherhoras(data[0], document.getElementById('pesquisardataagenda').value);
                         }
                     }
                 });
         }
 
+        function preencherhoras(medico, data){
+        $.ajax({
+                    type: "GET",
+                    url: "/consultaagendahorario",
+                    data: {med_id: medico, data: data},
+                    dataType: "json",
+                    success: function(data) {
+                        for(var i = 0; i<data.length; i++){
+                            var index = horariosatuais.indexOf(data[i][3]);
+                            document.getElementById('pessoa'+index).value = data[i][0];
+                            document.getElementById('servicoselect'+index).value = data[i][1];
+                            document.getElementById('statusselect'+index).value = data[i][2];
+                        }
+                    }
+                });
+    }
+
     function salvaragenda(input){
-        var idinputatual = input.id.substr(input.id.length-1, 1);
-        if(document.getElementById('pessoa'+idinputatual).value != '' && document.getElementById('servicoselect'+idinputatual).value != 0){
-            var dados = [document.getElementById('pessoa'+idinputatual).value, document.getElementById('servicoselect'+idinputatual).value, document.getElementById('statusselect'+idinputatual).value ,horariosatuais[idinputatual], document.getElementById('pesquisardataagenda').value, document.getElementById('pesquisarmedicoagenda').value];
+        if(input.id.substr(0,6) == 'pessoa'){
+            var idinputatual = input.id.split('pessoa');
+        }else if(input.id.substr(0,6) == 'servic'){
+            var idinputatual = input.id.split('servicoselect');
+        }else{
+            var idinputatual = input.id.split('statusselect');
+        }
+        if(document.getElementById('pessoa'+idinputatual[1]).value != '' && document.getElementById('servicoselect'+idinputatual[1]).value != 0){
+            var dados = [document.getElementById('pessoa'+idinputatual[1]).value, document.getElementById('servicoselect'+idinputatual[1]).value, document.getElementById('statusselect'+idinputatual[1]).value ,horariosatuais[idinputatual[1]], document.getElementById('pesquisardataagenda').value, document.getElementById('pesquisarmedicoagenda').value];
             $.ajax({
                     type: "GET",
                     url: "cadastroagendamedico",
                     data: {dados: dados},
                     dataType: "json",
                     success: function(data) {
-                        console.log(data);
+                        if(data == 1){
+                            console.log('Agenda Atualualizada com Sucesso!');
+                        }
                     }
                 });
         }

@@ -637,6 +637,58 @@ class ConsultaController extends Controller
         }
     }
 
+    public function ConsultaAgendaHorario(Request $request){
+        $horas = [];
+        $data = explode('-',$request->data);
+        $data = $data[2] . "/" . $data[1] . "/" . $data[0];
+        $horadia = DB::table('agendas')
+        ->where('age_data', 'like', $data.'%')
+        ->where('age_med', $request->med_id)
+        ->get();
+        foreach($horadia as $horadia){
+            if($horadia->age_idpessoa[4] == "1"){
+                $consultapessoa = DB::table('pacientes')
+                ->where('pac_id', substr($horadia->age_idpessoa, 0, 4))
+                ->get();
+                $consultapessoa2 = $consultapessoa->map(function($obj){
+                    return (array) $obj;
+                })->toArray();
+            }else if($horadia->age_idpessoa[4] == "2"){
+                $consultapessoa = DB::table('fornecedoresfis')
+                ->where('forfis_id', substr($horadia->age_idpessoa, 0, 4))
+                ->get();
+                $consultapessoa2 = $consultapessoa->map(function($obj){
+                    return (array) $obj;
+                })->toArray();
+            }else if($horadia->age_idpessoa[4] == "3"){
+                $consultapessoa = DB::table('funcionarios')
+                ->where('func_id', substr($horadia->age_idpessoa, 0, 4))
+                ->get();
+                $consultapessoa2 = $consultapessoa->map(function($obj){
+                    return (array) $obj;
+                })->toArray();
+            }else if($horadia->age_idpessoa[4] == "4"){
+                $consultapessoa = DB::table('clientesjur')
+                ->where('clijur_id', substr($horadia->age_idpessoa, 0, 4))
+                ->get();
+                $consultapessoa2 = $consultapessoa->map(function($obj){
+                    return (array) $obj;
+                })->toArray();
+            }else if($horadia->age_idpessoa[4] == "5"){
+                $consultapessoa = DB::table('fornecedoresjur')
+                ->where('forjur_id', substr($horadia->age_idpessoa, 0, 4))
+                ->get();
+                $consultapessoa2 = $consultapessoa->map(function($obj){
+                    return (array) $obj;
+                })->toArray();
+            }
+            array_push($horas, [$consultapessoa2[0]['clijur_nome'] . ' - ' . $horadia->age_contrato, $horadia->age_serv, $horadia->age_status , explode(' - ',$horadia->age_data)[1]]);
+            
+        }
+        return $horas;
+        
+    }
+
     public function ConsultaAgendaNomeContrato(Request $request){
         $nome = [];
         $idtitu = [];

@@ -148,6 +148,7 @@
     }
 
     function filtservi(){
+        serviar = [];
         document.getElementById('servicheckbox').innerHTML = '';
         if($("[name='espec']").val() != ''){
             $.ajax({
@@ -167,6 +168,12 @@
     }
 
     function consespec(){
+        var select = document.getElementById("especselect");
+            var length = select.options.length;
+            for (i = length-1; i >= 0; i--) {
+                select.options[i] = null;
+        }
+
         $.ajax({
                 type: "GET",
                 url: "/consultacadastroespec",

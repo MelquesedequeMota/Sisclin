@@ -40,6 +40,8 @@ Route::get('consultacadastroitem', 'App\Http\Controllers\ConsultaController@Cons
 Route::get('consultacadastroservi', 'App\Http\Controllers\ConsultaController@ConsultaCadastroServico')->name('consultacadastroservi');
 Route::get('consultaespecmedico', 'App\Http\Controllers\ConsultaController@ConsultaEspecialidadeMedico')->name('consultaespecmedico');
 Route::get('consultaagendamedico', 'App\Http\Controllers\ConsultaController@ConsultaAgendadeMedico')->name('consultaagendamedico');
+Route::get('consultaagendamedicodia', 'App\Http\Controllers\ConsultaController@ConsultaAgendadeMedicoDia')->name('consultaagendamedicodia');
+Route::get('consultaagendahorario', 'App\Http\Controllers\ConsultaController@ConsultaAgendaHorario')->name('consultaagendahorario');
 
 Route::get('consulta/pessoa', 'App\Http\Controllers\ConsultaController@ConsultaPessoa')->name('consultapessoa');
 Route::get('consulta/medico', 'App\Http\Controllers\ConsultaController@ConsultaMedico')->name('consultamedico');

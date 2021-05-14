@@ -302,6 +302,7 @@ class CadastroController extends Controller
     }
 
     public function CadastroMedico(Request $request){
+        dd($request->all());
         $servi = implode(',', $request->servi);
         $cadastrarmedico = DB::table('medicos')->insert([
             'med_nome' => $request->nome,
@@ -596,15 +597,33 @@ class CadastroController extends Controller
         $data = explode('-',$request->dados[4]);
         $data = $data[2] . "/" . $data[1] . "/" . $data[0];
         $datahora = $data . ' - ' . $request->dados[3];
-        $cadastraragenda = DB::table('agendas')->insert([
-            'age_idpessoa' => $idpessoa,
-            'age_data' => $datahora,
-            'age_serv' => $request->dados[1],
-            'age_med' => $request->dados[5],
-            'age_status' => $request->dados[2],
-        ]);
-        
-        if($cadastraragenda == 1){
+        $checardatamedico = DB::table('agendas')
+        ->where('age_data', $datahora)
+        ->where('age_med', $request->dados[5])
+        ->get();
+        if(count($checardatamedico) != 0){
+            $attagenda = DB::table('agendas')
+            ->where('age_data', $datahora)
+            ->where('age_med', $request->dados[5])
+            ->update(
+                ['age_idpessoa' => $idpessoa,
+                'age_contrato' => $pessoadados[1],
+                'age_data' => $datahora,
+                'age_serv' => $request->dados[1],
+                'age_med' => $request->dados[5],
+                'age_status' => $request->dados[2]]
+            );
+        }else{
+            $attagenda = DB::table('agendas')->insert([
+                'age_idpessoa' => $idpessoa,
+                'age_contrato' => $pessoadados[1],
+                'age_data' => $datahora,
+                'age_serv' => $request->dados[1],
+                'age_med' => $request->dados[5],
+                'age_status' => $request->dados[2],
+            ]);
+        }
+        if($attagenda == 1){
             return 1;
         }else{
             return 0;
