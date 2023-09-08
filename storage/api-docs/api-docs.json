@@ -1,0 +1,47 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Sisger.in",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/consulta/produto/dados/{nomeproduto}": {
+            "get": {
+                "tags": [
+                    "Produtos"
+                ],
+                "summary": "Pega as informações de um produto",
+                "description": "Retorna as informações de um produto",
+                "operationId": "627f999ace164e40d286415e4d04cc90",
+                "parameters": [
+                    {
+                        "name": "nomeproduto",
+                        "in": "path",
+                        "description": "Nome do Produto",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        }
+    },
+    "security": [
+        []
+    ]
+}

@@ -1,0 +1,152 @@
+ @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+ @import url('https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700&display=swap');
+ @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap');
+
+ .divisaopainel {
+   width: 96%;
+   margin: 0.6rem auto;
+   /* background: blue; */
+   display: flex;
+   justify-content: space-between;
+   height: 47vh;
+ }
+
+ .divpropagandas {
+   width: 50%;
+   background-color: lightgray;
+   border-radius: 10px;
+ }
+
+ .titulopainel{
+   font-family: 'Roboto',
+   sans-serif;
+   font-style: normal;
+   font-weight: normal;
+   font-size: 20px;
+   color: #FFFFFF;
+  
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   margin:0;
+   width:100%;
+   background: #003C77;
+   height:2.5rem;
+   padding: 0 1rem;
+ }
+
+ .pessoaatendimento {
+   background: white;
+   width: 48%;
+   border-radius: 10px;
+   border: 1px solid gray;
+   display: flex;
+   align-items: center;
+   flex-direction: column;
+ }
+
+ .btamarelo {
+   background-color: #d1941a !important;
+ }
+
+ .corbolas {
+   border: 1.8px solid black;
+   width: 1.8rem;
+   height: 1.8rem;
+   border-radius: 50%;
+   margin-right: 1.5rem;
+ }
+
+ .sala {
+   text-align: center;
+   border: 1px solid black;
+   padding: 1.5rem;
+   border-radius: 5rem;
+   width: 12.5rem;
+
+   margin: auto;
+   font-family: Roboto;
+   font-style: normal;
+   font-weight: normal;
+   font-size: 26px;
+   line-height: 0px;
+   color: rgba(0, 0, 0, 0.81);
+ }
+
+ .flexr {
+   display: flex;
+   align-items: center;
+ }
+
+ .nomepaciente {
+   font-family: 'Roboto',
+     sans-serif;
+   font-style: normal;
+   font-weight: normal;
+   font-size: 32px;
+   line-height: 0px;
+   color: rgba(0, 0, 0, 0.81);
+ }
+
+ .area {
+   font-family: 'Roboto',
+     sans-serif;
+   font-style: normal;
+   font-weight: normal;
+   font-size: 26px;
+   line-height: 0px;
+   color: #956B17;
+ }
+
+ .ordempacientes {
+   width: 96%;
+   margin: 1rem auto;
+   /* box-shadow: 0 3px 8px rgb(0 0 0 / 25%); */
+   box-shadow: 0 1px 8px rgb(0 0 0 / 33%);
+   height: 44vh;
+   border-radius: 10px;
+ }
+
+ .titleultimoschamados {
+   position: relative;
+   top: 0.2rem;
+   margin-bottom:1rem;
+   text-align: center;
+   font-family: 'Source Sans Pro',
+   sans-serif;
+   font-style: normal;
+   font-weight: normal;
+   font-size: 23px;
+   /* line-height: 0px; */
+   color: rgba(0, 0, 0, 0.81);
+ }
+
+ .listapacientes {
+   font-family: 'Mulish',
+   sans-serif;
+   font-style: normal;
+   font-weight: normal;
+   font-size: 22px;
+   line-height: 45px;
+   color: #000000;
+ }
+
+ .bolalistapacientes{
+  display: none;
+  border: 1.8px solid black;
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+ }
+
+ .fontebotao {
+   font-family: "Source Sans Pro", sans-serif;
+   font-style: normal;
+   font-weight: 600;
+   font-size: 15px;
+   line-height: 20px;
+   letter-spacing: 0.5px;
+   color: #ffffff;
+   border: none;
+ }

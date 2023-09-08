@@ -15,24 +15,49 @@ use App\Models\Produtos;
 use App\Models\Planos;
 use App\Models\Contratos;
 use App\Models\ContratosObs;
+use App\Models\Laboratorios;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class EditarController extends Controller
 {
     public function EditarPaciente(Request $request){
-        $paciente = DB::table('pacientes')->where('pac_cpf', $request->cpf)->get()->map(function($obj){
-            return (array) $obj;
-        })->toArray();
-        $edpaciente = Pacientes::find($paciente[0]['pac_id']);
+        // dd($request->all());
+        $idatual = substr($request->id, 0, -1);
+        
+        // dd($idatual, $request->id, substr($request->id, 0, -1));
+        // $paciente = DB::table('pacientes')->where('pac_cpf', $request->cpf)->get()->map(function($obj){
+        //     return (array) $obj;
+        // })->toArray();
+
+        // if(count($paciente) > 0){
+        if($idatual != ''){
+            $edpaciente = Pacientes::find($idatual);
+        }else{
+            $edpaciente = '';
+        }
+
+        // dd($edpaciente);
         
         $fornecedor = DB::table('fornecedoresfis')->where('forfis_cpf', $request->cpf)->get()->map(function($obj){
             return (array) $obj;
         })->toArray();
-        $edfornecedor = FornecedoresFisicos::find($fornecedor[0]['forfis_id']);
+
+        if(count($fornecedor) > 0){
+            $edfornecedor = FornecedoresFisicos::find($fornecedor[0]['forfis_id']);
+        }else{
+            $edfornecedor = '';
+        }
 
         $funcionario = DB::table('funcionarios')->where('func_cpf', $request->cpf)->get()->map(function($obj){
             return (array) $obj;
         })->toArray();
-        $edfuncionario = Funcionarios::find($funcionario[0]['func_id']);
+
+        if(count($funcionario) > 0){
+            $edfuncionario = Funcionarios::find($funcionario[0]['func_id']);
+        }else{
+            $edfuncionario = '';
+        }
 
         if($edfornecedor){
             $edfornecedor->forfis_nome = $request->nome;
@@ -52,6 +77,10 @@ class EditarController extends Controller
             $edfornecedor->forfis_celular = $request->celular;
             $edfornecedor->forfis_rg = $request->rg;
             $edfornecedor->forfis_email = $request->email;
+            $edfornecedor->forfis_altura = $request->altura;
+            $edfornecedor->forfis_peso = $request->peso;
+            $edfornecedor->forfis_pa = $request->pa;
+            $edfornecedor->forfis_tiposangue = $request->tiposangue;
             if($edfornecedor->save()){
 
             }else{
@@ -76,6 +105,10 @@ class EditarController extends Controller
             $edfuncionario->func_celular = $request->celular;
             $edfuncionario->func_rg = $request->rg;
             $edfuncionario->func_email = $request->email;
+            $edfuncionario->func_altura = $request->altura;
+            $edfuncionario->func_peso = $request->peso;
+            $edfuncionario->func_pa = $request->pa;
+            $edfuncionario->func_tiposangue = $request->tiposangue;
             if($edfuncionario->save()){
 
             }else{
@@ -108,6 +141,10 @@ class EditarController extends Controller
             $edpaciente->pac_situ = $request->situpac;
             $edpaciente->pac_obj = $request->obj;
             $edpaciente->pac_obs = $request->obs;
+            $edpaciente->pac_altura = $request->altura;
+            $edpaciente->pac_peso = $request->peso;
+            $edpaciente->pac_pa = $request->pa;
+            $edpaciente->pac_tiposangue = $request->tiposangue;
             if($edpaciente->save()){
                 return 1;
             }else{
@@ -120,19 +157,34 @@ class EditarController extends Controller
         $paciente = DB::table('pacientes')->where('pac_cpf', $request->cpf)->get()->map(function($obj){
             return (array) $obj;
         })->toArray();
-        $edpaciente = Pacientes::find($paciente[0]['pac_id']);
+
+        if(count($paciente) > 0){
+            $edpaciente = Pacientes::find($paciente[0]['pac_id']);
+        }else{
+            $edpaciente = '';
+        }
         
         $fornecedor = DB::table('fornecedoresfis')->where('forfis_cpf', $request->cpf)->get()->map(function($obj){
             return (array) $obj;
         })->toArray();
-        $edfornecedor = FornecedoresFisicos::find($fornecedor[0]['forfis_id']);
+
+        if(count($fornecedor) > 0){
+            $edfornecedor = FornecedoresFisicos::find($fornecedor[0]['forfis_id']);
+        }else{
+            $edfornecedor = '';
+        }
 
         $funcionario = DB::table('funcionarios')->where('func_cpf', $request->cpf)->get()->map(function($obj){
             return (array) $obj;
         })->toArray();
-        $edfuncionario = Funcionarios::find($funcionario[0]['func_id']);
 
-        if($edpaciente){
+        if(count($funcionario) > 0){
+            $edfuncionario = Funcionarios::find($funcionario[0]['func_id']);
+        }else{
+            $edfuncionario = '';
+        }
+
+        if($edpaciente != ''){
             $edpaciente->pac_nome = $request->nome;
             $edpaciente->pac_cpf = $request->cpf;
             $edpaciente->pac_estadocivil = $request->estadocivil;
@@ -150,13 +202,17 @@ class EditarController extends Controller
             $edpaciente->pac_celular = $request->celular;
             $edpaciente->pac_rg = $request->rg;
             $edpaciente->pac_email = $request->email;
+            $edpaciente->pac_altura = $request->altura;
+            $edpaciente->pac_peso = $request->peso;
+            $edpaciente->pac_pa = $request->pa;
+            $edpaciente->pac_tiposangue = $request->tiposangue;
             if($edpaciente->save()){
 
             }else{
                 return 0;
             }
         }
-        if($edfuncionario){
+        if($edfuncionario != ''){
             $edfuncionario->func_nome = $request->nome;
             $edfuncionario->func_cpf = $request->cpf;
             $edfuncionario->func_estadocivil = $request->estadocivil;
@@ -174,6 +230,10 @@ class EditarController extends Controller
             $edfuncionario->func_celular = $request->celular;
             $edfuncionario->func_rg = $request->rg;
             $edfuncionario->func_email = $request->email;
+            $edfuncionario->func_altura = $request->altura;
+            $edfuncionario->func_peso = $request->peso;
+            $edfuncionario->func_pa = $request->pa;
+            $edfuncionario->func_tiposangue = $request->tiposangue;
             if($edfuncionario->save()){
 
             }else{
@@ -181,7 +241,7 @@ class EditarController extends Controller
             }
         }
 
-        if($edfornecedor){
+        if($edfornecedor != ''){
             $edfornecedor->forfis_nome = $request->nome;
             $edfornecedor->forfis_cpf = $request->cpf;
             $edfornecedor->forfis_estadocivil = $request->estadocivil;
@@ -203,6 +263,10 @@ class EditarController extends Controller
             $edfornecedor->forfis_razaosocial = $request->razaosocial;
             $edfornecedor->forfis_areaatuacao = $request->areaatuacao;
             $edfornecedor->forfis_obs = $request->obs;
+            $edfornecedor->forfis_altura = $request->altura;
+            $edfornecedor->forfis_peso = $request->peso;
+            $edfornecedor->forfis_pa = $request->pa;
+            $edfornecedor->forfis_tiposangue = $request->tiposangue;
             if($edfornecedor->save()){
                 return 1;
             }else{
@@ -212,22 +276,38 @@ class EditarController extends Controller
     }
 
     public function EditarFuncionario(Request $request){
+        // dd($request->all());
         $paciente = DB::table('pacientes')->where('pac_cpf', $request->cpf)->get()->map(function($obj){
             return (array) $obj;
         })->toArray();
-        $edpaciente = Pacientes::find($paciente[0]['pac_id']);
+
+        if(count($paciente) > 0){
+            $edpaciente = Pacientes::find($paciente[0]['pac_id']);
+        }else{
+            $edpaciente = '';
+        }
         
         $fornecedor = DB::table('fornecedoresfis')->where('forfis_cpf', $request->cpf)->get()->map(function($obj){
             return (array) $obj;
         })->toArray();
-        $edfornecedor = FornecedoresFisicos::find($fornecedor[0]['forfis_id']);
+
+        if(count($fornecedor) > 0){
+            $edfornecedor = FornecedoresFisicos::find($fornecedor[0]['forfis_id']);
+        }else{
+            $edfornecedor = '';
+        }
 
         $funcionario = DB::table('funcionarios')->where('func_cpf', $request->cpf)->get()->map(function($obj){
             return (array) $obj;
         })->toArray();
-        $edfuncionario = Funcionarios::find($funcionario[0]['func_id']);
 
-        if($edpaciente){
+        if(count($funcionario) > 0){
+            $edfuncionario = Funcionarios::find($funcionario[0]['func_id']);
+        }else{
+            $edfuncionario = '';
+        }
+
+        if($edpaciente != ''){
             $edpaciente->pac_nome = $request->nome;
             $edpaciente->pac_cpf = $request->cpf;
             $edpaciente->pac_estadocivil = $request->estadocivil;
@@ -245,13 +325,17 @@ class EditarController extends Controller
             $edpaciente->pac_celular = $request->celular;
             $edpaciente->pac_rg = $request->rg;
             $edpaciente->pac_email = $request->email;
+            $edpaciente->pac_altura = $request->altura;
+            $edpaciente->pac_peso = $request->peso;
+            $edpaciente->pac_pa = $request->pa;
+            $edpaciente->pac_tiposangue = $request->tiposangue;
             if($edpaciente->save()){
 
             }else{
                 return 0;
             }
         }
-        if($edfornecedor){
+        if($edfornecedor != ''){
             $edfornecedor->forfis_nome = $request->nome;
             $edfornecedor->forfis_cpf = $request->cpf;
             $edfornecedor->forfis_estadocivil = $request->estadocivil;
@@ -269,6 +353,10 @@ class EditarController extends Controller
             $edfornecedor->forfis_celular = $request->celular;
             $edfornecedor->forfis_rg = $request->rg;
             $edfornecedor->forfis_email = $request->email;
+            $edfornecedor->forfis_altura = $request->altura;
+            $edfornecedor->forfis_peso = $request->peso;
+            $edfornecedor->forfis_pa = $request->pa;
+            $edfornecedor->forfis_tiposangue = $request->tiposangue;
             if($edfornecedor->save()){
 
             }else{
@@ -276,7 +364,7 @@ class EditarController extends Controller
             }
         }
 
-        if($edfuncionario){
+        if($edfuncionario != ''){
             $edfuncionario->func_nome = $request->nome;
             $edfuncionario->func_cpf = $request->cpf;
             $edfuncionario->func_rg = $request->rg;
@@ -301,13 +389,30 @@ class EditarController extends Controller
             $edfuncionario->func_serie = $request->serie;
             $edfuncionario->func_pis = $request->pis;
             $edfuncionario->func_ufctps = $request->ufctps;
-            $edfuncionario->func_salario = $request->salario;
+            $edfuncionario->func_salario = doubleval($request->salario);
             $edfuncionario->func_conjugue = $request->conjugue;
             $edfuncionario->func_nomepai = $request->nomepai;
             $edfuncionario->func_nomemae = $request->nomemae;
             $edfuncionario->func_obs = $request->obs;
+            $edfuncionario->func_altura = $request->altura;
+            $edfuncionario->func_peso = $request->peso;
+            $edfuncionario->func_pa = $request->pa;
+            $edfuncionario->func_tiposangue = $request->tiposangue;
             if($edfuncionario->save()){
-                return 1;
+                if($request->user_senha == null){
+                    return 1;
+                }else{
+                    $eduser = User::where('user_id', strval($funcionario[0]['func_id']) . '3')->first();
+                    // dd($eduser, strval($funcionario[0]['func_id']) . '3');
+                    $eduser->username = $request->user_name;
+                    $eduser->password = Hash::make($request->user_senha);
+                    if($request->user_tipo){
+                        $eduser->user_tipo = $request->user_tipo;
+                    }
+                    if($eduser->save()){
+                        return 1;
+                    }
+                }
             }else{
                 return 0;
             }
@@ -323,9 +428,14 @@ class EditarController extends Controller
         $clientesjur = DB::table('clientesjur')->where('clijur_cnpj', $request->cnpj)->get()->map(function($obj){
             return (array) $obj;
         })->toArray();
-        $edclientejur = ClientesJuridicos::find($clientesjur[0]['clijur_id']);
 
-        if($edclientejur){
+        if(count($clientesjur) > 0){
+            $edclientejur = ClientesJuridicos::find($clientesjur[0]['clijur_id']);
+        }else{
+            $edclientejur = '';
+        }
+
+        if($edclientejur != ''){
             $edclientejur->clijur_nome = $request->nome;
             $edclientejur->clijur_cnpj = $request->cnpj;
             $edclientejur->clijur_cep = $request->cep;
@@ -387,14 +497,18 @@ class EditarController extends Controller
         $fornecedor = DB::table('fornecedoresjur')->where('forjur_cnpj', $request->cnpj)->get()->map(function($obj){
             return (array) $obj;
         })->toArray();
-        $edfornecedor = FornecedoresJuridicos::find($fornecedor[0]['forjur_id']);
+        if(count($fornecedor) > 0){
+            $edfornecedor = FornecedoresJuridicos::find($fornecedor[0]['forjur_id']);
+        }else{
+            $edfornecedor = '';
+        }
 
         $clientesjur = DB::table('clientesjur')->where('clijur_cnpj', $request->cnpj)->get()->map(function($obj){
             return (array) $obj;
         })->toArray();
         $edclientejur = ClientesJuridicos::find($clientesjur[0]['clijur_id']);
 
-        if($edfornecedor){
+        if($edfornecedor != ''){
             $edfornecedor->forjur_nome = $request->nome;
             $edfornecedor->forjur_cnpj = $request->cnpj;
             $edfornecedor->forjur_cep = $request->cep;
@@ -454,14 +568,15 @@ class EditarController extends Controller
     }
 
     public function EditarMedico(Request $request){
-        $medico = DB::table('medicos')->where('med_cpf', $request->cpf)->get()->map(function($obj){
+        // dd($request->all());
+        $medico = DB::table('medicos')->where('med_cpfcnpj', $request->cpf)->get()->map(function($obj){
             return (array) $obj;
         })->toArray();
         $servi = implode(',', $request->servi);
         $edmedico = Medicos::find($medico[0]['med_id']);
         $edmedico->med_nome = $request->nome;
         $edmedico->med_crn = $request->crn;
-        $edmedico->med_cpf = $request->cpf;
+        $edmedico->med_cpfcnpj = $request->cpf;
         $edmedico->med_estadocivil = $request->estadocivil;
         $edmedico->med_sexo = $request->sexo;
         $edmedico->med_datanasc = $request->datanasc;
@@ -481,9 +596,11 @@ class EditarController extends Controller
         $edmedico->med_espec = $request->espec;
         $edmedico->med_servi = $servi;
         $edmedico->med_diapag = $request->pagamento;
+        $edmedico->med_maxaten = $request->maximoatendimento;
+        $edmedico->med_maxret = $request->maximoretorno;
         $edmedico->med_status = $request->status;
         if($edmedico->save()){
-            $medicoatual = DB::table('medicos')->orderBy('med_id', 'DESC')->first();
+            $medicoatual = $medico[0]['med_id'];
             $dias = ['domingo','segunda','terca','quarta','quinta','sexta','sabado'];
             $dadosdias = [];
             for($i = 0; $i<count($dias); $i++){
@@ -496,7 +613,7 @@ class EditarController extends Controller
                     array_push($dadosdias,'');
                 }
             }
-            $medico_atendimento = DB::table('medico_atendimento')->where('med_id', $medicoatual->med_id)->get()->map(function($obj){
+            $medico_atendimento = DB::table('medico_atendimento')->where('med_id', $medicoatual)->get()->map(function($obj){
                 return (array) $obj;
             })->toArray();
             $edmedico_atendimento = Medico_Atendimento::find($medico_atendimento[0]['medat_id']);
@@ -509,7 +626,16 @@ class EditarController extends Controller
             $edmedico_atendimento->medat_sabado = $dadosdias[6];
             $edmedico_atendimento->medat_tempoconsulta = $request->tempoconsulta;
             if($edmedico_atendimento->save()){
-                return 1;
+                if($request->user_senha == null){
+                    return 1;
+                }else{
+                    $eduser = User::where('user_id', $medicoatual)->where('user_tipo', 3)->first();
+                    $eduser->username = $request->user_name;
+                    $eduser->password = Hash::make($request->user_senha);
+                    if($eduser->save()){
+                        return 1;
+                    }
+                }
             }else{
                 return 0;
             }
@@ -519,9 +645,12 @@ class EditarController extends Controller
     }
 
     public function EditarProduto(Request $request){
-        $produto = DB::table('produtos')->where('prod_nome', $request->nome)->get()->map(function($obj){
+        // dd($request->all());
+        
+        $produto = DB::table('produtos')->where('prod_nome', $request->nomeantigo)->get()->map(function($obj){
             return (array) $obj;
         })->toArray();
+        // dd($produto);
         $edproduto = Produtos::find($produto[0]['prod_id']);
 
         if($request->quant == null){
@@ -529,41 +658,183 @@ class EditarController extends Controller
         }else{
             $quant = $request->quant;
         }
-        if($request->tipo == 'Servico'){
+        
+        // dd($request->all(), $request->valor,  doubleval(str_replace(',', '', $request->valor)));
+        if($request->tipo == 'Servico' || $request->tipo == 'Exame' || $request->tipo == 'Ultrassom' || $request->tipo == 'Raiox'){
                 $edproduto->prod_nome = $request->nome;
                 $edproduto->prod_desc = $request->desc;
                 $edproduto->prod_cate = $request->cate;
                 $edproduto->prod_tipo = $request->tipo;
                 $edproduto->prod_quant = null;
-                $edproduto->prod_valor = $request->valor;
+                $edproduto->prod_valor = doubleval(str_replace(',', '', $request->valor));
+                $edproduto->prod_valorlab = doubleval(str_replace(',', '', $request->valorlab));
                 $edproduto->prod_estqmin = null;
                 $edproduto->prod_serviitens = $request->serviitens;
         }else{
-                $edproduto->prod_nome = $request->nome;
-                $edproduto->prod_desc = $request->desc;
-                $edproduto->prod_cate = $request->cate;
-                $edproduto->prod_tipo = $request->tipo;
-                $edproduto->prod_quant = $quant;
-                $edproduto->prod_valor = $request->valor;
-                $edproduto->prod_estqmin = $request->estqmin;
-                $edproduto->prod_serviitens = null;
+            $edproduto->prod_nome = $request->nome;
+            $edproduto->prod_desc = $request->desc;
+            $edproduto->prod_cate = $request->cate;
+            $edproduto->prod_tipo = $request->tipo;
+            $edproduto->prod_quant = $quant;
+            $edproduto->prod_valor = doubleval(str_replace(',', '', $request->valor));
+            $edproduto->prod_estqmin = $request->estqmin;
+            $edproduto->prod_serviitens = null;
         }
         if($edproduto->save()){
             return 1;
         }else{
             return 0;
         }
+        
+        
     }
 
     public function EditarPlano(Request $request){
+        // dd($request->all());
+        // dd(doubleval($request->valorcartao));
         $edplano = Planos::find($request->id);
         $edplano->plan_nome = $request->nome;
         $edplano->plan_desc = $request->desc;
         $edplano->plan_qtddep = $request->qtddep;
-        $edplano->plan_valor = $request->valor;
-        $edplano->plan_servicos = $request->servicos;
-        $edplano->plan_itens = $request->itens;
+        $edplano->plan_valorboleto = doubleval(str_replace(',','.',$request->valorboleto));
+        $edplano->plan_valorcartao = doubleval(str_replace(',','.',$request->valorcartao));
+        $edplano->plan_adesao = doubleval(str_replace(',','.',$request->adesao));
         if($edplano->save()){
+            $planoobs = DB::table('planoobs')->where('planobs_plano', $request->id)->delete();
+            if($request->itens != null){
+                for($i = 0; $i < count($request->itens[0]); $i++){
+                    if($request->itens[3][$i] == '1'){
+                        $cadastrarplanoobs1 = DB::table('planoobs')->insert([
+                            'planobs_plano' => $request->id,
+                            'planobs_produto' => $request->itens[0][$i],
+                            'planobs_quantidade' => $request->itens[1][$i],
+                            'planobs_valor' => doubleval(str_replace(',','.',$request->itens[2][$i])),
+                            'planobs_incluso' => 'Incluso',
+                        ]);
+                    }else{
+                        $cadastrarplanoobs1 = DB::table('planoobs')->insert([
+                            'planobs_plano' => $request->id,
+                            'planobs_produto' => $request->itens[0][$i],
+                            'planobs_quantidade' => $request->itens[1][$i],
+                            'planobs_valor' => doubleval(str_replace(',','.',$request->itens[2][$i])),
+                        ]);
+                    }
+                }
+            }else{
+                $cadastrarplanoobs1 = 1;
+            }
+
+            if($request->servicos != null){
+
+                for($i = 0; $i < count($request->servicos[0]); $i++){
+                    if($request->servicos[2][$i] == '1'){
+                        $cadastrarplanoobs2 = DB::table('planoobs')->insert([
+                            'planobs_plano' => $request->id,
+                            'planobs_produto' => $request->servicos[0][$i],
+                            'planobs_valor' => doubleval(str_replace(',','.',$request->servicos[1][$i])),
+                            'planobs_incluso' => 'Incluso',
+                        ]);
+                    }else{
+                        $cadastrarplanoobs2 = DB::table('planoobs')->insert([
+                            'planobs_plano' => $request->id,
+                            'planobs_produto' => $request->servicos[0][$i],
+                            'planobs_valor' => doubleval(str_replace(',','.',$request->servicos[1][$i])),
+                        ]);
+                    }
+                }
+                
+            }else{
+                $cadastrarplanoobs2 = 1;
+            }
+            if($cadastrarplanoobs1 == 1 && $cadastrarplanoobs2 == 1){
+                return 1;
+            }else{
+                return 0;
+            }
+        }else{
+            return 0;
+        }
+    }
+
+    public function EditarLaboratorio(Request $request){
+        $edlaboratorio = Laboratorios::find($request->id);
+        $edlaboratorio->lab_num = $request->numlab;
+        $edlaboratorio->lab_nome = $request->nomelab;
+        $edlaboratorio->lab_espec = $request->espec;
+        if($edlaboratorio->save()){
+            return 1;
+        }else{
+            return 0;
+        }
+    }
+
+    public function EditarAviso(Request $request){
+        // dd($request->all());
+        $edaviso = DB::table('avisos')
+                    ->where('aviso_id', $request->idaviso)
+                    ->update([
+                        "aviso_titulo" => $request->titulo,
+                        "aviso_texto" => $request->texto,
+                    ]);
+        if($edaviso == 1){
+            return 1;
+        }else{
+            return 0;
+        }
+    }
+
+    public function EditarEventoCalendario(Request $request){
+        $edevento = DB::table('calendariocolaboradores')
+                    ->where('calcol_data', $request->data)
+                    ->where('calcol_even', $request->eventoantigo)
+                    ->update(["calcol_even" => $request->eventonovo]);
+        if($edevento == 1){
+            return 1;
+        }else{
+            return 0;
+        }
+    }
+
+    public function EditarUltrassom(Request $request){
+        $edultrassom = DB::table('ultrassons')
+                    ->where('ultrassons_id', $request->id)
+                    ->update(["ultrassons_nome" => $request->nome]);
+        if($edultrassom == 1){
+            return 1;
+        }else{
+            return 0;
+        }
+    }
+
+    public function EditarRaioX(Request $request){
+        $edraiox = DB::table('raiox')
+                    ->where('raiox_id', $request->id)
+                    ->update(["raiox_nome" => $request->nome]);
+        if($edraiox == 1){
+            return 1;
+        }else{
+            return 0;
+        }
+    }
+
+    public function EditarExame(Request $request){
+        $edexame1 = DB::table('exames')
+        ->where('exame_id', $request->id)
+        ->update(
+                ["exame_nome" => $request->nome]
+            );
+
+        $edexame2 = DB::table('exames')
+        ->where('exame_id', $request->id)
+        ->update(
+                ["exame_cate" => $request->cate],
+            );
+        $edexame3 = DB::table('exames')
+        ->where('exame_id', $request->id)
+        ->update(
+                ["exame_valor" => $request->valor],
+            );
+        if($edexame1 == 1 && $edexame2 == 1 && $edexame3 == 1){
             return 1;
         }else{
             return 0;
@@ -705,6 +976,25 @@ class EditarController extends Controller
             }else{
                 return 0;
             }
+        }else{
+            return 0;
+        }
+    }
+
+    public function EditHorarioMedico(Request $request){
+        // dd($request->all());
+
+        $horariomedico = $request->inicioagendamedico . "-" . $request->fimagendamedico;
+
+        // dd($request->datamedico, $horariomedico, $request->idagendamedicoatual);
+
+        $edithorariomedico = DB::table('agendamedico')->where('idagendamedico',$request->idagendamedicoatual)->update([
+            "datamedico" => $request->datamedico,
+            "horariosmedico" => $horariomedico,
+        ]);
+
+        if($edithorariomedico == 1){
+            return 1;
         }else{
             return 0;
         }

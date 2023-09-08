@@ -1,0 +1,83 @@
+.mudar {
+    display: flex;
+}
+
+.mudar2 {
+    display: flex;
+}
+
+.gigante {
+    width: 47rem;
+}
+
+@media (max-width: 768px) {
+    .inputm3 {
+        width: 7rem;
+    }
+    .inputlg2 {
+        width: 25rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .paddingprincipal {
+        padding: 0.5rem 0rem 2rem !important;
+    }
+
+    .direction {
+        flex-direction: column;
+        /* margin-top:1.5rem; */
+        margin-bottom: 0;
+        margin-top: 0;
+    }
+
+    .inputSs,
+    .inputSt {
+        width: 100%;
+    }
+
+    .inputSt {
+        margin: 0;
+    }
+
+    .inputlg,
+    .inputm3,
+    .inputlg2,
+    .inputS,
+    .inputxl,
+    .gigante,
+    .inputSs,
+    .inputt {
+        margin: 1rem 0rem;
+    }
+
+    .directionrowexterno {
+        flex-direction: column;
+        margin-top: 0;
+    }
+
+    .directioncolumn {
+        width: 80%;
+    }
+
+    .div2 {
+        flex-direction: row;
+    }
+
+    .inputlg,
+    .inputm3,
+    .inputlg2,
+    .inputS,
+    .inputxl,
+    .gigante {
+        width: 100%;
+    }
+
+    .mudar {
+        flex-direction: row;
+    }
+
+    .tituloprincipal {
+        font-size: 25px;
+    }
+}

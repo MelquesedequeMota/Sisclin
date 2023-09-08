@@ -1,0 +1,462 @@
+@import url("https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@300;400;500;600&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  outline: 0;
+}
+
+.fonttitulo{
+  font-family:'Roboto', sans-serif;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 20px;
+  line-height: 23px;
+  color: #000000;
+}
+
+html {
+  /* a cada 1rem será considera 10px */
+  font-size: 62.5% !important;
+}
+
+html,
+body {
+  height: 100vh;
+  font-family: "Source Sans Pro";
+  text-rendering: optimizelegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  font-size: 1.6rem !important;
+}
+
+.fontebotao {
+  font-family: "Source Sans Pro", sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 20px;
+  letter-spacing: 0.5px;
+  color: #ffffff;
+  border: none;
+}
+
+.maxespaco {
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+.s02 {
+  font-size: 15px !important;
+}
+
+
+.espacototal {
+  width: 100% !important;
+
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+}
+
+.selectacoes {
+  font-family: "Source Sans Pro", sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 20px;
+  letter-spacing: 0.5px;
+  color: #ffffff !important;
+  background-color: #d1941a !important;
+  border: none;
+}
+
+.nomesblocos,
+.nomesblocos1,
+.nomesblocos2,
+.nomesblocos3,
+.nomesblocos4,
+.nomesblocos5 {
+  font-family: "Source Sans Pro", sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 20px;
+  letter-spacing: 0.5px;
+  color: #232222;
+  margin-bottom: 2rem;
+}
+
+.inputtextcc {
+  width: 9rem;
+  text-align: center;
+}
+
+.form-label {
+  font-family: "Source Sans Pro", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+
+  line-height: 35px;
+  letter-spacing: -0.5px;
+  color: #333333;
+}
+
+.btn {
+  font-family: "Source Sans Pro", sans-serif;
+  font-style: normal;
+  font-weight: 600 !important;
+  font-size: 15px !important;
+  line-height: 20px;
+  letter-spacing: -0.5px;
+  color: #ffffff;
+  border-radius: 4px !important;
+  padding: 0.54rem 0.75rem !important;
+}
+
+.btdelete {
+  /* background-color: #ce2334 !important; */
+  background-color: #af1221 !important;
+}
+
+.btamarelo {
+  background-color: #d1941a !important;
+}
+
+.edit {
+  color: black !important;
+  font-weight: 400 !important;
+}
+
+.corbtedit {
+  background-color: lightgray !important;
+}
+
+.btadd {
+  margin-bottom: 1rem;
+  margin-left: 0.8rem;
+  width: 29% !important;
+}
+
+.btadicionar {
+  background-color: #0e6969 !important;
+  padding: 0.4rem 0.55rem !important;
+}
+
+/* Estilização de tabelas */
+.table-responsive-sm {
+  background: #ffffff;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  font-size: 14px;
+  border-radius: 5px;
+  width: max-content;
+  max-width: 100%;
+}
+
+/* arredondar as bordas do thead */
+.table thead td:first-of-type {
+  border-top-left-radius: 5px;
+}
+
+.table thead td:last-of-type {
+  border-top-right-radius: 5px;
+}
+
+/* linhas da table */
+.table td,
+.table th {
+  border-bottom: 1px solid #dee2e6;
+  border-top: 0px !important;
+}
+
+.table> :not(:last-child)> :last-child>* {
+  border-bottom-color: #ececec !important;
+}
+
+/*  */
+
+.container-fluid {
+  width: 100%;
+  max-width: 980px;
+  margin-top: 5rem;
+  float: left;
+}
+
+.selecttipopessoa {
+  max-width: max-content;
+}
+
+.subtipo {
+  display: flex;
+  font-size: 18px;
+}
+
+.btcadastrarcon {
+  display: flex;
+  align-items: center;
+  margin-top: 4rem;
+}
+
+.form-select {
+  min-width: max-content;
+}
+
+.form-control,
+.form-select,
+.inputtextcc {
+  border: 1px solid gray !important;
+  border-radius: 4px !important;
+}
+
+.alinharitens {
+  display: flex;
+  align-items: center;
+  margin-right: 1rem;
+}
+
+.distitens {
+  margin-left: 0.5rem;
+}
+
+input,
+select,
+textarea {
+  font-size: 15px !important;
+  height: 3.5rem;
+}
+
+/* Estilização dos títulos das páginas de consultar e editar */
+.tituloprincipal {
+  font-family: "Mulish", sans-serif;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 26px;
+  /* line-height: 20px; */
+  letter-spacing: 0.2px;
+  margin-top: 1%;
+}
+
+.tituloeditar {
+  font-family: "Mulish", sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  /* line-height: 20px; */
+  letter-spacing: 0.2px;
+  margin-top: 1%;
+}
+
+/*  */
+
+.divOU {
+  display: flex;
+  justify-content: center;
+  margin-top: 6rem !important;
+  width: max-content !important;
+}
+
+.flexdiv {
+  display: flex;
+  align-items: center;
+}
+
+.f02 {
+  margin-left: 2rem;
+}
+
+.btnovaespec {
+  margin-left: 1rem;
+}
+
+.direction {
+  display: flex;
+  flex-direction: row;
+}
+
+.divexternaespec {
+  width: max-content !important;
+}
+
+.btcategoria {
+  margin-left: 1rem;
+}
+
+.novaagendab {
+  margin: auto;
+}
+
+.inputstexttelas {
+  border: 0.7px solid #7e848b;
+  box-sizing: border-box;
+  border-radius: 4px;
+  /* width: 17rem; */
+  height: 31px !important;
+  padding-left: 0.3rem;
+
+  font-family: "Source Sans Pro", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 17px;
+  line-height: 20px;
+  letter-spacing: 0.7px;
+  /* Gray 2 */
+  color: #333333;
+
+  width: 9rem;
+}
+
+/* .inputtextmedio {
+  width: 13rem;
+}
+
+.inputtextcc {
+  width: 9rem;
+} */
+
+.distcampos {
+  margin-bottom: 0.5rem;
+}
+
+.infopacientes {
+  font-family: "Mulish", sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  /* line-height: 36px; */
+  letter-spacing: -0.03em;
+  color: rgba(0, 0, 0, 0.74);
+}
+
+.divdadospaciente {
+  display: flex !important;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 0.4rem;
+}
+
+.btbordagreen {
+  border: 1px solid #127a7a !important;
+}
+
+.textobtborda {
+  font-size: 14px;
+}
+
+.dados {
+  font-family: "Mulish", sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 39px;
+  letter-spacing: 0.09em;
+  color: rgba(0, 0, 0, 0.74);
+  display: flex;
+}
+
+.divlistahpp {
+  display: flex;
+  margin-right: 0.5rem;
+
+  background: lightgray;
+  border-radius: 4px;
+  padding: 0.6rem 0.8rem;
+}
+
+#hpplista {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: max-content;
+  max-width: 100%;
+}
+
+.titulodados {
+  font-family: "IBM Plex Sans Condensed", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 24px;
+  line-height: 36px;
+  letter-spacing: 0.065em;
+  color: rgba(0, 0, 0, 0.74);
+}
+
+.tamanhoinput {
+  width: 7rem !important;
+  height: 3rem;
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-radius: 0px !important;
+  margin-right: 0.5rem;
+}
+
+/* .disttop,.disttophorarios{
+  margin-top: 1rem;
+} */
+
+/* @media (min-width: 900px) {
+  .disttop,
+  .disttophorarios {
+    margin-top: 4rem;
+  }
+} */
+
+@media (max-width: 900px) {
+  html {
+    font-size: 56% !important;
+  }
+  .btcadastrarcon {
+    margin-top: 4.4rem;
+  }
+}
+
+@media (max-width: 845px) {
+  .btn {
+    font-size: 14px !important;
+  }
+}
+
+/* @media (min-width: 768px) {
+  .disttop{
+    margin-top:4.3rem; 
+  }
+} */
+
+@media (max-width: 575px) {
+  .btnovaespec {
+    margin-left: 0rem;
+  }
+
+  .btcategoria {
+    margin-left: 0rem;
+  }
+
+  .direction {
+    flex-direction: column;
+  }
+
+  .divexternaespec {
+    width: 100% !important;
+  }
+
+  .btn {
+    width: 100%;
+  }
+
+  .divOU {
+    margin-top: 0rem !important;
+  }
+}
+
+@media (max-width: 350px) {
+  .novaagendab {
+    margin: 0;
+  }
+}

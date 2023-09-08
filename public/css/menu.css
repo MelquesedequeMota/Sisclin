@@ -1,0 +1,243 @@
+@import url("https://fonts.googleapis.com/css2?family=Mulish:wght@300;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@300;400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&display=swap");
+
+* {
+    padding: 0;
+    margin: 0;
+    /* box-sizing: border-box;
+    font-family: 'IBM Plex Sans Condensed', sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 24px;
+    letter-spacing: 1.3px; */
+}
+ol,
+ul {
+    padding-left: 0rem !important;
+}
+nav {
+    line-height: normal;
+}
+
+img {
+    vertical-align: baseline !important;
+}
+
+label {
+    font-weight: 400 !important;
+}
+
+.item label,
+.menuLateral a{
+    font-family: 'IBM Plex Sans Condensed', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    letter-spacing: 1.3px;
+    color: #FFFFFF;
+}
+
+.dist {
+    margin-left: 0.7rem;
+}
+
+.dist1 {
+    margin-left: 0.8rem;
+}
+
+/* Menu Lateral*/
+.menuLateral {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #006077;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+    padding-bottom: 1rem;
+}
+.menuLateral a {
+    padding: 16px 8px 8px 23px !important;
+    text-decoration: none;
+    font-size: 16.5px !important;
+    color: #fff;
+    display: block;
+    transition: 0.3s;
+}
+.menuLateral a:hover {
+    background-color: #026e88;
+    border-left: 4px solid white;
+}
+.btnFechar {
+    position: absolute;
+    top: 10px !important;
+    padding: 0 0 0 15px;
+    font-size: 25px;
+    color: #fff;
+    cursor: pointer;
+}
+
+/* Menu Pesquisa */
+.menuContainerPesquisa {
+    width: 300px;
+    padding: 15px 0;
+    background-color: #bbb;
+}
+.menuContainerPesquisa li a {
+    padding: 12px;
+    text-decoration: none;
+    display: block;
+}
+#menuPesquisa {
+    list-style-type: none;
+    padding: 0px;
+    margin: 0px;
+}
+
+input::placeholder {
+    color: white;
+}
+
+.lupa {
+    position: relative;
+    text-align: center;
+}
+.lupa::after {
+    content: url(../imagens/search.svg);
+    left: 3rem;
+    position: absolute;
+    top: 6px;
+}
+
+.lupa:nth-child(3)::after {
+    content: url(../imagens/search.svg);
+}
+
+#pesquisa {
+    width: 200px;
+    height: 30px;
+    color: white;
+    transition: 0.4s;
+    border: 1px solid #ffffff;
+    box-sizing: border-box;
+    border-radius: 6px;
+    background: none;
+    text-align: center;
+}
+
+#pesquisa:focus {
+    text-align: unset;
+    transition: 0.4s;
+}
+.ContPesquisa {
+    /* padding-left: 25px; */
+    margin: 2rem 0rem 3rem;
+}
+
+/* Menu Dropdown*/
+.item label {
+    display: block;
+    padding: 16px 19px 8px 25px;
+    background-color: #006077;
+    color: #fff;
+    font-size: 16.5px;
+    cursor: pointer;
+    /* margin-top: 5px; */
+}
+.setaItem {
+    float: right;
+    padding: 0 !important;
+    margin-top: 4px;
+    transition: 0.4s;
+}
+.item input {
+    display: none;
+}
+.item ul {
+    width: 100%;
+    list-style-type: none;
+    overflow: hidden;
+    max-height: 0;
+    display: block;
+    transition: all 0.4s linear;
+}
+.item ul li a {
+    width: 100%;
+    height: fit-content;
+    padding: 6px;
+    display: block;
+    text-decoration: none;
+    background-color: #fafafa;
+    color: #333;
+}
+.item ul li a:hover {
+    background-color: #006077;
+    color: white;
+}
+.item label:hover {
+    background-color: #026e88;
+    border-left: 4px solid white;
+}
+.item input:checked ~ ul {
+    height: auto;
+    max-height: 500px;
+    transform: all;
+}
+.item input:checked ~ label .setaItem {
+    transform: rotate(180deg);
+    transition: 0.4s;
+}
+
+/* Atalhos */
+
+.atalhos {
+    display: flex;
+    justify-content: space-between;
+    /* display: inline-block !important;
+    position: sticky; */
+    width: 100%;
+    height: 43px;
+    top: 0;
+    background-color: #006077;
+}
+.atalhos a {
+    text-decoration: none;
+    text-transform: uppercase;
+    text-align: center;
+    color: #fff;
+    font-size: 12px;
+    padding: 14px 12px 0 8px !important;
+    float: right;
+}
+.abrirMenu {
+    padding: 10px 0 0 5px !important;
+    top: 10px !important;
+    font-size: 25px;
+    cursor: pointer;
+    color: #fff;
+}
+
+/* Conteudo */
+
+#principal {
+    padding: 16px;
+    transition: margin-left 0.5s;
+}
+
+/* Media Querrys */
+
+@media screen and (max-height: 450px) {
+    .menuLateral {
+        padding-top: 15px;
+    }
+    .menuLateral a {
+        font-size: 18px;
+    }
+}

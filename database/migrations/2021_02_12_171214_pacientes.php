@@ -39,6 +39,7 @@ class Pacientes extends Migration
             $table->string('pac_situ')->nullable();
             $table->string('pac_obj')->nullable();
             $table->string('pac_obs')->nullable();
+            $table->string('pac_status');
         });
     }
     

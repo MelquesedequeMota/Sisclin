@@ -23,6 +23,7 @@ class Produtos extends Migration
             $table->integer('prod_estqmin')->nullable();
             $table->double('prod_valor')->nullable();
             $table->string('prod_serviitens')->nullable();
+            $table->string('prod_img')->nullable();
         });
     }
 

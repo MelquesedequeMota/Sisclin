@@ -37,7 +37,32 @@ return [
 
         'public' => [
             'driver' => 'local',
-            'root' => storage_path('app/public'),
+            'root'   => public_path(),
+        ],
+
+        'imagens' => [
+            'driver' => 'local',
+            'root' => storage_path('app/imagens'),
+            'url' => env('APP_URL').'/storage',
+            'visibility' => 'public',
+        ],
+        'boletos' => [
+            'driver' => 'local',
+            'root' => storage_path('app/boletos'),
+            'url' => env('APP_URL').'/storage',
+            'visibility' => 'public',
+        ],
+
+        'retornos' => [
+            'driver' => 'local',
+            'root' => storage_path('app/retornos'),
+            'url' => env('APP_URL').'/storage',
+            'visibility' => 'public',
+        ],
+
+        'atendimentoaudio' => [
+            'driver' => 'local',
+            'root' => storage_path('app/atendimentoaudio'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
         ],
@@ -67,6 +92,7 @@ return [
 
     'links' => [
         public_path('storage') => storage_path('app/public'),
+        public_path('images') => storage_path('app/images'),
     ],
 
 ];

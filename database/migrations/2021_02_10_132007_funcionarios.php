@@ -46,6 +46,7 @@ class Funcionarios extends Migration
             $table->string('func_dataadm');
             $table->string('func_datadem')->nullable();
             $table->string('func_obs')->nullable();
+            $table->string('func_status');
         });
     }
 

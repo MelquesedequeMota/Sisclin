@@ -1,0 +1,236 @@
+html {
+    font-size: 62.5%;
+}
+
+body {
+    font-size: 1.6rem !important;
+}
+
+.form-floating > .form-control:not(:placeholder-shown) {
+    padding-top: 2.7rem !important;
+}
+
+.form-floating {
+    width: 90%;
+    height: 70vh;
+    max-width: 800px;
+    margin: auto;
+    margin-bottom: 2rem;
+}
+
+.divcontainer {
+    margin: auto;
+    width: 100%;
+    max-width: 960px;
+    text-align: center;
+    border: 1px solid black;
+}
+
+.divtextos {
+    text-align: justify;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.paddingprincipal {
+    padding: 0.5rem 1rem 4rem;
+}
+
+.margem {
+    margin-bottom: 2rem;
+}
+
+/* Responsividade */
+.directioncolumn {
+    display: flex;
+    flex-direction: column;
+}
+
+.directionrowexterno {
+    display: flex;
+    flex-direction: row;
+    margin-top: 1.5rem;
+}
+
+.directionExternoBloco2 {
+    display: flex;
+}
+
+.bloco2 {
+    display: flex;
+}
+
+.direction {
+    display: flex;
+}
+/*  */
+
+/* Inputs */
+input {
+    border: none;
+    border-bottom: 1px solid black;
+    text-align: center;
+}
+
+input:focus {
+    outline: 0;
+}
+
+.inputxs {
+    width: 7rem;
+}
+
+.inputS {
+    width: 10rem;
+}
+
+.inputm {
+    width: 12rem;
+}
+
+.inputm2 {
+    width: 23rem;
+}
+
+.inputm3 {
+    width: 15.2rem;
+}
+
+.inputlg {
+    width: 32rem;
+}
+
+.inputlg2 {
+    width: 39rem;
+}
+
+.inputxl {
+    width: 30rem;
+}
+
+.inputxxl {
+    width: 40rem;
+}
+
+.inputxxl2 {
+    width: 64.8rem;
+}
+
+/*  */
+
+@media (max-width: 900px) {
+    html {
+        font-size: 55%;
+    }
+}
+
+@media (max-width: 766px) {
+    .inputxxl2 {
+        width: 60.8rem;
+    }
+
+    .inputlg {
+        width: 30rem;
+    }
+
+    .inputlg2 {
+        width: 26rem;
+    }
+
+    .inputxs {
+        width: 5rem;
+    }
+
+    .inputm2 {
+        width: 19rem;
+    }
+
+    .inputm3 {
+        width: 12.2rem;
+    }
+}
+
+@media (max-width: 682px) {
+    .inputxxl2 {
+        width: 52.8rem;
+    }
+
+    .inputm2 {
+        width: 11rem;
+    }
+    .inputlg {
+        width: 26rem;
+    }
+
+    .inputlg2 {
+        width: 22rem;
+    }
+
+    .inputm3 {
+        width: 10.2rem;
+    }
+}
+
+@media (max-width: 612px) {
+    .inputm2 {
+        width: 21rem;
+    }
+
+    .inputxxl2 {
+        width: 45.8rem;
+    }
+
+    .inputlg {
+        width: 22.6rem;
+    }
+
+    .inputS {
+        width: 19rem;
+    }
+
+    .directionExternoBloco2 {
+        flex-direction: column;
+    }
+
+    .bloco2_input2 {
+        margin-top: 2rem;
+    }
+}
+
+@media (max-width: 556px) {
+    .directionrowexterno {
+        flex-direction: column;
+    }
+
+    .bloco2_div1 {
+        flex-direction: column;
+    }
+
+    .direction {
+        margin-bottom: 1rem;
+        flex-direction: column;
+    }
+
+    .paddingprincipal {
+        padding: 0.5rem 2rem 2rem !important;
+    }
+
+    .inputlg,
+    .inputS,
+    .inputm {
+        width: 100%;
+    }
+    .inputxxl2 {
+        width: 97%;
+    }
+
+    .inputm2 {
+        width: 84%;
+    }
+
+    html {
+        font-size: 50%;
+    }
+}

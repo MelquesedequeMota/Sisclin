@@ -36,6 +36,7 @@ class Fornecedoresjur extends Migration
             $table->string('forjur_emailrep')->nullable();
             $table->string('forjur_contatorep');
             $table->string('forjur_obs')->nullable();
+            $table->string('forjur_status');
         });
     }
 

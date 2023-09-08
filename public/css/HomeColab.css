@@ -1,0 +1,608 @@
+/* Works on Firefox */
+.scrollcss {
+    scrollbar-width: thin;
+    scrollbar-color: #bdbbbb #d9d9df;
+}
+
+/* Works on Chrome, Edge, and Safari */
+.scrollcss::-webkit-scrollbar {
+    width: 8.5px;
+}
+
+.scrollcss::-webkit-scrollbar-track {
+    background: #d9d9df;
+    background-clip: content-box;
+}
+
+.scrollcss::-webkit-scrollbar-thumb {
+    background-color: #bdbbbb;
+    border-radius: 20px;
+    /* border: 3px solid #ceced1; */
+}
+
+/* .listatotem {
+    display: none !important;
+} */
+
+.table td,
+.table th {
+    border-bottom: 0px;
+    border-top: 0px !important;
+}
+
+/* ## Calendario ## */
+.pignose-calendar {
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    /* -webkit-box-shadow: none !important;
+    box-shadow: none !important; */
+    background-color: transparent !important;
+    border-radius: 20px !important;
+    position: relative !important;
+    bottom: 1rem !important;
+    border: 0px !important;
+    box-sizing: border-box;
+}
+
+.pignose-calendar .pignose-calendar-unit.pignose-calendar-unit-sat a,
+.pignose-calendar .pignose-calendar-unit.pignose-calendar-unit-sun a {
+    color: black !important;
+}
+
+.pignose-calendar
+    .pignose-calendar-header
+    .pignose-calendar-week.pignose-calendar-week-sat,
+.pignose-calendar
+    .pignose-calendar-header
+    .pignose-calendar-week.pignose-calendar-week-sun {
+    color: #6f6e6e !important;
+}
+
+.pignose-calendar .pignose-calendar-top .pignose-calendar-top-month {
+    font-size: 118% !important;
+    text-transform: capitalize;
+}
+
+.pignose-calendar-top-date {
+    background-color: #f7f6fd;
+    border-top-left-radius: 8px !important;
+    border-top-right-radius: 8px !important;
+    color: black;
+}
+.pignose-calendar .pignose-calendar-top {
+    border-top-left-radius: 20px !important;
+    border-top-right-radius: 20px !important;
+    border-bottom: 0px !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+}
+
+.pignose-calendar-top-year {
+    color: #fff !important;
+}
+.pignose-calendar
+    .pignose-calendar-top
+    .pignose-calendar-top-nav
+    .pignose-calendar-top-icon {
+    color: #fff !important;
+    font-size: 160%;
+}
+.pignose-calendar .pignose-calendar-unit.pignose-calendar-unit-active a {
+    background-color: #103aa7 !important;
+    color: white !important;
+}
+.pignose-calendar .pignose-calendar-unit a {
+    color: #000 !important;
+}
+
+.pignose-calendar .pignose-calendar-light .pignose-calendar-default {
+    border-radius: 8px !important;
+}
+.pignose-calendar .pignose-calendar-unit {
+    float: left;
+    display: block;
+    height: 3em !important;
+    width: 14.28%;
+    text-align: center;
+    line-height: 2.8em;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.pignose-calendar .pignose-calendar-body {
+    padding: 6px 8px 16px 1px !important;
+}
+
+.pignose-calendar .pignose-calendar-top .pignose-calendar-top-date {
+    padding: 0.5em 1.1em !important;
+    text-align: left !important;
+}
+
+.pignose-calendar .icon-arrow-right:before {
+    margin-left: -2rem;
+}
+
+.pignose-calendar
+    .pignose-calendar-top
+    .pignose-calendar-top-nav
+    .pignose-calendar-top-icon {
+    color: black !important;
+    z-index: 1;
+    position: absolute;
+    margin-top: -0.1rem;
+    margin-left: 3rem;
+}
+
+.pignose-calendar .icon-arrow-left:before {
+    margin-left: 11rem;
+}
+
+.pignose-calendar .pignose-calendar-unit a {
+  width: 2.2em!important;
+  height: 2.2em !important;
+  line-height: 2.1em !important;
+}
+
+.pignose-calendar-top-year {
+    color: black !important;
+}
+
+/* alterar top do corpo do calendário */
+.pignose-calendar .pignose-calendar-top {
+    padding: 0.8em 0em !important;
+}
+
+.pignose-calendar .pignose-calendar-header {
+    margin-top: 0px !important;
+}
+
+/* ## Agenda ## */
+.ContAgenda {
+    position: absolute;
+    right: 0px;
+    top: 43px;
+    height: 175vh;
+    width: 260px;
+    display: block;
+    background-color: #f7f6fd;
+    overflow-x: hidden;
+    transition: 0.4s;
+    -webkit-box-shadow: 0 3px 8px rgb(0 0 0 / 17%);
+    box-shadow: 0 3px 8px rgb(0 0 0 / 17%);
+    z-index: 100;
+}
+
+.btnsAgenda {
+    display: block;
+    width: 240px;
+    margin: 0 auto;
+    margin-bottom: 20px;
+    padding: 10px;
+}
+.AgendaTitulo {
+    font-size: 24px;
+    color: #4f4f4f;
+    margin-top: 15px;
+    margin-left: 40px;
+}
+
+.btnAbriAgenda {
+    position: fixed;
+    right: 0px;
+    z-index: 90;
+}
+
+.btnOpenAgen {
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    padding: 6px 10px;
+    margin: 2px;
+    margin-right: 20px;
+    background: #103aa7;
+    color: #fff;
+    text-align: center;
+    font-size: 18px;
+    display: inline-block;
+}
+
+.abrirAgenda {
+    font-size: 18px;
+}
+
+.btnClosAgen {
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    padding: 6px 10px;
+    margin: 0px 0px 0px 0px;
+    background: #103aa7;
+    color: #fff;
+    text-align: center;
+    font-size: 18px;
+}
+.fecharAgenda {
+    font-size: 18px;
+}
+
+/* ## Multi Abas ##*/
+
+.tab {
+    overflow: hidden;
+    border: 1px solid #333;
+    background-color: transparent;
+    border-radius: 3px;
+    max-width: max-content;
+    margin: 0 auto;
+    margin-bottom: 3rem;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+.calendar {
+    margin-top: 3rem;
+}
+
+.tab button {
+    border: 1px;
+    outline: none;
+    cursor: pointer;
+    background-color: transparent;
+    color: #787885;
+    padding: 4px;
+    margin: 0px;
+    transition: 0.3s;
+    font-size: 12px;
+    text-align: center;
+    border-radius: 6px;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+} 
+
+.tab button.active {
+    background-color: #003c76;
+    color: #fff;
+}
+
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border-top: none;
+    border-radius: 4px;
+}
+
+/* ## Eventos ## */
+.tabEventos {
+    display: block;
+    box-sizing: border-box;
+    border-radius: 8px;
+    margin: -17px auto;
+    background-color: transparent;
+    max-width: 215px !important;
+    height: max-content;
+    color: black;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    margin-bottom: 10px;
+
+    font-family: IBM Plex Sans;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.12px;
+}
+
+.labelEventos {
+    display: block;
+    margin: 0 auto;
+}
+
+.diaEvent {
+    margin: 7px auto !important;
+    padding: 9px;
+    width: 100%;
+    /* color: #fff; */
+    /* background-color: #d8d8d8; */
+    border: 1px solid #103aa7;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* .btnEditEvento {
+    background-color: #d1941a !important;
+    color: #fff;
+    -webkit-box-shadow: 0 3px 8px rgb(0 0 0 / 25%);
+    box-shadow: 0 3px 8px rgb(0 0 0 / 25%);
+}
+.btnApagEvento {
+    background-color: #ce2334 !important;
+    color: #fff;
+    -webkit-box-shadow: 0 3px 8px rgb(0 0 0 / 25%);
+    box-shadow: 0 3px 8px rgb(0 0 0 / 25%);
+} */
+.btnNovoEvento {
+    border: 0.8 solid #333;
+    -webkit-box-shadow: 0 3px 8px rgb(0 0 0 / 25%);
+    box-shadow: 0 3px 8px rgb(0 0 0 / 25%);
+}
+/* .btnCancEvento {
+    border: 0.8 solid #333;
+    -webkit-box-shadow: 0 3px 8px rgb(0 0 0 / 25%);
+    box-shadow: 0 3px 8px rgb(0 0 0 / 25%);
+} */
+
+.tablepainel > :not(caption) > * > * {
+    padding: 0.8rem 1rem !important;
+    /* padding: 0.8rem 0.7rem !important; */
+}
+
+.bttabela {
+    padding: 0.3rem 0.4rem;
+    border: none;
+    background-color: #d1941a;
+    border-radius: 4px;
+
+    position: absolute;
+    bottom: 14px;
+}
+
+/* ## Avisos-Geral ## */
+.tabAvisos {
+    width: 32.43rem;
+    height: 295px;
+    /* border: 0.8px solid #333; */
+    -webkit-box-shadow: 0 3px 8px rgb(0 0 0 / 25%);
+    box-shadow: 0 3px 8px rgb(0 0 0 / 25%);
+    float: left;
+    background-color: #fffefe;
+    border-radius: 10px;
+    margin-right: 3rem;
+    margin-left: 0.6rem;
+    overflow-x: hidden;
+}
+.hAvisos {
+    display: flex;
+    width: 100%;
+    height: 70px;
+    justify-content: space-between;
+    align-content: center;
+    padding-top: 4px;
+    padding-bottom: 8px;
+}
+.LabelTitu {
+    display: block;
+    position: relative;
+    max-width: max-content;
+    left: 6px;
+}
+.aviTitu {
+    display: block;
+    font-family: "Mulish", sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 24px;
+    /* line-height: 24px; */
+    letter-spacing: 0.4px;
+    color: #252733;
+}
+.aviSubTitu {
+    display: block;
+    font-family: "Mulish", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12.5px;
+    line-height: 16px;
+    letter-spacing: 0.1px;
+    color: #9fa2b4;
+}
+.mostraAviso {
+    display: block;
+    position: relative;
+    color: #3751ff;
+    right: 23px;
+    top: 20px;
+    cursor: pointer;
+}
+
+.listadepacientes {
+    font-family: "Mulish", sans-serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 25px;
+    /* identical to box height */
+    letter-spacing: 0.4px;
+    /* grayscale / black */
+    color: #252733;
+}
+
+/* ## Avisos - Accordion ## */
+.accordions {
+    width: 100%;
+    display: block;
+    transition: 0.4s;
+}
+.accordion-item input {
+    display: none;
+    transition: 0.4s;
+}
+.accordion-item label {
+    display: block;
+    height: 50px;
+    border-bottom: 0.9px solid #ccc;
+    background-color: transparent;
+    cursor: pointer;
+    padding: 8px 6px;
+}
+.accordion-item:last-child label {
+    border-bottom: none;
+}
+.accordion-item label .setaBaixo {
+    float: right;
+    right: 10px;
+    position: relative;
+    top: 8px !important;
+    transition: 0.4s;
+}
+.accordion-content {
+    height: 0;
+    overflow: hidden;
+    /* -webkit-transition: height 0.3s;
+    -moz-transition: height 0.3s;
+    -o-transition: height 0.3s;
+    -ms-transition:height 0.3s;
+    transition: height 0.3s; */
+    transition: 0.4s !important;
+}
+#dataAviso {
+    float: right;
+    position: relative;
+    color: #9fa2b4;
+    right: 12px;
+}
+
+/* [id^=accordion]:checked ~ .accordion-content {
+    height: max-content;
+    transition: 0.4s!important;
+} */
+.accordion-item input:checked ~ label > .setaBaixo {
+    transform: rotate(180deg);
+    transition: 0.4s;
+}
+.accordion-item input:checked ~ .accordion-content {
+    transition: 0.4s;
+    height: auto;
+    max-height: 500px;
+    transform: all;
+}
+/* [id^=accordion]:checked ~ .accordion-item .setaBaixo {
+    transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+} */
+
+/* ## Home Atalhos ## */
+.ContainerHomeAtalhos {
+    display: block;
+    /* max-width: 460px; */
+    width: 28.75rem;
+    max-height: 295px;
+    height: 295px;
+    float: left;
+    border: 0.8 solid #333;
+    -webkit-box-shadow: 0 3px 8px rgb(0 0 0 / 25%);
+    box-shadow: 0 3px 8px rgb(0 0 0 / 25%);
+    border-radius: 10px;
+}
+.ContainerHomeAtalhos .TituloAtalhos {
+    display: block;
+    text-align: center;
+    margin: 4px;
+    padding-top: 10px;
+
+    font-family: "Mulish", sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 21px;
+    line-height: 21px;
+    letter-spacing: 0.4px;
+    color: #252733;
+}
+
+.ContainerHomeAtalhos .HomeAtaBody {
+    display: block;
+    max-width: 417px;
+    padding-top: 22px;
+    margin: 0 auto;
+}
+.HomeAtaBody .btnAtalho {
+    margin-top: 2rem;
+    text-decoration: none;
+}
+
+.HomeAtaBody .linhas {
+    width: 100%;
+    max-height: 60px;
+    text-align: center;
+    border: 1px solid #333;
+}
+
+.bolaAtalhos {
+    border-radius: 50%;
+    padding: 0.5rem 0.7rem;
+    margin-right: 4px;
+}
+
+#tabela,
+.listatotem {
+    margin-left: 0.6rem;
+}
+
+.tituloaviso {
+    font-family: "Mulish", sans-serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 0.2px;
+    color: #252733;
+}
+
+.dataviso {
+    font-family: "Mulish", sans-serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 20px;
+    text-align: right;
+    letter-spacing: 0.2px;
+    color: #838592;
+}
+
+.bolaAtalhos .fa-calendar {
+    color: #fff;
+}
+.bolaAtalho1 {
+    background-color: #e9a723;
+}
+.bolaAtalho2 {
+    background-color: #d01e1e;
+}
+.bolaAtalho3 {
+    background-color: #138787;
+}
+.bolaAtalho4 {
+    background-color: #103aa7;
+}
+.bolaAtalho5 {
+    background-color: #c4c4c4;
+}
+.bolaAtalho6 {
+    background-color: #c4c4c4;
+}
+
+/* @media only screen and (max-width: 700px) {
+    .tabAvisos {
+        margin-left: 0rem;
+        width: 20.43rem;
+    }
+
+    .ContainerHomeAtalhos {
+        width: 19.75rem;
+    }
+
+    .accordions {
+        width: 20.43rem;
+    }
+
+    #tabela,
+    .listatotem {
+        margin-left: 0rem;
+    }
+} */

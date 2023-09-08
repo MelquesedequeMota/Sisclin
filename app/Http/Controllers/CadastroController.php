@@ -4,10 +4,20 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\File;
+use App\Models\Usuarios;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Validator;
 use Datetime;
+use Illuminate\Support\Facades\Auth;
 
 class CadastroController extends Controller
 {
+    public function CadastroProntuario(Request $request){
+        return view('Prontuario');
+    }
     public function CadastroPessoa(Request $request){
         return view('CadastroPessoa');
     }
@@ -25,6 +35,21 @@ class CadastroController extends Controller
     }
     public function CadastrarAgenda(Request $request){
         return view('CadastroAgenda');
+    }
+    public function CadastrarLaboratorio(Request $request){
+        return view('CadastroLaboratorio');
+    }
+    public function CadastrarUltrassom(Request $request){
+        return view('CadastroUltrassom');
+    }
+    public function CadastrarRaioX(Request $request){
+        return view('CadastroRaioX');
+    }
+    public function CadastrarExames(Request $request){
+        return view('CadastroExame');
+    }
+    public function CadastrarEspecialidades(Request $request){
+        return view('CadastroEspecialidade');
     }
     public function CadastroDepartamento(Request $request){
         $cadastrardep = DB::table('departamentos')->insert([
@@ -60,14 +85,25 @@ class CadastroController extends Controller
     }
 
     public function CadastroEspecialidade(Request $request){
+        // dd($request->all());
         $cadastrarespec = DB::table('especialidades')->insert([
             'espec_nome' => $request->nome,
             'espec_desc' => $request->desc,
+            'espec_letraordem' => $request->letraordem,
         ]);
-        $cadastrarcate = DB::table('categorias')->insert([
-            'cate_nome' => $request->nome,
-            'cate_desc' => "Categoria Criada para o(a) ".$request->nome,
-        ]);
+
+        $pesquisarcate = DB::table('categorias')->where('cate_nome', $request->nome)->get();
+        
+        if(count($pesquisarcate) == 0){
+            $cadastrarcate = DB::table('categorias')->insert([
+                'cate_nome' => $request->nome,
+                'cate_desc' => "Categoria Criada para o(a) ".$request->nome,
+                'cate_tipo' => "Exame",
+            ]);
+        }else{
+            $cadastrarcate = 1;
+        }
+        
         if($cadastrarespec == 1 && $cadastrarcate == 1){
             return 1;
         }else{
@@ -94,6 +130,7 @@ class CadastroController extends Controller
         $cadastrarcate = DB::table('categorias')->insert([
             'cate_nome' => $request->nome,
             'cate_desc' => $request->desc,
+            'cate_tipo' => $request->tipo,
         ]);
         if($cadastrarcate == 1){
             return 1;
@@ -102,7 +139,19 @@ class CadastroController extends Controller
         }
     }
 
+    public function CadastroCategoriaExame(Request $request){
+        $cadastrarcateexame = DB::table('categoriasexames')->insert([
+            'cateexames_nome' => $request->nome,
+        ]);
+        if($cadastrarcateexame == 1){
+            return 1;
+        }else{
+            return 0;
+        }
+    }
+
     public function CadastroPaciente(Request $request){
+        // dd($request->all());
         $cadastrarpaciente = DB::table('pacientes')->insert([
             'pac_nome' => $request->nome,
             'pac_cpf' => $request->cpf,
@@ -128,8 +177,40 @@ class CadastroController extends Controller
             'pac_situ' => $request->situpac,
             'pac_obj' => $request->obj,
             'pac_obs' => $request->obs,
+            'pac_status' => "Ativo",
+            'pac_altura' => $request->altura,
+            'pac_peso' => $request->peso,
+            'pac_pa' => $request->pa,
+            'pac_tiposangue' => $request->tiposangue,
         ]);
         if($cadastrarpaciente == 1){
+            if($request->planoatual != null){
+                $data = 1;
+                $id = DB::table('pacientes')->where('pac_cpf', $request->cpf)->where('pac_nome', $request->nome)->first()->pac_id;
+                $timezone = new \DateTimeZone('America/Sao_Paulo');
+                $agora = new \DateTime('now', $timezone);
+    
+                $cont_id = date('Ym') . str_pad($id , 8 , '0' , STR_PAD_LEFT) . $data;
+                $checkcont = DB::table('contratos')->where('cont_id', 'like', '%'.$cont_id.'%')->get();
+                $contatual = count($checkcont) + 1;
+                $cont_id = $cont_id.$contatual;
+    
+                $cadastrarcont = DB::table('contratos')->insert([
+                    'cont_id' => $cont_id,
+                    'cont_plano' => $request->planoatual,
+                    'cont_diapag' => $request->diapag,
+                    'cont_status' => 'Ativo',
+                    'cont_vendedor' => '1',
+                    'cont_datainicio' => $agora->format('Y-m-d')
+                ]);
+    
+                $cadastrarcontobs = DB::table('contratosobs')->insert([
+                    'contobs_id' => $cont_id,
+                    'contobs_idpessoa' => $id.'1',
+                    'contobs_tipo' => 'Titular',
+                    'contobs_status' => 'Ativo'
+                ]);
+            }
             return 1;
         }else{
             return 0;
@@ -159,6 +240,11 @@ class CadastroController extends Controller
             'forfis_razaosocial' => $request->razaosocial,
             'forfis_areaatuacao' => $request->areaatuacao,
             'forfis_obs' => $request->obs,
+            'forfis_status' => "Ativo",
+            'forfis_altura' => $request->altura,
+            'forfis_peso' => $request->peso,
+            'forfis_pa' => $request->pa,
+            'forfis_tiposangue' => $request->tiposangue,
         ]);
         if($cadastrarfornecedor == 1){
             return 1;
@@ -190,6 +276,7 @@ class CadastroController extends Controller
             'forjur_emailrep' => $request->emailrep,
             'forjur_contatorep' => $request->contatorep,
             'forjur_obs' => $request->obs,
+            'forjur_status' => "Ativo",
         ]);
         if($cadastrarfornecedor == 1){
             return 1;
@@ -221,6 +308,7 @@ class CadastroController extends Controller
             'clijur_emailrep' => $request->emailrep,
             'clijur_contatorep' => $request->contatorep,
             'clijur_obs' => $request->obs,
+            'clijur_status' => "Ativo",
         ]);
         if($cadastrarcliente == 1){
             return 1;
@@ -261,12 +349,45 @@ class CadastroController extends Controller
             'func_nomemae' => $request->nomemae,
             'func_dataadm' => date('d/m/Y'),
             'func_obs' => $request->obs,
+            'func_status' => "Ativo",
+            'func_altura' => $request->altura,
+            'func_peso' => $request->peso,
+            'func_pa' => $request->pa,
+            'func_tiposangue' => $request->tiposangue,
         ]);
         if($cadastrarfuncionario == 1){
             return 1;
         }else{
             return 0;
         }
+    }
+
+    public function CadastroUsuario(Request $request){
+        if($request->user_tipo == 1 || $request->user_tipo == 2){
+            $func = strval(DB::table('funcionarios')->orderBy('func_id', 'DESC')->first()->func_id) . strval('3');
+
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'username' => $request->user_name,
+                'password' => Hash::make($request->user_senha),
+                'user_tipo' => $request->user_tipo,
+                'user_id' => $func,
+            ]);
+        }else if($request->user_tipo == 3){
+            $medico = DB::table('medicos')->orderBy('med_id', 'DESC')->first()->med_id;
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'username' => $request->user_name,
+                'password' => Hash::make($request->user_senha),
+                'user_tipo' => $request->user_tipo,
+                'user_id' => $medico,
+            ]);
+        }
+        
+        
+        return json_encode(1);
     }
     public function HoraAtendimento(){
         return view('HoraAtendimento');
@@ -302,12 +423,11 @@ class CadastroController extends Controller
     }
 
     public function CadastroMedico(Request $request){
-        dd($request->all());
         $servi = implode(',', $request->servi);
         $cadastrarmedico = DB::table('medicos')->insert([
             'med_nome' => $request->nome,
             'med_crn' => $request->crn,
-            'med_cpf' => $request->cpf,
+            'med_cpfcnpj' => $request->cpf,
             'med_estadocivil' => $request->estadocivil,
             'med_sexo' => $request->sexo,
             'med_datanasc' => $request->datanasc,
@@ -371,13 +491,14 @@ class CadastroController extends Controller
         }else{
             $quant = $request->quant;
         }
-        if($request->tipo == 'Servico'){
+        if($request->tipo == 'Servico' || $request->tipo == 'Exame' || $request->tipo == 'Ultrassom' || $request->tipo == 'Raiox'){
             $cadastrarproduto = DB::table('produtos')->insert([
                 'prod_nome' => $request->nome,
                 'prod_desc' => $request->desc,
                 'prod_cate' => $request->cate,
                 'prod_tipo' => $request->tipo,
-                'prod_valor' => $request->valor,
+                'prod_valor' => doubleval(str_replace(',', '', $request->valor)),
+                'prod_valorlab' => doubleval(str_replace(',', '', $request->valorlab)),
                 'prod_serviitens' => $request->serviitens,
             ]);
         }else{
@@ -388,7 +509,7 @@ class CadastroController extends Controller
                 'prod_tipo' => $request->tipo,
                 'prod_quant' => $quant,
                 'prod_estqmin' => $request->estqmin,
-                'prod_valor' => $request->valor,
+                'prod_valor' => doubleval(str_replace(',', '', $request->valor)),
             ]);
         }
         if($cadastrarproduto == 1){
@@ -399,61 +520,171 @@ class CadastroController extends Controller
     }
 
     public function CadastroPlano(Request $request){
+        
+        // dd($request->all());
             $cadastrarplano = DB::table('planos')->insert([
                 'plan_nome' => $request->nome,
                 'plan_desc' => $request->desc,
                 'plan_qtddep' => $request->qtddep,
-                'plan_valor' => $request->valor,
-                'plan_servicos' => $request->servicos,
-                'plan_itens' => $request->itens,
+                'plan_valorboleto' => doubleval($request->valorboleto),
+                'plan_valorcartao' => doubleval($request->valorcartao),
+                'plan_adesao' => doubleval($request->valoradesao),
             ]);
         if($cadastrarplano == 1){
+            $idatual = DB::table('planos')->where('plan_nome',$request->nome)->first()->plan_id;
+            // dd($idatual);
+            if($request->itens){
+                for($i = 0; $i < count($request->itens[0]); $i++){
+                    if($request->itens[3][$i] == '1'){
+                        $cadastrarplanoobs1 = DB::table('planoobs')->insert([
+                            'planobs_plano' => $idatual,
+                            'planobs_produto' => $request->itens[0][$i],
+                            'planobs_quantidade' => $request->itens[1][$i],
+                            'planobs_valor' => doubleval($request->itens[2][$i]),
+                            'planobs_incluso' => 'Incluso',
+                        ]);
+                    }else{
+                        $cadastrarplanoobs1 = DB::table('planoobs')->insert([
+                            'planobs_plano' => $idatual,
+                            'planobs_produto' => $request->itens[0][$i],
+                            'planobs_quantidade' => $request->itens[1][$i],
+                            'planobs_valor' => doubleval($request->itens[2][$i]),
+                        ]);
+                    }
+                }
+            }
+            
+            if($request->servicos){
+                for($i = 0; $i < count($request->servicos[0]); $i++){
+                    if($request->servicos[2][$i] == '1'){
+                        $cadastrarplanoobs2 = DB::table('planoobs')->insert([
+                            'planobs_plano' => $idatual,
+                            'planobs_produto' => $request->servicos[0][$i],
+                            'planobs_valor' => doubleval($request->servicos[1][$i]),
+                            'planobs_incluso' => 'Incluso',
+                        ]);
+                    }else{
+                        $cadastrarplanoobs2 = DB::table('planoobs')->insert([
+                            'planobs_plano' => $idatual,
+                            'planobs_produto' => $request->servicos[0][$i],
+                            'planobs_valor' => doubleval($request->servicos[1][$i]),
+                        ]);
+                    }
+                }
+            }
+            return 1;
+        }else{
+            return 0;
+        }
+    }
+    public function CadastroLaboratorio(Request $request){
+        $cadastrarlaboratorio = DB::table('laboratorios')->insert([
+            'lab_num' => $request->numlab,
+            'lab_nome' => $request->nomelab,
+            'lab_espec' => $request->espec,
+            'lab_status' => 'Livre',
+        ]);
+        if($cadastrarlaboratorio == 1){
+            return 1;
+        }else{
+            return 0;
+        }
+    }
+    public function CadastroEventoCalendario(Request $request){
+        $cadastrarevento = DB::table('calendariocolaboradores')->insert([
+            'calcol_even' => $request->evento,
+            'calcol_data' => $request->data,
+            'calcol_idcolaborador' => $request->idcolaborador,
+        ]);
+        if($cadastrarevento == 1){
             return 1;
         }else{
             return 0;
         }
     }
 
+    public function VerificarCadastroContrato(Request $request){
+
+        $titularatual = DB::table('pacientes')->where('pac_cpf', $request->titu)->first();
+
+        if($titularatual->pac_num == '' || $titularatual->pac_logradouro == '' || $titularatual->pac_bairro == '' || $titularatual->pac_complemento == '' || $titularatual->pac_cep == '' || $titularatual->pac_cidade == ''){
+            return 99;
+        }else {
+            return 1;
+        }
+
+    }
+
     public function CadastroContrato(Request $request){
+        // dd($request->all(), Auth::user()->id);
+        $anualcobranca = [[],[],[],[],[]];
+
+        if($request->pagamentoanualcheck == 1){
+            for($i = 0; $i < count($request->metodospagamentoanual); $i++){
+                for($o = 0; $o < $request->parcelaanual[$i]; $o++){
+                    array_push($anualcobranca[0], $request->metodospagamentoanual[$i]);
+                    array_push($anualcobranca[1], $request->parcelaanual[$i]);
+                    array_push($anualcobranca[2], $request->autoanual[$i]);
+                    array_push($anualcobranca[3], $request->cvanual[$i]);
+                    array_push($anualcobranca[4], number_format(doubleval($request->anualvalor[$i]) / $request->parcelaanual[$i], 2, '.', '') );
+                }
+            }
+        }
+        // dd($anualcobranca);
         $dep = [];
         $contobs = [];
         $contobserro = 0;
-        for($i = 0; $i < count($request->dep); $i++){
-            $depatual = $request->dep[$i][0];
+        $nome = '';
+        $timezone = new \DateTimeZone('America/Sao_Paulo');
+        $agora = new \DateTime('now', $timezone);
+        $pagamento = new \DateTime('now', $timezone);
+        if($request->pagamentoanualcheck == 1){
+            $pagamento->setDate($agora->format('Y'), $agora->format('m'), $agora->format('d'));
+        }else{
+            $pagamento->setDate($agora->format('Y'), $agora->format('m'), $request->diapag);
+        }
+        $pagamento->modify('+1 month');
+        // dd($agora, $pagamento->format('m'));
+        $boleto_ou_cartao = 0;
+        // dd($agora->format('Y-m-d'));
+        if($request->dep != null){
+            for($i = 0; $i < count($request->dep); $i++){
+                $depatual = $request->dep[$i][0];
 
-            $iddeppaciente = DB::table('pacientes')->where('pac_cpf', $depatual)->get();
-            $iddepforfis = DB::table('fornecedoresfis')->where('forfis_cpf', $depatual)->get();
-            $iddepfunc = DB::table('funcionarios')->where('func_cpf', $depatual)->get();
-            $iddepclijur = DB::table('clientesjur')->where('clijur_cnpj', $depatual)->get();
-            $iddepforjur = DB::table('fornecedoresjur')->where('forjur_cnpj', $depatual)->get();
-            if(count($iddeppaciente) !=0 ){
-                $id = $iddeppaciente->map(function($obj){
-                    return (array) $obj;
-                })->toArray();
-                $id = str_pad($id[0]["pac_id"] , 4 , '0' , STR_PAD_LEFT) . "1";
-            }else if(count($iddepforfis) !=0 ){
-                $id = $iddepforfis->map(function($obj){
-                    return (array) $obj;
-                })->toArray();
-                $id = str_pad($id[0]["forfis_id"], 4 , '0' , STR_PAD_LEFT) . "2";
-            }else if(count($iddepfunc) !=0 ){
-                $id = $iddepfunc->map(function($obj){
-                    return (array) $obj;
-                })->toArray();
-                $id = str_pad($id[0]["func_id"] , 4 , '0' , STR_PAD_LEFT) . "3";
-            }else if(count($iddepclijur) !=0 ){
-                $id = $iddepclijur->map(function($obj){
-                    return (array) $obj;
-                })->toArray();
-                $id = str_pad($id[0]["clijur_id"] , 4 , '0' , STR_PAD_LEFT) . "4";
-            }else if(count($iddepforjur) !=0 ){
-                $id = $iddepforjur->map(function($obj){
-                    return (array) $obj;
-                })->toArray();
-                $id = str_pad($id[0]["forjur_id"] , 4 , '0' , STR_PAD_LEFT) . "5";
+                $iddeppaciente = DB::table('pacientes')->where('pac_cpf', $depatual)->get();
+                $iddepforfis = DB::table('fornecedoresfis')->where('forfis_cpf', $depatual)->get();
+                $iddepfunc = DB::table('funcionarios')->where('func_cpf', $depatual)->get();
+                $iddepclijur = DB::table('clientesjur')->where('clijur_cnpj', $depatual)->get();
+                $iddepforjur = DB::table('fornecedoresjur')->where('forjur_cnpj', $depatual)->get();
+                if(count($iddeppaciente) !=0 ){
+                    $id = $iddeppaciente->map(function($obj){
+                        return (array) $obj;
+                    })->toArray();
+                    $id = str_pad($id[0]["pac_id"] , 8 , '0' , STR_PAD_LEFT) . "1";
+                }else if(count($iddepforfis) !=0 ){
+                    $id = $iddepforfis->map(function($obj){
+                        return (array) $obj;
+                    })->toArray();
+                    $id = str_pad($id[0]["forfis_id"], 8 , '0' , STR_PAD_LEFT) . "2";
+                }else if(count($iddepfunc) !=0 ){
+                    $id = $iddepfunc->map(function($obj){
+                        return (array) $obj;
+                    })->toArray();
+                    $id = str_pad($id[0]["func_id"] , 8 , '0' , STR_PAD_LEFT) . "3";
+                }else if(count($iddepclijur) !=0 ){
+                    $id = $iddepclijur->map(function($obj){
+                        return (array) $obj;
+                    })->toArray();
+                    $id = str_pad($id[0]["clijur_id"] , 8 , '0' , STR_PAD_LEFT) . "4";
+                }else if(count($iddepforjur) !=0 ){
+                    $id = $iddepforjur->map(function($obj){
+                        return (array) $obj;
+                    })->toArray();
+                    $id = str_pad($id[0]["forjur_id"] , 8 , '0' , STR_PAD_LEFT) . "5";
+                }
+
+                array_push($dep, $id);
             }
-
-            array_push($dep, $id);
         }
         $idtitularpaciente = DB::table('pacientes')->where('pac_cpf', $request->titu)->get();
         $idtitularforfis = DB::table('fornecedoresfis')->where('forfis_cpf', $request->titu)->get();
@@ -464,58 +695,421 @@ class CadastroController extends Controller
             $id = $idtitularpaciente->map(function($obj){
                 return (array) $obj;
             })->toArray();
+            $nome = $id[0]["pac_nome"];
+            $cidade = $id[0]['pac_cidade'];
             $id = $id[0]["pac_id"];
             $data = 1;
         }else if(count($idtitularforfis) !=0 ){
             $id = $idtitularforfis->map(function($obj){
                 return (array) $obj;
             })->toArray();
+            $nome = $id[0]["forfis_nome"];
+            $cidade = $id[0]['forfis_cidade'];
             $id = $id[0]["forfis_id"];
             $data = 2;
+            
         }else if(count($idtitularfunc) !=0 ){
             $id = $idtitularfunc->map(function($obj){
                 return (array) $obj;
             })->toArray();
+            $nome = $id[0]["func_nome"];
+            $cidade = $id[0]['func_cidade'];
             $id = $id[0]["func_id"];
             $data = 3;
+            
         }else if(count($idtitularclijur) !=0 ){
             $id = $idtitularclijur->map(function($obj){
                 return (array) $obj;
             })->toArray();
+            $nome = $id[0]["clijur_nome"];
+            $cidade = $id[0]['clijur_cidade'];
             $id = $id[0]["clijur_id"];
             $data = 4;
+            
         }else if(count($idtitularforjur) !=0 ){
             $id = $idtitularforjur->map(function($obj){
                 return (array) $obj;
             })->toArray();
+            $nome = $id[0]["forjur_nome"];
+            $cidade = $id[0]['forjur_cidade'];
             $id = $id[0]["forjur_id"];
             $data = 5;
+            
         }
-        $cont_id = date('Ym') . str_pad($id , 4 , '0' , STR_PAD_LEFT) . $data;
+        $cont_id = date('Ym') . str_pad($id , 8 , '0' , STR_PAD_LEFT) . $data;
         $checkcont = DB::table('contratos')->where('cont_id', 'like', '%'.$cont_id.'%')->get();
         $contatual = count($checkcont) + 1;
         $cont_id = $cont_id.$contatual;
-        $cont_titu = str_pad($id , 4 , '0' , STR_PAD_LEFT) . $data;
+        $cont_titu = str_pad($id , 8 , '0' , STR_PAD_LEFT) . $data;
         array_push($contobs, $cont_titu);
         for($i = 0; $i < count($dep); $i++){
             array_push($contobs, $dep[$i]);
         }
+        $planoatual = DB::table('planos')->select('plan_id', 'plan_adesao', 'plan_valorboleto', 'plan_valorcartao')->where('plan_id',$request->plano)->first();
+        
+        $vendedoratual = DB::table('users')->select('id')->where('name', $request->vendedor)->first();
+        // dd($planoatual, $vendedoratual);
+        // dd($contobs);
         $cadastrarcont = DB::table('contratos')->insert([
             'cont_id' => $cont_id,
             'cont_plano' => $request->plano,
-            'cont_diapag' => $request->diapag,
+            'cont_diapag' => $agora->format('d'),
             'cont_status' => 'Ativo',
+            'cont_vendedor' => $vendedoratual->id,
+            'cont_datainicio' => $agora->format('Y-m-d'),
+            'cont_assinatura' => $request->assinatura
         ]);
     if($cadastrarcont == 1){
         $ultimocontrato = DB::table('contratos')->orderBy('cont_id', 'desc')->first();
         for($i = 0; $i < count($contobs); $i++){
+            
             if($i == 0){
+                if($pagamento->format('m') == '02' && intval($pagamento->format('d')) > 28){
+                    if($request->pagamentoanualcheck == 1){
+                        $formapagamento = implode(',', $request->metodospagamentoanual);
+                        $cobrancalote = DB::table('cobrancalote')->insert([
+                            'quantidadelote' => 12 ,
+                            'responsavellote' => $id.strval($data) ,
+                            'datalote' => $agora->format('Y-m-').'28' ,
+                            'formapagamentolote' => $formapagamento,
+                            'contratolote' => $cont_id,
+                            'pagolote' => 0,
+                            'fechadolote' => 0,
+                            'cobradorlote' => Auth::user()->id
+                        ]);
+                    }else {
+                        $formapagamento = 6;
+                        $cobrancalote = DB::table('cobrancalote')->insert([
+                            'quantidadelote' => 12 ,
+                            'responsavellote' => $id.strval($data) ,
+                            'datalote' => $agora->format('Y-m-').'28' ,
+                            'formapagamentolote' => $formapagamento,
+                            'contratolote' => $cont_id,
+                            'pagolote' => 0,
+                            'fechadolote' => 0,
+                            'cobradorlote' => Auth::user()->id
+                        ]);
+                    }
+                    
+                }else{
+                    if($request->pagamentoanualcheck == 1){
+                        $formapagamento = implode(',', $request->metodospagamentoanual);
+                        $cobrancalote = DB::table('cobrancalote')->insert([
+                            'quantidadelote' => 12 ,
+                            'responsavellote' => $id.strval($data) ,
+                            'datalote' => $agora->format('Y-m-d') ,
+                            'formapagamentolote' => $formapagamento,
+                            'contratolote' => $cont_id,
+                            'pagolote' => 0,
+                            'fechadolote' => 0,
+                            'cobradorlote' => Auth::user()->id
+                        ]);
+                    }else {
+                        $formapagamento = 6;
+                        $cobrancalote = DB::table('cobrancalote')->insert([
+                            'quantidadelote' => 12 ,
+                            'responsavellote' => $id.strval($data) ,
+                            'datalote' => $agora->format('Y-m-d') ,
+                            'formapagamentolote' => $formapagamento,
+                            'contratolote' => $cont_id,
+                            'pagolote' => 0,
+                            'fechadolote' => 0,
+                            'cobradorlote' => Auth::user()->id
+                        ]);
+                    }
+                    
+                }
+                $cobrancaloteatual = DB::table('cobrancalote')->select('idlote')->where('contratolote', $cont_id)->where('datalote', $agora->format('Y-m-d'))->first();
+
+                if($formapagamento == 6){
+                    
+                    if($request->adesaocheck == 0){
+                        for($o = 0; $o < count($request->metodospagamentoadesao); $o++){
+                            if($request->metodospagamentoadesao[$o] == '2' || $request->metodospagamentoadesao[$o] == '3'){
+                                $contasareceber = DB::table('contasareceber')->insert([
+                                    'datapagoconta' => $agora->format('Y-m-d') ,
+                                    'vencimentoconta' => $agora->format('Y-m-d') ,
+                                    'clienteconta' => $contobs[$i] ,
+                                    'formapagamentoconta' => $request->metodospagamentoadesao[$o],
+                                    'valorconta' => doubleval($request->valoradesao[$o]),
+                                    'descconta' => "Adesão - ".$cont_id,
+                                    'recebidoconta' => 0,
+                                    'autoconta' => $request->autoadesao[$o],
+                                    'cvconta' => $request->cvadesao[$o]
+                                ]);
+                            }else{
+                                $contasareceber = DB::table('contasareceber')->insert([
+                                    'datapagoconta' => $agora->format('Y-m-d') ,
+                                    'vencimentoconta' => $agora->format('Y-m-d') ,
+                                    'clienteconta' => $contobs[$i] ,
+                                    'formapagamentoconta' => $request->metodospagamentoadesao[$o],
+                                    'valorconta' => doubleval($request->valoradesao[$o]),
+                                    'descconta' => "Adesão - ".$cont_id,
+                                    'recebidoconta' => 0
+                                ]);
+                            }
+                        }
+                    }
+                    
+                    
+                    for($o = 0; $o <=11; $o++){
+                        if($pagamento->format('m') == '02' && intval($pagamento->format('d')) > 28){
+                            $criarcobranca = DB::table('cobranca')->insert([
+                                'idlote' => $cobrancaloteatual->idlote,
+                                'cobrador' => Auth::user()->id,
+                                'contrato' => $cont_id,
+                                'responsavel' => $id.strval($data),
+                                'fechado'  => 0,
+                                'validado'  => 0,
+                                'data' => $pagamento->format('Y-m-').'28',
+                                'cidade' => $cidade,
+                                'numero' => 0,
+                                'valor' => doubleval($planoatual->plan_valorboleto),
+                                'formapagamento' => 6,
+                                'pago' => 0
+                            ]);
+                            // $contasareceber = DB::table('contasareceber')->insert([
+                            //     'datapagoconta' => $pagamento->format('Y-m-').'28' ,
+                            //     'vencimentoconta' => $pagamento->format('Y-m-').'28' ,
+                            //     'clienteconta' => $contobs[$i] ,
+                            //     'formapagamentoconta' => $formapagamento,
+                            //     'valorconta' => doubleval($planoatual->plan_valorboleto),
+                            //     'descconta' => "Mensalidade 28".'/'.$pagamento->format('m').'/'.$pagamento->format('Y')." - ".$cont_id,
+                            //     'recebidoconta' => 0
+                            // ]);
+                        }else{
+                            $criarcobranca = DB::table('cobranca')->insert([
+                                'idlote' => $cobrancaloteatual->idlote,
+                                'cobrador' => Auth::user()->id,
+                                'contrato' => $cont_id,
+                                'responsavel' => $id.strval($data),
+                                'fechado'  => 0,
+                                'validado'  => 0,
+                                'data' => $pagamento->format('Y-m-d'),
+                                'cidade' => $cidade,
+                                'numero' => 0,
+                                'valor' => doubleval($planoatual->plan_valorboleto),
+                                'formapagamento' => 6,
+                                'pago' => 0
+                            ]);
+                            // $contasareceber = DB::table('contasareceber')->insert([
+                            //     'datapagoconta' => $pagamento->format('Y-m-d') ,
+                            //     'vencimentoconta' => $pagamento->format('Y-m-d') ,
+                            //     'clienteconta' => $contobs[$i] ,
+                            //     'formapagamentoconta' => $formapagamento,
+                            //     'valorconta' => doubleval($planoatual->plan_valorboleto),
+                            //     'descconta' => "Mensalidade ".$pagamento->format('d').'/'.$pagamento->format('m').'/'.$pagamento->format('Y')." - ".$cont_id,
+                            //     'recebidoconta' => 0
+                            // ]);
+                        }
+                        $pagamento->modify('+1 month');
+                    }
+                }else{
+                    // dd($request->all());
+                    if($request->adesaocheck == 0){
+                        for($o = 0; $o < count($request->metodospagamentoadesao); $o++){
+                            if($request->metodospagamentoadesao[$o] == '2' || $request->metodospagamentoadesao[$o] == '3'){
+                                $contasareceber = DB::table('contasareceber')->insert([
+                                    'datapagoconta' => $agora->format('Y-m-d') ,
+                                    'vencimentoconta' => $agora->format('Y-m-d') ,
+                                    'clienteconta' => $contobs[$i] ,
+                                    'formapagamentoconta' => $request->metodospagamentoadesao[$o],
+                                    'valorconta' => doubleval($request->valoradesao[$o]),
+                                    'descconta' => "Adesão - ".$cont_id,
+                                    'recebidoconta' => 0,
+                                    'autoconta' => $request->autoadesao[$o],
+                                    'cvconta' => $request->cvadesao[$o]
+                                ]);
+                            }else{
+                                $contasareceber = DB::table('contasareceber')->insert([
+                                    'datapagoconta' => $agora->format('Y-m-d') ,
+                                    'vencimentoconta' => $agora->format('Y-m-d') ,
+                                    'clienteconta' => $contobs[$i] ,
+                                    'formapagamentoconta' => $request->metodospagamentoadesao[$o],
+                                    'valorconta' => doubleval($request->valoradesao[$o]),
+                                    'descconta' => "Adesão - ".$cont_id,
+                                    'recebidoconta' => 0,
+                                ]);
+                            }
+                        }
+                    }
+                    for($o = 0; $o <=11; $o++){
+                        $autojunto = implode(',', $request->autoanual);
+                        $cvjunto = implode(',', $request->cvanual);
+                        if($pagamento->format('m') == '02' && intval($pagamento->format('d')) > 28){
+                            $criarcobranca = DB::table('cobranca')->insert([
+                                'idlote' => $cobrancaloteatual->idlote,
+                                'cobrador' => Auth::user()->id,
+                                'contrato' => $cont_id,
+                                'responsavel' => $id.strval($data),
+                                'fechado'  => 0,
+                                'validado'  => 0,
+                                'data' => $pagamento->format('Y-m-').'28',
+                                'cidade' => $cidade,
+                                'numero' => 0,
+                                'valor' => doubleval($planoatual->plan_valorcartao),
+                                'pago' => 0,
+                                'auto' => $autojunto,
+                                'cv' => $cvjunto,
+                                'formapagamento' => $formapagamento
+                            ]);
+                            // $contasareceber = DB::table('contasareceber')->insert([
+                            //     'datapagoconta' => $pagamento->format('Y-m-').'28' ,
+                            //     'vencimentoconta' => $pagamento->format('Y-m-').'28' ,
+                            //     'clienteconta' => $contobs[$i] ,
+                            //     'formapagamentoconta' => $anualcobranca[0][$o],
+                            //     'valorconta' => doubleval($planoatual->plan_valorcartao),
+                            //     'descconta' => "Mensalidade 28".'/'.$pagamento->format('m').'/'.$pagamento->format('Y')." - ".$cont_id,
+                            //     'recebidoconta' => 0,
+                            //     'autoconta' => $anualcobranca[2][$o],
+                            //     'cvconta' => $anualcobranca[3][$o]
+                            // ]);
+                        }else{
+                            $criarcobranca = DB::table('cobranca')->insert([
+                                'idlote' => $cobrancaloteatual->idlote,
+                                'cobrador' => Auth::user()->id,
+                                'contrato' => $cont_id,
+                                'responsavel' => $id.strval($data),
+                                'fechado'  => 0,
+                                'validado'  => 0,
+                                'data' => $pagamento->format('Y-m-d'),
+                                'cidade' => $cidade,
+                                'numero' => 0,
+                                'valor' => doubleval($planoatual->plan_valorcartao),
+                                'pago' => 0,
+                                'auto' => $autojunto,
+                                'cv' => $cvjunto,
+                                'formapagamento' => $formapagamento
+                            ]);
+                            // $contasareceber = DB::table('contasareceber')->insert([
+                            //     'datapagoconta' => $pagamento->format('Y-m-d') ,
+                            //     'vencimentoconta' => $pagamento->format('Y-m-d') ,
+                            //     'clienteconta' => $contobs[$i] ,
+                            //     'formapagamentoconta' => $anualcobranca[0][$o],
+                            //     'valorconta' => doubleval($planoatual->plan_valorcartao),
+                            //     'descconta' => "Mensalidade ".$pagamento->format('d').'/'.$pagamento->format('m').'/'.$pagamento->format('Y')." - ".$cont_id,
+                            //     'recebidoconta' => 0,
+                            //     'autoconta' => $anualcobranca[2][$o],
+                            //     'cvconta' => $anualcobranca[3][$o]
+                            // ]);
+                        }
+                        $pagamento->modify('+1 month');
+                    }
+                    
+                    
+                }//
+
+            $pagamentocartao = new \DateTime('now', $timezone);
+            $pagamentoresto = new \DateTime('now', $timezone);
+            if($request->pagamentoanualcheck == 1){
+                $pagamentocartao->setDate($agora->format('Y'), $agora->format('m'), $agora->format('d'));
+            }else{
+                $pagamentocartao->setDate($agora->format('Y'), $agora->format('m'), $request->diapag);
+            }
+            if($request->pagamentoanualcheck == 1){
+                $pagamentoresto->setDate($agora->format('Y'), $agora->format('m'), $agora->format('d'));
+            }else{
+                $pagamentoresto->setDate($agora->format('Y'), $agora->format('m'), $request->diapag);
+            }
+            
+
+            if($formapagamento == 6){
+
+                for($o = 0; $o <= 11; $o++){
+                    if($pagamentoresto->format('m') == '02' && intval($pagamentoresto->format('d')) > 28){
+                        $contasareceber = DB::table('contasareceber')->insert([
+                            'datapagoconta' => $pagamentoresto->format('Y-m-').'28' ,
+                            'vencimentoconta' => $pagamentoresto->format('Y-m-').'28' ,
+                            'clienteconta' => $contobs[$i] ,
+                            'formapagamentoconta' => $formapagamento,
+                            'valorconta' => doubleval($planoatual->plan_valorboleto),
+                            'descconta' => "Mensalidade 28".'/'.$pagamentoresto->format('m').'/'.$pagamentoresto->format('Y')." - ".$cont_id,
+                            'recebidoconta' => 0
+                        ]);
+                    }else{
+                        $contasareceber = DB::table('contasareceber')->insert([
+                            'datapagoconta' => $pagamentoresto->format('Y-m-d') ,
+                            'vencimentoconta' => $pagamentoresto->format('Y-m-d') ,
+                            'clienteconta' => $contobs[$i] ,
+                            'formapagamentoconta' => $formapagamento,
+                            'valorconta' => doubleval($planoatual->plan_valorboleto),
+                            'descconta' => "Mensalidade ".$pagamentoresto->format('d').'/'.$pagamentoresto->format('m').'/'.$pagamentoresto->format('Y')." - ".$cont_id,
+                            'recebidoconta' => 0
+                        ]);
+                    }
+                    $pagamentoresto->modify('+1 month');
+                }
+            }else{
+                for($o = 0; $o < count($anualcobranca[1]) ; $o++){
+                    if($anualcobranca[1][$o] == '3'){
+                        if($pagamentocartao->format('m') == '02' && intval($pagamentocartao->format('d')) > 28){
+                        
+                            $contasareceber = DB::table('contasareceber')->insert([
+                                'datapagoconta' => $pagamentocartao->format('Y-m-').'28' ,
+                                'vencimentoconta' => $pagamentocartao->format('Y-m-').'28' ,
+                                'clienteconta' => $contobs[$i] ,
+                                'formapagamentoconta' => $anualcobranca[0][$o],
+                                'valorconta' => doubleval($anualcobranca[4][$o]),
+                                'descconta' => "Anual - ".$cont_id,
+                                'recebidoconta' => 0,
+                                'autoconta' => $anualcobranca[2][$o],
+                                'cvconta' => $anualcobranca[3][$o]
+                            ]);
+                        }else{
+                            $contasareceber = DB::table('contasareceber')->insert([
+                                'datapagoconta' => $pagamentocartao->format('Y-m-d') ,
+                                'vencimentoconta' => $pagamentocartao->format('Y-m-d') ,
+                                'clienteconta' => $contobs[$i] ,
+                                'formapagamentoconta' => $anualcobranca[0][$o],
+                                'valorconta' => doubleval($anualcobranca[4][$o]),
+                                'descconta' => "Anual - ".$cont_id,
+                                'recebidoconta' => 0,
+                                'autoconta' => $anualcobranca[2][$o],
+                                'cvconta' => $anualcobranca[3][$o]
+                            ]);
+                        }
+                        $pagamentocartao->modify('+1 month');
+                    }else{
+                        if($pagamentoresto->format('m') == '02' && intval($pagamentoresto->format('d')) > 28){
+                        
+                            $contasareceber = DB::table('contasareceber')->insert([
+                                'datapagoconta' => $pagamentoresto->format('Y-m-').'28' ,
+                                'vencimentoconta' => $pagamentoresto->format('Y-m-').'28' ,
+                                'clienteconta' => $contobs[$i] ,
+                                'formapagamentoconta' => $anualcobranca[0][$o],
+                                'valorconta' => doubleval($anualcobranca[4][$o]),
+                                'descconta' => "Anual - ".$cont_id,
+                                'recebidoconta' => 0,
+                                'autoconta' => $anualcobranca[2][$o],
+                                'cvconta' => $anualcobranca[3][$o]
+                            ]);
+                        }else{
+                            $contasareceber = DB::table('contasareceber')->insert([
+                                'datapagoconta' => $pagamentoresto->format('Y-m-d') ,
+                                'vencimentoconta' => $pagamentoresto->format('Y-m-d') ,
+                                'clienteconta' => $contobs[$i] ,
+                                'formapagamentoconta' => $anualcobranca[0][$o],
+                                'valorconta' => doubleval($anualcobranca[4][$o]),
+                                'descconta' => "Anual - ".$cont_id,
+                                'recebidoconta' => 0,
+                                'autoconta' => $anualcobranca[2][$o],
+                                'cvconta' => $anualcobranca[3][$o]
+                            ]);
+                        }
+                    }
+                    
+                    
+                }
+                
+                
+            }
                 $cadastrarcontobs = DB::table('contratosobs')->insert([
                     'contobs_id' => $cont_id,
                     'contobs_idpessoa' => $contobs[$i],
                     'contobs_tipo' => 'Titular',
                     'contobs_status' => 'Ativo'
                 ]);
+                
             }else{
                 $cadastrarcontobs = DB::table('contratosobs')->insert([
                     'contobs_id' => $cont_id,
@@ -540,95 +1134,602 @@ class CadastroController extends Controller
     }
     }
     public function CadastroAgendaMedico(Request $request){
+        // dd($request->all());
         $idall = [];
-        $pessoadados = explode(' - ',$request->dados[0]);
-        $idtitularpaciente = DB::table('pacientes')->where('pac_nome', $pessoadados[0])->get();
-        $idtitularforfis = DB::table('fornecedoresfis')->where('forfis_nome', $pessoadados[0])->get();
-        $idtitularfunc = DB::table('funcionarios')->where('func_nome', $pessoadados[0])->get();
-        $idtitularclijur = DB::table('clientesjur')->where('clijur_nome', $pessoadados[0])->get();
-        $idtitularforjur = DB::table('fornecedoresjur')->where('forjur_nome', $pessoadados[0])->get();
-        if(count($idtitularpaciente) !=0 ){
-            $id = $idtitularpaciente->map(function($obj){
-                return (array) $obj;
-            })->toArray();
-            $id = $id[0]["pac_id"];
-            $data = 1;
-            array_push($idall, str_pad($id , 4 , '0' , STR_PAD_LEFT) . $data);
-        }if(count($idtitularforfis) !=0 ){
-            $id = $idtitularforfis->map(function($obj){
-                return (array) $obj;
-            })->toArray();
-            $id = $id[0]["forfis_id"];
-            $data = 2;
-            array_push($idall, str_pad($id , 4 , '0' , STR_PAD_LEFT) . $data);
-        }if(count($idtitularfunc) !=0 ){
-            $id = $idtitularfunc->map(function($obj){
-                return (array) $obj;
-            })->toArray();
-            $id = $id[0]["func_id"];
-            $data = 3;
-            array_push($idall, str_pad($id , 4 , '0' , STR_PAD_LEFT) . $data);
-        }if(count($idtitularclijur) !=0 ){
-            $id = $idtitularclijur->map(function($obj){
-                return (array) $obj;
-            })->toArray();
-            $id = $id[0]["clijur_id"];
-            $data = 4;
-            array_push($idall, str_pad($id , 4 , '0' , STR_PAD_LEFT) . $data);
-        }if(count($idtitularforjur) !=0 ){
-            $id = $idtitularforjur->map(function($obj){
-                return (array) $obj;
-            })->toArray();
-            $id = $id[0]["forjur_id"];
-            $data = 5;
-            array_push($idall, str_pad($id , 4 , '0' , STR_PAD_LEFT) . $data);
-        }
-
-        foreach($idall as $idall){
-            $contrato = DB::table('contratosobs')
-            ->where('contobs_id', $pessoadados[1])
-            ->where('contobs_idpessoa', $idall)
-            ->where('contobs_status', 'Ativo')
-            ->get();
-            if(count($contrato) > 0){
-                $idpessoa = $contrato[0]->contobs_idpessoa;
-            }
-        }
-        $data = explode('-',$request->dados[4]);
+        $data = explode('-',$request->dados[3]);
         $data = $data[2] . "/" . $data[1] . "/" . $data[0];
-        $datahora = $data . ' - ' . $request->dados[3];
+        $datahora = $data . ' - ' . $request->dados[2];
         $checardatamedico = DB::table('agendas')
         ->where('age_data', $datahora)
-        ->where('age_med', $request->dados[5])
+        ->where('age_med', $request->dados[4])
         ->get();
-        if(count($checardatamedico) != 0){
-            $attagenda = DB::table('agendas')
-            ->where('age_data', $datahora)
-            ->where('age_med', $request->dados[5])
-            ->update(
-                ['age_idpessoa' => $idpessoa,
-                'age_contrato' => $pessoadados[1],
-                'age_data' => $datahora,
-                'age_serv' => $request->dados[1],
-                'age_med' => $request->dados[5],
-                'age_status' => $request->dados[2]]
-            );
+
+        
+        // dd($dadospessoa);
+
+        if(count(explode(' - ', $request->dados[0])) == 1 || count(explode(' - ', $request->dados[0])) == 2){
+            if(count($checardatamedico) != 0){
+                $attagenda = DB::table('agendas')
+                ->where('age_data', $datahora)
+                ->where('age_med', $request->dados[4])
+                ->update(
+                    ['age_pessoa' => explode(' - ', $request->dados[0])[0],
+                    'age_contrato' => 'Não Cadastrado',
+                    'age_data' => $datahora,
+                    'age_med' => $request->dados[4],
+                    'age_status' => 'Dependente Cadastro',
+                    'age_prioridade' => $request->dados[5],
+                    'age_datadb' => $request->dados[3]]  
+                );
+
+                $agendaatual = DB::table('agendas')
+                ->where('age_data', $datahora)
+                ->where('age_med', $request->dados[4])
+                ->first()->age_id;
+
+                $atendimentosatuaisretorno = DB::table('agendamentocliente')
+                ->where('idagenda', $agendaatual)
+                ->where('servico', 0)
+                ->get();
+
+                // dd($request->all());
+
+                if($request->dados[1] == 'Retorno'){
+                    if(count($atendimentosatuaisretorno) == 0){
+                        $inserirretorno = DB::table('agendamentocliente')
+                        ->insert([
+                            "idagenda" => $agendaatual,
+                            "servico" => 0,
+                            "situacao" => 'realizar',
+                            "quantidade" => 1,
+                        ]);
+                    }
+                }else{
+                    if(count($atendimentosatuaisretorno) > 0){
+                        $removerretorno = DB::table('agendamentocliente')
+                        ->where('idagenda', $agendaatual)
+                        ->where('servico', 0)
+                        ->delete();
+                    }
+                }
+                
+            }else{
+                $attagenda = DB::table('agendas')->insert([
+                    'age_pessoa' => explode(' - ', $request->dados[0])[0],
+                    'age_contrato' => 'Não Cadastrado',
+                    'age_data' => $datahora,
+                    'age_med' => $request->dados[4],
+                    'age_status' => 'Dependente Cadastro',
+                    'age_prioridade' => $request->dados[5],
+                    'age_datadb' => $request->dados[3]
+                ]);
+            }
+        }else if(explode(' - ',$request->dados[0])[2] == "Particular"){
+            $dadospessoa = explode(' - ', $request->dados[0])[0] . ' - ' . explode(' - ', $request->dados[0])[1];
+            if(count($checardatamedico) != 0){
+                $attagenda = DB::table('agendas')
+                ->where('age_data', $datahora)
+                ->where('age_med', $request->dados[4])
+                ->update(
+                    ['age_pessoa' => $dadospessoa,
+                    'age_contrato' => 'Particular',
+                    'age_data' => $datahora,
+                    'age_med' => $request->dados[4],
+                    'age_status' => $request->dados[1],
+                    'age_prioridade' => $request->dados[5],
+                    'age_datadb' => $request->dados[3]]
+                );
+
+                $agendaatual = DB::table('agendas')
+                ->where('age_data', $datahora)
+                ->where('age_med', $request->dados[4])
+                ->first()->age_id;
+
+                $atendimentosatuaisretorno = DB::table('agendamentocliente')
+                ->where('idagenda', $agendaatual)
+                ->where('servico', 0)
+                ->get();
+
+                // dd($request->all());
+
+                if($request->dados[1] == 'Retorno'){
+                    if(count($atendimentosatuaisretorno) == 0){
+                        $inserirretorno = DB::table('agendamentocliente')
+                        ->insert([
+                            "idagenda" => $agendaatual,
+                            "servico" => 0,
+                            "situacao" => 'realizar',
+                            "quantidade" => 1,
+                        ]);
+                    }
+                }else{
+                    if(count($atendimentosatuaisretorno) > 0){
+                        $removerretorno = DB::table('agendamentocliente')
+                        ->where('idagenda', $agendaatual)
+                        ->where('servico', 0)
+                        ->delete();
+                    }
+                }
+
+            }else{
+                $attagenda = DB::table('agendas')->insert([
+                    'age_pessoa' => $dadospessoa,
+                    'age_contrato' => 'Particular',
+                    'age_data' => $datahora,
+                    'age_med' => $request->dados[4],
+                    'age_status' => $request->dados[1],
+                    'age_prioridade' => $request->dados[5],
+                    'age_datadb' => $request->dados[3]
+                ]);
+
+                $agendaatual = DB::table('agendas')
+                ->where('age_data', $datahora)
+                ->where('age_med', $request->dados[4])
+                ->first()->age_id;
+
+                $atendimentosatuaisretorno = DB::table('agendamentocliente')
+                ->where('idagenda', $agendaatual)
+                ->where('servico', 0)
+                ->get();
+
+                // dd($request->all());
+
+                if($request->dados[1] == 'Retorno'){
+                    if(count($atendimentosatuaisretorno) == 0){
+                        $inserirretorno = DB::table('agendamentocliente')
+                        ->insert([
+                            "idagenda" => $agendaatual,
+                            "servico" => 0,
+                            "situacao" => 'realizar',
+                            "quantidade" => 1,
+                        ]);
+                    }
+                }else{
+                    if(count($atendimentosatuaisretorno) > 0){
+                        $removerretorno = DB::table('agendamentocliente')
+                        ->where('idagenda', $agendaatual)
+                        ->where('servico', 0)
+                        ->delete();
+                    }
+                }
+            }
         }else{
-            $attagenda = DB::table('agendas')->insert([
-                'age_idpessoa' => $idpessoa,
-                'age_contrato' => $pessoadados[1],
-                'age_data' => $datahora,
-                'age_serv' => $request->dados[1],
-                'age_med' => $request->dados[5],
-                'age_status' => $request->dados[2],
-            ]);
+            $dadospessoa = explode(' - ', $request->dados[0])[0] . ' - ' . explode(' - ', $request->dados[0])[1];
+            $pessoadados = explode(' - ',$request->dados[0]);
+            $idtitularpaciente = DB::table('pacientes')->where('pac_cpf', $pessoadados[1])->get();
+            $idtitularforfis = DB::table('fornecedoresfis')->where('forfis_cpf', $pessoadados[1])->get();
+            $idtitularfunc = DB::table('funcionarios')->where('func_cpf', $pessoadados[1])->get();
+            if(count($idtitularpaciente) !=0 ){
+                $id = $idtitularpaciente->map(function($obj){
+                    return (array) $obj;
+                })->toArray();
+                $id = $id[0]["pac_id"];
+                $data = 1;
+                array_push($idall, str_pad($id , 4 , '0' , STR_PAD_LEFT) . $data);
+            }if(count($idtitularforfis) !=0 ){
+                $id = $idtitularforfis->map(function($obj){
+                    return (array) $obj;
+                })->toArray();
+                $id = $id[0]["forfis_id"];
+                $data = 2;
+                array_push($idall, str_pad($id , 4 , '0' , STR_PAD_LEFT) . $data);
+            }if(count($idtitularfunc) !=0 ){
+                $id = $idtitularfunc->map(function($obj){
+                    return (array) $obj;
+                })->toArray();
+                $id = $id[0]["func_id"];
+                $data = 3;
+                array_push($idall, str_pad($id , 4 , '0' , STR_PAD_LEFT) . $data);
+            }
+
+
+            foreach($idall as $idall){
+                // dd($idall);
+                $contrato = DB::table('contratosobs')
+                ->where('contobs_id', $pessoadados[2])
+                ->where('contobs_idpessoa', $idall)
+                ->where('contobs_status', 'Ativo')
+                ->get();
+                if(count($contrato) > 0){
+                    $idpessoa = $contrato[0]->contobs_idpessoa;
+                }
+            }
+            // dd($idpessoa);
+            $dadospessoa = $pessoadados[0]. ' - ' . $pessoadados[1];
+            if(count($checardatamedico) != 0){
+                if(count(explode(' - ', $request->dados[0])) == 2){
+                    $attagenda = DB::table('agendas')
+                    ->where('age_data', $datahora)
+                    ->where('age_med', $request->dados[4])
+                    ->update(
+                        ['age_pessoa' => $dadospessoa,
+                        'age_contrato' => 'Particular',
+                        'age_data' => $datahora,
+                        'age_med' => $request->dados[4],
+                        'age_status' => $request->dados[1],
+                        'age_prioridade' => $request->dados[5],
+                        'age_datadb' => $request->dados[3]]
+                    );
+
+                    $agendaatual = DB::table('agendas')
+                    ->where('age_data', $datahora)
+                    ->where('age_med', $request->dados[4])
+                    ->first()->age_id;
+
+                    $atendimentosatuaisretorno = DB::table('agendamentocliente')
+                    ->where('idagenda', $agendaatual)
+                    ->where('servico', 0)
+                    ->get();
+
+                    // dd($request->all());
+
+                    if($request->dados[1] == 'Retorno'){
+                        if(count($atendimentosatuaisretorno) == 0){
+                            $inserirretorno = DB::table('agendamentocliente')
+                            ->insert([
+                                "idagenda" => $agendaatual,
+                                "servico" => 0,
+                                "situacao" => 'realizar',
+                                "quantidade" => 1,
+                            ]);
+                        }
+                    }else{
+                        if(count($atendimentosatuaisretorno) > 0){
+                            $removerretorno = DB::table('agendamentocliente')
+                            ->where('idagenda', $agendaatual)
+                            ->where('servico', 0)
+                            ->delete();
+                        }
+                    }
+                }else{
+                    $attagenda = DB::table('agendas')
+                    ->where('age_data', $datahora)
+                    ->where('age_med', $request->dados[4])
+                    ->update(
+                        ['age_pessoa' => $dadospessoa,
+                        'age_contrato' => $pessoadados[2],
+                        'age_data' => $datahora,
+                        'age_med' => $request->dados[4],
+                        'age_status' => $request->dados[1],
+                        'age_prioridade' => $request->dados[5],
+                        'age_datadb' => $request->dados[3]]
+                    );
+                    $agendaatual = DB::table('agendas')
+                    ->where('age_data', $datahora)
+                    ->where('age_med', $request->dados[4])
+                    ->first()->age_id;
+
+                    $atendimentosatuaisretorno = DB::table('agendamentocliente')
+                    ->where('idagenda', $agendaatual)
+                    ->where('servico',0)
+                    ->get();
+
+                    // dd($request->all());
+
+                    if($request->dados[1] == 'Retorno'){
+                        // dd($request->all(), count($atendimentosatuaisretorno), $agendaatual, $atendimentosatuaisretorno);
+                        if(count($atendimentosatuaisretorno) == 0){
+                            $inserirretorno = DB::table('agendamentocliente')
+                            ->insert([
+                                "idagenda" => $agendaatual,
+                                "servico" => 0,
+                                "situacao" => 'realizar',
+                                "quantidade" => 1,
+                            ]);
+                        }
+                    }else{
+                        // dd($request->all());
+                        if(count($atendimentosatuaisretorno) > 0){
+                            // dd('porraaaaa');
+                            $removerretorno = DB::table('agendamentocliente')
+                            ->where('idagenda', $agendaatual)
+                            ->where('servico', 0)
+                            ->delete();
+                        }
+                    }
+                }
+                
+            }else{
+                $attagenda = DB::table('agendas')->insert([
+                    'age_pessoa' => $dadospessoa,
+                    'age_contrato' => $pessoadados[2],
+                    'age_data' => $datahora,
+                    'age_med' => $request->dados[4],
+                    'age_status' => $request->dados[1],
+                    'age_prioridade' => $request->dados[5],
+                    'age_datadb' => $request->dados[3]
+                ]);
+                $agendaatual = DB::table('agendas')
+                ->where('age_data', $datahora)
+                ->where('age_med', $request->dados[4])
+                ->first()->age_id;
+
+                $atendimentosatuaisretorno = DB::table('agendamentocliente')
+                ->where('idagenda', $agendaatual)
+                ->where('servico', 0)
+                ->get();
+
+                if($request->dados[1] == 'Retorno'){
+                    if(count($atendimentosatuaisretorno) == 0){
+                        $inserirretorno = DB::table('agendamentocliente')
+                        ->insert([
+                            "idagenda" => $agendaatual,
+                            "servico" => 0,
+                            "situacao" => 'realizar',
+                            "quantidade" => 1,
+                        ]);
+                    }
+                }else{
+                    if(count($atendimentosatuaisretorno) > 0){
+                        $removerretorno = DB::table('agendamentocliente')
+                        ->where('idagenda', $agendaatual)
+                        ->where('servico', 0)
+                        ->delete();
+                    }
+                }
+            }
         }
+
         if($attagenda == 1){
             return 1;
         }else{
             return 0;
         }
-        
+    }
+
+    public function CadastroAtendimento(Request $request){
+        // dd($request->all());
+        $atendimento = DB::table('atendimentos')->insert([
+            'aten_pessoa' => $request->pessoa,
+            'aten_lugar' => $request->lugar,
+        ]);
+        if($atendimento == 1){
+            return 1;
+        }else{
+            return 0;
+        }
+    }
+
+    public function CadastrarAviso(Request $request){
+        date_default_timezone_set('America/Sao_Paulo');
+        $data = date('d/m/Y');
+        // dd($data);
+        // dd($request->all());
+        $aviso = DB::table('avisos')->insert([
+            'aviso_titulo' => $request->titulo,
+            'aviso_texto' => $request->texto,
+            'aviso_data' => $data,
+        ]);
+        if($aviso == 1){
+            return 1;
+        }else{
+            return 0;
+        }
+    }
+
+    public function CadastrarProdutoImagem(Request $request){
+        $idproduto = DB::table('produtos')->orderBy('prod_id', 'DESC')->first()->prod_id;
+        $nomeproduto = DB::table('produtos')->orderBy('prod_id', 'DESC')->first()->prod_nome;
+        $validation = Validator::make($request->all(), [
+            'imagemiteminput' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+           ]);
+           if($validation->passes())
+           {
+                $imagem = $request->file('imagemiteminput');
+                $nome = $nomeproduto.'.'.$imagem->getClientOriginalExtension();
+                $nome = str_replace(" ", "_", $nome);
+                Storage::disk('imagens')->put($nome, file_get_contents($imagem));
+                $produtoimagem = DB::table('produtos')
+                ->where('prod_id', $idproduto)
+                ->update(["prod_img" => $nome]);
+                if($produtoimagem == 1){
+                    return 1;
+                }else{
+                    return 0;
+                }
+           }
+    }
+
+    public function CadastroNovoUltrassom(Request $request){
+        $ultrassom = DB::table('ultrassons')->insert([
+            'ultrassons_nome' => $request->ultrassom,
+        ]);
+        if($ultrassom == 1){
+            return 1;
+        }else{
+            return 0;
+        }
+    }
+
+    public function CadastroRaioX(Request $request){
+        $raiox = DB::table('raiox')->insert([
+            'raiox_nome' => $request->raiox,
+        ]);
+        if($raiox == 1){
+            return 1;
+        }else{
+            return 0;
+        }
+    }
+
+    public function CadastroExame(Request $request){
+        $exame = DB::table('exames')->insert([
+            'exame_nome' => $request->exame,
+            'exame_cate' => $request->categoria,
+            'exame_valor' => $request->valor,
+        ]);
+        if($exame == 1){
+            return 1;
+        }else{
+            return 0;
+        }
+    }
+
+    public function CadastroNovoHorarioMedico(Request $request){
+        // dd($request->all());
+
+        $med_id = DB::table('medicos')->where('med_cpfcnpj', $request->cpfatual)->first()->med_id;
+
+        // dd($med_id);
+
+        $horariomedico = $request->inicioagendamedico . "-" . $request->fimagendamedico;
+
+        $novohorariomedico = DB::table('agendamedico')->insert([
+            'idmedico' => $med_id,
+            'datamedico' => $request->datamedico,
+            'horariosmedico' => $horariomedico,
+        ]);
+        if($novohorariomedico == 1){
+            return 1;
+        }else{
+            return 0;
+        }
+    }
+
+    public function CadastroSalvarListExames(Request $request){
+        // dd($request->all(), count($request->exames));
+
+        $delete = DB::table('agendamentocliente')->where('idagenda', $request->idagenda)->delete();
+
+        for($i = 0; $i < count($request->exames); $i++){
+            $novohorariocliente = DB::table('agendamentocliente')->insert([
+                'idagenda' => $request->idagenda,
+                'servico' => $request->exames[$i],
+                'quantidade' => $request->quantidade[$i],
+                'situacao' => $request->situacao[$i],
+            ]);
+        }
+        if($novohorariocliente == 1){
+            return 1;
+        }else{
+            return 0;
+        }
+
         
     }
+
+    public function PassarContratos(){
+        // dd('funciona');
+        $teste1 = DB::table('tb_contrato')->get();
+        // dd($teste1);
+        foreach($teste1 as $teste){
+            // dd($teste);
+            if($teste->isn_cliente != null && $teste->isn_plano != null){
+                $data = explode('-', $teste->dth_data_carencia)[0] . explode('-', $teste->dth_data_carencia)[1];
+                $cont_id = $data . str_pad($teste->isn_cliente , 8 , '0' , STR_PAD_LEFT) . '1';
+                $checkcont = DB::table('contratos')->where('cont_id', 'like', '%'.$cont_id.'%')->get();
+                $contatual = count($checkcont) + 1;
+                $cont_id = $cont_id.$contatual;
+                if($teste->num_vencimento != null){
+                    $diapag = $teste->num_vencimento;
+                }else{
+                    $diapag = 1;
+                }
+                if($teste->flg_status == '1'){
+                    $passar = DB::table('contratos')->insert([
+                        'cont_id' => $cont_id,
+                        'cont_plano' => $teste->isn_plano,
+                        'cont_diapag' => $diapag,
+                        'cont_status' => 'Ativo',
+                        'cont_datainicio' => $teste->dth_data_inicio,
+                        'cont_datafim' => $teste->dth_data_inativacao
+                    ]);
+                }else{
+                    $passar = DB::table('contratos')->insert([
+                        'cont_id' => $cont_id,
+                        'cont_plano' => $teste->isn_plano,
+                        'cont_diapag' => $diapag,
+                        'cont_status' => 'Não Ativo',
+                        'cont_datainicio' => $teste->dth_data_inicio,
+                        'cont_datafim' => $teste->dth_data_inativacao
+                    ]);
+                }
+
+                $teste2 = DB::table('tb_pessoa_contrato')->where('isn_contrato', $teste->isn_contrato)->get();
+                foreach($teste2 as $teste2){
+                    if(count(DB::table('pacientes')->where('pac_id', $teste2->isn_pessoa)->get()) != 0){
+                        if($teste->isn_cliente == $teste2->isn_pessoa){
+                            if($teste2->flg_status == 1){
+                                $passar = DB::table('contratosobs')->insert([
+                                    'contobs_id' => $cont_id,
+                                    'contobs_idpessoa' => $teste2->isn_pessoa . '1',
+                                    'contobs_tipo' => 'Titular',
+                                    'contobs_status' => 'Ativo'
+                                ]);
+                            }else{
+                                $passar = DB::table('contratosobs')->insert([
+                                    'contobs_id' => $cont_id,
+                                    'contobs_idpessoa' => $teste2->isn_pessoa. '1',
+                                    'contobs_tipo' => 'Titular',
+                                    'contobs_status' => 'Não Ativo'
+                                ]);
+                            }
+                        }else{
+                            if($teste2->flg_status == 1){
+                                $passar = DB::table('contratosobs')->insert([
+                                    'contobs_id' => $cont_id,
+                                    'contobs_idpessoa' => $teste2->isn_pessoa. '1',
+                                    'contobs_tipo' => 'Dependente',
+                                    'contobs_status' => 'Ativo'
+                                ]);
+                            }else{
+                                $passar = DB::table('contratosobs')->insert([
+                                    'contobs_id' => $cont_id,
+                                    'contobs_idpessoa' => $teste2->isn_pessoa. '1',
+                                    'contobs_tipo' => 'Dependente',
+                                    'contobs_status' => 'Não Ativo'
+                                ]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return 'Foi meu parceiro compatriota bixo doido doido do krl doido';
+    }
+
+    public function PassarCategorias(Request $request){
+        $categorias = DB::table('tb_pessoas_categorias')->where('pac_id', '>', '242327')->orderBy('pac_id')->get();
+        foreach($categorias as $categorias){
+            $pessoa = DB::table('pacientes')->where('pac_id', $categorias->pac_id)->update([
+                'pac_categoria' => $categorias->pac_categoria
+            ]);
+        }
+        return 'foi';
+    }
+
+    public function PassarIRNDucash(Request $request){
+        $planoducash = DB::table('planos')->where('plan_nome','Ducash')->first()->plan_id;
+        // dd($planoducash);
+        $planobsirn = DB::table('planoobs')->where('planobs_plano','8')->get();
+        foreach($planobsirn as $planobsirn){
+            // dd($planobsirn);
+            $planobsducash = DB::table('planoobs')->insert([
+                'planobs_plano' => $planoducash,
+                'planobs_produto' => $planobsirn->planobs_produto,
+                'planobs_valor' => $planobsirn->planobs_valor,
+                'planobs_incluso' => $planobsirn->planobs_incluso,
+                'planobs_quantidade' => $planobsirn->planobs_quantidade,
+            ]);
+        }
+        return 'foi';
+    }
+
+    public function TransfLotes(Request $request){
+        $cobrancas = DB::table('cobranca')->get();
+        foreach($cobrancas as $cobrancas){
+            if ($cobrancas->fechado == '1') {
+                $cobrancalote = DB::table('cobrancalote')->where('idlote', $cobrancas->idlote)->update([
+                    'fechadolote' => 1
+                ]);
+            }
+            if ($cobrancas->pago == '1') {
+                $cobrancalote = DB::table('cobrancalote')->where('idlote', $cobrancas->idlote)->update([
+                    'pagolote' => 1
+                ]);
+            }
+        }
+        return 'foi';
+    }
+    
 }

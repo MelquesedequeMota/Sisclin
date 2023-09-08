@@ -19,8 +19,6 @@ class Planos extends Migration
             $table->string('plan_desc')->nullable();
             $table->integer('plan_qtddep')->nullable();
             $table->double('plan_valor')->nullable();
-            $table->string('plan_servicos')->nullable();
-            $table->string('plan_itens')->nullable();
         });
     }
 

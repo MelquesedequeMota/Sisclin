@@ -1,0 +1,42 @@
+.inputstexttelas02 {
+    border: 0.7px solid #7e848b;
+    box-sizing: border-box;
+    border-radius: 4px;
+    width: 17rem;
+    height: 31px !important;
+    padding-left: 0.3rem;
+
+    font-family: "Source Sans Pro", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 17px;
+    line-height: 20px;
+    letter-spacing: 0.7px;
+    /* Gray 2 */
+    color: #333333;
+}
+
+.coluna02 {
+    margin-left: 0.7rem;
+}
+
+.inputtextcc02 {
+    width: 9rem;
+}
+
+@media (max-width: 564px) {
+    .flex,
+    .transformdiv {
+        flex-direction: column;
+    }
+
+    .inputstexttelas02,
+    .inputtextcc02,
+    .btn {
+        width: 100%;
+    }
+
+    .coluna02 {
+        margin-left: 0rem;
+    }
+}

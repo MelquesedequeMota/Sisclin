@@ -1,0 +1,243 @@
+.divisaoresp {
+    width: 50%;
+}
+
+.selectcategoria {
+    border: 0.7px solid #7e848b;
+    box-sizing: border-box;
+    border-radius: 4px;
+    height: 30px;
+    /* margin-top: 0.2rem; */
+}
+ 
+/* #servinovoespec{
+    width: 46%!important;
+} */
+
+#servinovoinput,
+#especnovoinput,
+#especnovodescinput {
+    width: 100% !important;
+}
+
+#tipo_pessoa {
+    width: 12rem;
+}
+
+.divOU {
+    padding-right: 1.5%;
+    margin-top: 2.5rem;
+}
+
+.catendescinput {
+    margin-bottom: 1.5rem;
+}
+
+.input {
+    margin-right: 0.9rem;
+    display: none;
+}
+
+.transformdiv {
+    display: flex;
+    flex-direction: row;
+}
+
+.nomesblocos {
+    font-family: "Source Sans Pro", sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 19px;
+    line-height: 20px;
+    letter-spacing: 0.5px;
+    color: #232222;
+}
+
+.externadivisaoresp {
+    width: 100%;
+    height: 100vh;
+}
+
+.imglogologin {
+    text-align: center;
+    margin-bottom: 8rem;
+}
+
+.imglogo {
+    width: 23rem;
+}
+
+.divcampos {
+    width: 300px;
+}
+
+.submit-lente {
+    position: absolute;
+    top: -2.7rem;
+    right: 4px;
+    z-index: 10;
+    border: none;
+    background: transparent;
+    outline: none;
+}
+
+.submit-line {
+    position: relative;
+    /* width: 200px; */
+}
+
+.submit-line input {
+    width: 100%;
+}
+
+.btn-close {
+    width: 4px !important;
+    height: 10px !important;
+}
+
+.callout {
+    width: 18.7rem;
+    margin-top: -30px;
+    margin-bottom: 1rem;
+    padding: 7px 8px 7px 12px;
+    border: 1px solid #eee;
+    border-left-width: 5px;
+    border-radius: 3px;
+    border-left-color: red;
+}
+
+@media only screen and (min-width: 1211px) and (max-width: 1300px) {
+    .nsei {
+        width: 485px !important;
+    }
+
+    .container {
+        width: 12rem !important;
+        margin-left: 0rem !important;
+    }
+
+    #trocodiv {
+        width: 180px !important;
+    }
+
+    #principal {
+        padding: 18px 9px !important;
+    }
+}
+
+@media only screen and (min-width: 1270px) {
+    .imglogologin {
+        margin-top: 1rem;
+    }
+}
+
+@media only screen and (min-width: 700px) and (max-width: 1210px) {
+    .transformresponsive {
+        flex-direction: column !important;
+    }
+}
+
+@media (max-width: 1200px) {
+    .divisaoresp {
+        width: 100% !important;
+    }
+
+    .externadivisaoresp {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .imglogologin {
+        margin-bottom: 4rem;
+    }
+
+    .centralizary {
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+}
+
+@media only screen and (max-width: 700px) {
+    /* .flex {
+        flex-direction: column !important;
+        margin-top: 9% !important;
+    } */
+
+    .imglogo {
+        width: 18rem;
+    }
+
+    /* .form-select {
+        width: 100% !important;
+    } */
+
+    .arte {
+        min-height: 38vh !important;
+    }
+
+    .divexternanome {
+        padding-right: 0px;
+    }
+
+    .divsexternas {
+        margin-top: 3%;
+        width: 100% !important;
+        padding-right: 0px;
+    }
+
+    /* .inputstexttelas {
+        width: 100% !important;
+        height: 34px !important;
+    } */
+
+    /* .inputtextcc {
+        width: 100% !important;
+    } */
+
+    .distleft {
+        margin-left: 0rem;
+    }
+
+    /* .btn {
+        width: 100%;
+    } */
+
+    .divOU {
+        text-align: center;
+        margin-top: 1rem;
+        margin-bottom: -2rem;
+    }
+
+    /* textarea {
+        width: 100%;
+    } */
+
+    .input {
+        margin-right: 0rem !important;
+    }
+
+    /* .transformdiv {
+        display: flex;
+        flex-direction: column;
+    } */
+
+    .btadd {
+        width: 32% !important;
+    }
+}
+
+@media (max-width: 360px) {
+    .divcampos {
+        width: 285px;
+    }
+
+    .callout {
+        width: 17.8rem;
+    }
+
+    .imglogologin {
+        margin-top: -1rem;
+        margin-bottom: 2rem !important;
+    }
+}

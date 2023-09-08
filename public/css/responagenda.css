@@ -1,0 +1,74 @@
+/* Códigos próprios da página Agenda */
+
+#horarios {
+    margin-top: -1rem;
+    margin-bottom: 1.5rem;
+}
+
+.btn {
+    padding: 0.17rem 0.5rem !important;
+    color: #ffffff !important;
+}
+
+
+/*  */
+
+/* Responsividade da página Agenda*/
+@media (max-width: 736px) {
+    .inputstexttelas {
+        width: 100% !important;
+        height: 34px !important;
+    }
+
+    .form-select {
+        width: 100% !important;
+    }
+
+    .transformdiv {
+        flex-direction: column;
+    }
+
+    .distleft {
+        margin-left: 0rem;
+    }
+
+    .bthorarios {
+        width: 100%;
+    }
+
+    .btn {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        width: 100%;
+    }
+
+    .selectstatus {
+        margin-bottom: 1rem;
+    }
+}
+
+@media (min-width: 737px) and (max-width: 800px) {
+    .inputstexttelas {
+        width: 11rem !important;
+    }
+    .form-select {
+        width: 8rem !important;
+    }
+
+    .distleft {
+        margin-left: 0.4rem !important;
+    }
+}
+
+@media (min-width: 801px) and (max-width: 1005px) {
+    .inputstexttelas {
+        width: 13rem !important;
+    }
+    .form-select {
+        width: 9rem !important;
+    }
+
+    .distleft {
+        margin-left: 0.4rem !important;
+    }
+}

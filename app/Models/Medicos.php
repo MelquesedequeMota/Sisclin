@@ -11,7 +11,7 @@ class Medicos extends Model
     protected $fillable = [
         'med_nome',
         'med_crn',
-        'med_cpf',
+        'med_cpfcnpj',
         'med_estadocivil',
         'med_sexo',
         'med_datanasc',

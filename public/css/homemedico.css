@@ -1,0 +1,646 @@
+@import url('https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400;500;600&display=swap');
+
+.fontreem{
+  font-family: 'Reem Kufi',
+  sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 24px;
+  /* identical to box height */
+
+  letter-spacing: 0.02em;
+
+  color: #000000;
+}
+
+.alinhartextos{
+  display: flex;
+  justify-content: left;
+  color:#094319;
+}
+
+.titulo{
+  font-size: 17px;
+  margin-top: -4px;
+  margin-bottom: 6px;
+  width: 150px;
+  word-break: break-word;
+}
+
+.margensbox{
+  margin-right: 1rem;
+  margin-bottom: 0.8rem;
+  padding: 0.5rem 0.7rem 0.5rem 0.4rem;
+}
+
+.alinharitensbox{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  font-size: 14px;
+}
+
+.wrapper {
+  max-height: 120px;
+  display: flex;
+  overflow: hidden;
+  overflow-x: auto;
+  white-space: nowrap;
+  width: 33rem;
+  margin-left: 2rem;
+}
+
+.wrapper .item {
+  min-width: 10rem;
+  height: 100px;
+  text-align: center;
+  background-color: #ddd;
+  margin-right: 10px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  border-radius: 5px;
+}
+
+.wrapper::-webkit-scrollbar {
+  width: 16px;
+  display: none;
+}
+
+.setas {
+  display: flex;
+  position: absolute;
+  margin-top: -4rem;
+  margin-left: 2rem;
+  justify-content: space-between;
+  width: 33rem;
+  padding: 0rem 0.5rem;
+  cursor: pointer;
+}
+
+.divflexm {
+  display: flex;
+  z-index: 6;
+  position: relative;
+}
+
+.divflexm2 {
+  display: flex;
+}
+
+.externapadraocores {
+  margin: 0rem 1rem;
+}
+
+#dadoscliente {
+  padding: 0.5rem 1.5rem;
+  margin: 1rem 1.5rem;
+  width: 33rem;
+  height: 24rem;
+  background: #fffefe;
+  box-shadow: 1px 4.3px 3px rgb(160 148 148 / 26%),
+    0px 1px 10px rgb(0 0 0 / 12%);
+  border-radius: 8px;
+}
+
+.divdadospaciente {
+  display: flex !important;
+  flex-direction: row;
+  align-items: center;
+  /* margin-bottom: 0.4rem; */
+}
+
+.btn {
+  padding: 5px 8px !important;
+  border-radius: 5px !important;
+}
+
+.infopacientes {
+  font-family: "Mulish", sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  /* line-height: 36px; */
+  letter-spacing: -0.03em;
+  color: rgba(0, 0, 0, 0.74);
+}
+
+.titulodados {
+  font-family: "IBM Plex Sans Condensed", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 27px;
+  line-height: 36px;
+  letter-spacing: 0.065em;
+  color: rgba(0, 0, 0, 0.74);
+}
+
+.procedimento {
+  font-family: "IBM Plex Sans Condensed", sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  /* line-height: 36px; */
+  letter-spacing: 0.065em;
+  color: rgba(0, 0, 0, 0.74);
+}
+
+.dados {
+  font-family: "Mulish", sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 39px;
+  letter-spacing: 0.09em;
+  color: rgba(0, 0, 0, 0.74);
+  display: flex;
+}
+
+.icones {
+  width: 1.3rem;
+}
+
+.tamanhoinput {
+  width: 100% !important;
+  height: 2rem;
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-radius: 0px !important;
+  margin-right: 0.5rem;
+}
+
+.bolas {
+  width: 1rem;
+  height: 1rem;
+  background-color: #d01e1e;
+  border-radius: 50%;
+  margin-top: 0.7rem;
+  margin-right: 0.6rem;
+}
+
+.flexlinha {
+  display: flex;
+  flex-direction: row;
+  margin-right: 1.3rem;
+}
+
+.condensed {
+  font-family: "IBM Plex Sans Condensed", sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 36px;
+  letter-spacing: 0.04em;
+  color: rgba(0, 0, 0, 0.95);
+  margin-bottom: 1.6rem;
+}
+
+/* .btnspainellateral{
+        display:flex;
+    } */
+
+.cores {
+  font-family: "IBM Plex Sans Condensed", sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 36px;
+  letter-spacing: 0.07em;
+  color: rgba(0, 0, 0, 0.9);
+}
+
+.btbordared {
+  border: 1px solid #d01e1e;
+}
+
+.btbordagreen {
+  border: 1px solid #127a7a;
+}
+
+.textobtborda {
+  font-family: "IBM Plex Sans", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  /* identical to box height, or 277% */
+  color: rgba(0, 0, 0, 0.93);
+}
+
+.botaoamarelo {
+  padding: 0.3rem 0.5rem;
+  background: #d1941a;
+  border-radius: 4px;
+  border: none;
+
+  font-family: "IBM Plex Sans", sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  color: #ffffff;
+}
+
+.botaoverde {
+  padding: 0.3rem 0.5rem;
+  background: #127a7a;
+  border-radius: 4px;
+  border: none;
+  width: max-content;
+
+  font-family: "IBM Plex Sans", sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  color: #ffffff;
+  margin-left: 0.4rem;
+}
+
+.nomepaciente {
+  font-family: "IBM Plex Sans", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 15px;
+  line-height: 36px;
+  display: flex;
+  align-items: center;
+  color: #000000;
+}
+
+.servicopaciente {
+  font-family: "IBM Plex Sans", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 36px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.01em;
+  color: #000000;
+  margin-top: -0.5rem;
+  margin-left: 1.2rem;
+}
+
+.geral {
+  /* position: absolute; */
+  width: 302px;
+  height: 100vh;
+  left: 0;
+  top: 43px;
+  background: #cad8de;
+  box-shadow: 0px 6px 10px rgb(0 0 0 / 14%);
+  border-radius: 3px;
+  padding: 0.8rem;
+}
+
+#principal {
+  padding: 0px !important;
+}
+
+#pacientes,
+#titulopacientes,
+.listapacientes {
+  display: block;
+}
+
+.titulopacientes {
+  font-family: "IBM Plex Sans Condensed", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 22px;
+  line-height: 36px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.07em;
+  color: #000000;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+}
+
+#labatual {
+  background-color: #cad8de !important;
+}
+
+.menumedico {
+  width: 154px;
+  height: 94px;
+  background: #fffefe;
+  /* box-shadow: 1px 1px 7px rgb(0 0 0 / 25%); */
+  box-shadow: 0px 0px 0px 1.3px rgb(0 0 0 / 30%);
+  border-radius: 6px;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0.7rem;
+  justify-content: space-around;
+}
+
+.fontebotao2 {
+  font-family: "IBM Plex Sans Condensed", sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.065em;
+  color: #ffffff;
+}
+
+#iconchamarpacientes {
+  display: none;
+}
+
+.iconcomparecimento {
+  min-width: 15rem !important;
+}
+
+.menu-section {
+  background: #cad8de;
+  height: 100vh;
+  width: 17rem;
+  padding: 0.8rem 0.5rem 5rem 0.5rem;
+}
+
+.divflexbtns {
+  display: flex;
+}
+
+.marginspadraocores {
+  margin-bottom: 2.2rem;
+  margin-top: 1rem;
+}
+
+
+.scrollcss {
+  scrollbar-width: thin;
+  scrollbar-color: #bdbbbb #d9d9df;
+}
+
+/* Works on Chrome, Edge, and Safari */
+.scrollcss::-webkit-scrollbar {
+  width: 9.5px;
+}
+
+.scrollcss::-webkit-scrollbar-track {
+  background: #e9e9e9;
+  background-clip: content-box;
+}
+
+.scrollcss::-webkit-scrollbar-thumb {
+  background-color: #bdbbbb;
+  border-radius: 20px;
+  /* border: 3px solid #ceced1; */
+}
+
+@media (max-width: 1200px) {
+  .transformdiv {
+    flex-direction: column;
+  }
+
+  .externapadraocores {
+    margin: 2rem;
+  }
+}
+
+@media (max-width: 827px) {
+  #dadoscliente,
+  .setas,
+  .wrapper {
+    width: 29rem;
+  }
+}
+
+@media (max-width: 747px) {
+  .procedimento {
+    font-size: 14px;
+  }
+
+  .titulodados {
+    font-size: 25px;
+  }
+
+  #dadoscliente {
+    width: 25rem;
+    padding: 0.5rem 1rem;
+  }
+
+  .wrapper {
+    width: 25rem;
+    margin-left: 1rem;
+  }
+
+  .setas {
+    width: 25rem;
+    margin-left: 1rem;
+  }
+
+  #dadoscliente {
+    margin: 1rem;
+  }
+
+  .externapadraocores {
+    margin: 2rem 1rem;
+  }
+}
+
+@media (min-width: 681px) {
+  #pacientes,#labatual,#titulopacientes,.listapacientes{
+    display: block!important;
+  }
+}
+
+@media (max-width: 680px) {
+  .menu-section {
+    padding: 0;
+    width: 0;
+  }
+
+  #iconchamarpacientes {
+    width: 2.5rem;
+    margin: 0.4rem;
+  }
+
+  #pacientes,
+  #titulopacientes,
+  .listapacientes {
+    display: none;
+  }
+
+  .btn {
+    padding: 4px 6px !important;
+  }
+
+  #atendimentoatual {
+    margin: auto;
+  }
+
+  #iconchamarpacientes {
+    display: block;
+  }
+
+  .menu-toggle {
+    width: 40px;
+    height: 30px;
+    float: right;
+    z-index: 10;
+    position: absolute;
+  }
+
+  /* fullscreen */
+  .menu-section.on {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .menu-section.on .menu-toggle {
+    position: absolute;
+    right: 25px;
+    top: 15px;
+  }
+
+  .menu-section.on .menu-toggle .two {
+    opacity: 0;
+  }
+
+  .menu-section.on nav ul {
+    text-align: center;
+    display: block;
+  }
+
+  .menu-section.on nav ul a {
+    transition-duration: 0.5s;
+    font-size: 3rem;
+    line-height: 4rem;
+    display: block;
+  }
+}
+
+@media (max-width: 437px) {
+  .marginspadraocores {
+    margin-bottom: 3rem;
+  }
+
+  #dadoscliente {
+    margin-top: 2rem !important;
+  }
+
+  .bolas {
+    margin-right: 0.3rem;
+  }
+
+  .cores {
+    font-size: 17px;
+  }
+
+  .flexlinha {
+    margin-right: 0.8rem;
+  }
+
+  .wrapper .item {
+    min-width: 9rem;
+  }
+
+  .setas {
+    margin-left: 0.5rem;
+  }
+
+  #dadoscliente,
+  .wrapper,
+  .setas {
+    width: 22rem;
+  }
+
+  .titulodados {
+    font-size: 22px;
+  }
+
+  #dadoscliente,
+  .wrapper {
+    margin: 0.5rem;
+  }
+
+  .externapadraocores {
+    margin: 2rem 0.5rem;
+  }
+}
+
+@media (max-width: 369px) {
+
+  .btbordared,
+  .btbordagreen {
+    padding: 8px 5px !important;
+  }
+
+  .divflexbtns {
+    flex-direction: column;
+  }
+
+  .dados {
+    font-size: 15px;
+  }
+
+  .infopacientes {
+    font-size: 15px;
+  }
+
+  .procedimento {
+    font-size: 13px;
+  }
+
+  #dadoscliente {
+    padding: 0.3rem 0.7rem;
+  }
+
+  .fontebotao2 {
+    font-size: 13px
+  }
+
+  .botaoamarelo {
+    padding: 2px 5px !important;
+  }
+
+  .titulodados {
+    font-size: 19px;
+  }
+
+  .iconcomparecimento {
+    min-width: 12rem !important;
+  }
+
+  .iconssaude {
+    width: 2rem;
+  }
+
+  .fontssaude {
+    font-size: 14px;
+  }
+
+  .wrapper .item {
+    min-width: 8rem;
+  }
+
+  #dadoscliente,
+  .wrapper,
+  .setas {
+    width: 19rem;
+  }
+
+  .flexlinha {
+    margin-right: 0.4rem;
+  }
+
+  .cores {
+    font-size: 16px;
+  }
+
+  .bolas {
+    width: 0.7rem;
+    height: 0.7rem;
+  }
+}

@@ -36,6 +36,7 @@ class Fornecedoresfis extends Migration
             $table->string('forfis_website')->nullable();
             $table->string('forfis_areaatuacao')->nullable();
             $table->string('forfis_obs')->nullable();
+            $table->string('forfis_status');
         });
     }
 

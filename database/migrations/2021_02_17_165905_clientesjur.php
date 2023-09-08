@@ -36,6 +36,7 @@ class Clientesjur extends Migration
             $table->string('clijur_emailrep')->nullable();
             $table->string('clijur_contatorep');
             $table->string('clijur_obs')->nullable();
+            $table->string('clijur_status');
         });
     }
 

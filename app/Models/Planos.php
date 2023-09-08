@@ -12,7 +12,9 @@ class Planos extends Model
         'prod_nome',
         'prod_desc',
         'prod_qtddep',
-        'prod_valor',
+        'prod_valorboleto',
+        'prod_valorcartao',
+        'prod_valoradesao',
         'prod_servicos',
         'prod_itens',
     ];

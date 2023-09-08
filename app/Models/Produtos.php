@@ -16,6 +16,7 @@ class Produtos extends Model
         'prod_quant',
         'prod_estqmin',
         'prod_valor',
+        'prod_valorlab',
         'prod_serviitens',
 
     ];
